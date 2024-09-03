@@ -6,45 +6,45 @@ class Program
 {
     static void Main(string[] args)
     {
-        string terminal = Console.ReadLine();
-        Console.WriteLine(terminal);
-        if (terminal.Contains("cheep"))
+        string input = args[0];
+        if (args.Length > 0 && input == "cheep")
         {
-            string message =  terminal.Substring(terminal.IndexOf("\""));
-            toCSV(message);
-        }
-        else
-        {
-            try
+                string message = string.Join(" ", args, 1, args.Length - 1);
+                toCSV(message);
+        }    
+            else
             {
-                using StreamReader reader = new("chirp_cli_db.csv");
-                string text = reader.ReadLine();
-
-                while (!reader.EndOfStream)
+                try
                 {
-                    text = reader.ReadLine();
-                
-                    int firstIndex = text.IndexOf(',');
-                    int lastIndex = text.LastIndexOf(',');
-                
-                    string author = text.Substring(0,firstIndex);
-                    string message = text.Substring(firstIndex + 1, lastIndex - firstIndex - 1).TrimStart('\"').TrimEnd('\"');
-                    int date = int.Parse(text.Substring(lastIndex + 1));
+                    using StreamReader reader = new("chirp_cli_db.csv");
+                    string text = reader.ReadLine();
 
-                    string output = (author + " @ " + dateConverter(date) + ": " + message);
-                
-                    Console.WriteLine(output);
+                    while (!reader.EndOfStream)
+                    {
+                        text = reader.ReadLine();
+
+                        int firstIndex = text.IndexOf(',');
+                        int lastIndex = text.LastIndexOf(',');
+
+                        string author = text.Substring(0, firstIndex);
+                        string message = text.Substring(firstIndex + 1, lastIndex - firstIndex - 1).TrimStart('\"')
+                            .TrimEnd('\"');
+                        int date = int.Parse(text.Substring(lastIndex + 1));
+
+                        string output = (author + " @ " + dateConverter(date) + ": " + message);
+
+                        Console.WriteLine(output);
+                    }
+
                 }
-            
+                catch (IOException e)
+                {
+                    Console.WriteLine("The file could not be read");
+                    Console.WriteLine(e.Message);
+                }
             }
-            catch (IOException e)
-            {
-                Console.WriteLine("The file could not be read");
-                Console.WriteLine(e.Message);
-            }
-        }
-        
-        
+
+
     }
 
     static string dateConverter(int unix)
@@ -56,13 +56,11 @@ class Program
     static void toCSV(string message)
     {
         string user = Environment.UserName;
-        Console.WriteLine(user);
         int unixTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-        Console.WriteLine(unixTime);
         
         using (StreamWriter sw = File.AppendText("chirp_cli_db.csv"))
         {
-            sw.WriteLine(user + "," + message + "," + unixTime);
+            sw.WriteLine(user + ",\"" + message + "\"," + unixTime);
         }	
     }
 }
