@@ -25,7 +25,7 @@ public class Program
         ";
 
         var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
-        //string input = args[0];
+        string input = args[0];
         
         if (arguments["cheep"].IsTrue) // args 0 == "read" 
         {
