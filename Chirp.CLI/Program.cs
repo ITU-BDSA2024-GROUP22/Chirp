@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using Chirp.CLI;
 using CsvHelper;
+using DocoptNet;
 
 public class Program
 {
@@ -10,13 +11,29 @@ public class Program
 
     public static void Main(string[] args)
     {
+        const string usage = @"Chirp CLI version.
+
+        Usage:
+        chirp read <limit>
+        chirp cheep <message>
+        chirp (-h | --help)
+        chirp --version
+
+        Options:
+        -h --help     Show this screen.
+        --version     Show version.
+        ";
+
+        var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
         string input = args[0];
-        if (args.Length > 0 && input == "cheep")
+        
+        if (arguments["cheep"].IsTrue) // args 0 == "read" 
         {
-            string message = string.Join(" ", args, 1, args.Length - 1);
+            //string message = string.Join(" ", args, 1, args.Length - 1);
+            string message = arguments["<message>"].ToString();
             toCSV(message);
         }    
-        else
+        else if(arguments["read"].IsTrue)
         {
             try
             {
