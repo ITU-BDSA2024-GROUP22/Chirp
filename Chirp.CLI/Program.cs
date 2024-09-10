@@ -6,8 +6,7 @@ using CsvHelper;
 
 class Program
 {
-    public record Cheep(string Author, string Message, long Timestamp); //DIFFERENT LOCATION
-    //private static IEnumerable<Cheep> cheeps = new List<Cheep>();
+    public record Cheep(string Author, string Message, long Timestamp);
 
     static void Main(string[] args)
     {
@@ -57,22 +56,5 @@ class Program
             csv.NextRecord();
             csv.WriteRecord(cheep);
         }
-        
-        /*
-        using (StreamWriter sw = File.AppendText("chirp_cli_db.csv"))
-        {
-            sw.WriteLine(user + ",\"" + message + "\"," + unixTime);
-        }	
-        */
     }
 }
-
-/*
-List<string> cheeps = new() { "Hello, BDSA students!", "Welcome to the course!", "I hope you had a good summer." };
-
-foreach (var cheep in cheeps)
-{
-    Console.WriteLine(cheep);
-    Thread.Sleep(1000);
-}
-*/
