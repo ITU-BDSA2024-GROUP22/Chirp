@@ -1,14 +1,14 @@
-﻿// See https://aka.ms/new-console-template for more information
-
+﻿
 using System.Globalization;
 using System.IO;
+using Chirp.CLI;
 using CsvHelper;
 
-class Program
+public class Program
 {
     public record Cheep(string Author, string Message, long Timestamp);
 
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         string input = args[0];
         if (args.Length > 0 && input == "cheep")
@@ -24,10 +24,8 @@ class Program
                 using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                      var cheeps = csvReader.GetRecords<Cheep>();
-                     foreach (var cheep in cheeps)
-                     {
-                         Console.WriteLine(cheep.Author + " @ " + dateConverter(cheep.Timestamp) + ": " + cheep.Message);
-                     }
+                     UserInterface.PrintCheeps(cheeps);
+
                 }
             }
             catch (IOException e)
@@ -37,13 +35,7 @@ class Program
             }
         }
     }
-
-    static string dateConverter(long unix)
-    {
-        DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix + 3600);
-        return dto.ToString();
-    }
-
+    
     static void toCSV(string message)
     {
         string user = Environment.UserName;
