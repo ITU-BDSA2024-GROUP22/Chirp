@@ -28,7 +28,6 @@ public class Program
         
         if (arguments["cheep"].IsTrue) // args 0 == "read" 
         {
-            //string message = string.Join(" ", args, 1, args.Length - 1);
             string message = arguments["<message>"].ToString();
             toCSV(message);
         }    
