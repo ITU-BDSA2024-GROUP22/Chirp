@@ -38,21 +38,8 @@ public class Program
         }    
         else if(arguments["read"].IsTrue)
         {
-            try
-            {
-                using (StreamReader reader = new StreamReader("chirp_cli_db.csv"))
-                using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                     var cheeps = csvReader.GetRecords<Cheep>();
-                     UserInterface.PrintCheeps(cheeps);
-                    //
-                }
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("The file could not be read");
-                Console.WriteLine(e.Message);
-            }
+            var cheeps = database.Read(3);
+            UserInterface.PrintCheeps(cheeps);
         }
     }
 }
