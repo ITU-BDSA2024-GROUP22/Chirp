@@ -6,7 +6,7 @@ namespace SimpleDB;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
-     private string dbPath = "chirp_cli_db.csv";
+     private string dbPath = "../SimpleDB/chirp_cli_db.csv";
     
     public IEnumerable<T> Read(int? limit = null)
     {
