@@ -4,11 +4,12 @@ using System.IO;
 using Chirp.CLI;
 using CsvHelper;
 using DocoptNet;
+using SimpleDB;
 
 public class Program
 {
     public record Cheep(string Author, string Message, long Timestamp);
-
+    
     public static void Main(string[] args)
     {
         const string usage = @"Chirp CLI version.
@@ -26,10 +27,14 @@ public class Program
 
         var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
         
+        IDatabaseRepository<Cheep> database = new CSVDatabase<Cheep>();
+        
         if (arguments["cheep"].IsTrue) // args 0 == "read" 
         {
             string message = arguments["<message>"].ToString();
-            toCSV(message);
+            int unixTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+
+            database.Store(new Cheep(Environment.UserName, message, unixTime));
         }    
         else if(arguments["read"].IsTrue)
         {
@@ -48,20 +53,6 @@ public class Program
                 Console.WriteLine("The file could not be read");
                 Console.WriteLine(e.Message);
             }
-        }
-    }
-    
-    static void toCSV(string message)
-    {
-        string user = Environment.UserName;
-        int unixTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-        Cheep cheep = new Cheep(user, message, unixTime);
-        
-        using (StreamWriter writer = File.AppendText("chirp_cli_db.csv"))
-        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-        {
-            csv.NextRecord();
-            csv.WriteRecord(cheep);
         }
     }
 }
