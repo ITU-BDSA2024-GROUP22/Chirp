@@ -1,0 +1,11 @@
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/SimpleDB.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/SimpleDB.AssemblyInfoInputs.cache
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/SimpleDB.AssemblyInfo.cs
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/SimpleDB.csproj.CoreCompileInputs.cache
+/Users/Stina/Desktop/Chirp/SimpleDB/bin/Debug/net7.0/SimpleDB.deps.json
+/Users/Stina/Desktop/Chirp/SimpleDB/bin/Debug/net7.0/SimpleDB.dll
+/Users/Stina/Desktop/Chirp/SimpleDB/bin/Debug/net7.0/SimpleDB.pdb
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/SimpleDB.dll
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/refint/SimpleDB.dll
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/SimpleDB.pdb
+/Users/Stina/Desktop/Chirp/SimpleDB/obj/Debug/net7.0/ref/SimpleDB.dll

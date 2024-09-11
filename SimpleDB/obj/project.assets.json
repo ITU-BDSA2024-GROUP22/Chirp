@@ -8,19 +8,19 @@
     "net7.0": []
   },
   "packageFolders": {
-    "/Users/albertebuelow/.nuget/packages/": {}
+    "/Users/Stina/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/albertebuelow/Chirp/SimpleDB/SimpleDB.csproj",
+      "projectUniqueName": "/Users/Stina/Desktop/Chirp/SimpleDB/SimpleDB.csproj",
       "projectName": "SimpleDB",
-      "projectPath": "/Users/albertebuelow/Chirp/SimpleDB/SimpleDB.csproj",
-      "packagesPath": "/Users/albertebuelow/.nuget/packages/",
-      "outputPath": "/Users/albertebuelow/Chirp/SimpleDB/obj/",
+      "projectPath": "/Users/Stina/Desktop/Chirp/SimpleDB/SimpleDB.csproj",
+      "packagesPath": "/Users/Stina/.nuget/packages/",
+      "outputPath": "/Users/Stina/Desktop/Chirp/SimpleDB/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/albertebuelow/.nuget/NuGet/NuGet.Config"
+        "/Users/Stina/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -59,12 +59,22 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[7.0.20, 7.0.20]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[7.0.20, 7.0.20]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.302/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/Users/Stina/.dotnet/sdk/8.0.401/RuntimeIdentifierGraph.json"
       }
     }
   }
