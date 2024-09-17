@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Globalization;
 using CsvHelper;
 
@@ -6,14 +5,33 @@ namespace SimpleDB;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
-     private string dbPath = "../SimpleDB/chirp_cli_db.csv";
-    
+    private static CSVDatabase<T> instance;
+    private static readonly object padlock = new();
+
+    private readonly string dbPath = "../SimpleDB/chirp_cli_db.csv";
+
+    private CSVDatabase()
+    {
+    }
+
+    public static CSVDatabase<T> Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null) instance = new CSVDatabase<T>();
+                return instance;
+            }
+        }
+    }
+
     public IEnumerable<T> Read(int? limit = null)
     {
         try
         {
-            using (StreamReader reader = new StreamReader(dbPath))
-            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var reader = new StreamReader(dbPath))
+            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var cheeps = csvReader.GetRecords<T>().ToList();
                 return cheeps;
