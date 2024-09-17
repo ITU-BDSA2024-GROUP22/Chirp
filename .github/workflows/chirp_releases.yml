@@ -1,0 +1,53 @@
+name: Publish Chirp!
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: Release Chirp!
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x  # Update to .NET 7
+
+      - name: Build and Package for Linux, Windows, and macOS
+        shell: bash
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          
+          # Target platforms
+          targets=("linux-x64" "win-x64" "osx-x64")
+
+          for target in "${targets[@]}"; do
+            release_name="Chirp-${tag}-${target}"
+
+            # Build for each target
+            dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "$target" -c Release -o "$release_name" --self-contained false
+
+            # Compress the output based on the platform
+            if [ "$target" == "win-x64" ]; then
+              # Pack for Windows into a zip
+              7z a -tzip "${release_name}.zip" "./${release_name}/*"
+            else
+              # Pack for Linux/macOS into a tar.gz
+              tar czvf "${release_name}.tar.gz" "$release_name"
+            fi
+
+            # Clean up output directory after compression
+            rm -r "$release_name"
+          done
+
+      - name: Publish Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "Chirp*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
