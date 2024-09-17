@@ -1,4 +1,4 @@
-name: Publish Chirp!
+name: Publish Chirp
 
 on:
   release:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    name: Release Chirp!
+    name: Release Chirp
     runs-on: ubuntu-latest
 
     steps:
