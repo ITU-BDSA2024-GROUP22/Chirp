@@ -12,7 +12,8 @@ public static class UserInterface
     
     private static string dateConverter(long unix) 
     { 
-        DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix + 3600);
-        return dto.ToString();
+        DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix);
+        var localTime = dto.LocalDateTime;
+        return localTime.ToString("MM'/'dd'/'yy HH':'mm':'ss");
     }
 }
