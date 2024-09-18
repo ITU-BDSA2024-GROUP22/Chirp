@@ -21,6 +21,7 @@ jobs:
             os: macos-latest
             target: osx-x64
             file_suffix: osx-x64
+            depends-on: macos-arm64
           - kind: macOS
             os: macos-latest
             target: osx-arm64
@@ -50,7 +51,7 @@ jobs:
             # Pack to zip for Windows
             7z a -tzip "$zip_file" "./${release_name}/*"
           else
-            zip -r "$zip_file" "./${release_name}/*"
+            zip -r "$zip_file" "./${release_name}"/*
           fi
 
           # Delete output directory
