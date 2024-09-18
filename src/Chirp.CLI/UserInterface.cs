@@ -10,7 +10,7 @@ public static class UserInterface
         }
     } 
     
-    private static string dateConverter(long unix) 
+    public static string dateConverter(long unix) 
     { 
         DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix);
         var localTime = dto.LocalDateTime;
