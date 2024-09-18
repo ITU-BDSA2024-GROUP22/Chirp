@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           tag=$(git describe --tags --abbrev=0)
-          release_name="App-$tag-${{ matrix.target }}"
+          release_name="Chirp-$tag-${{ matrix.target }}"
           zip_file="${release_name}.zip"
 
           # Build everything
@@ -46,9 +46,9 @@ jobs:
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             # Pack to zip for Windows
-            7z a -tzip "${release_name}.zip" "./${release_name}/*"
+            7z a -tzip "$zip_file" "./${release_name}/*"
           else
-            zip -r "${release_name}.zip" "./${release_name}"/*
+            zip -r "$zip_file" "./${release_name}"/*
           fi
 
           # Delete output directory
@@ -57,6 +57,6 @@ jobs:
       - name: Publish
         uses: softprops/action-gh-release@v1
         with:
-          files: "App*"
+          files: "Chirp*.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
