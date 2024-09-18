@@ -9,7 +9,7 @@ jobs:
     name: Release
     strategy:
       matrix:
-        kind: ['linux', 'windows', 'macOS']
+        kind: ['linux']
         include:
           - kind: linux
             os: ubuntu-latest
@@ -20,12 +20,9 @@ jobs:
           - kind: macOS
             os: macos-latest
             target: osx-x64
-            file_suffix: osx-x64
-            depends-on: macos-arm64
           - kind: macOS
             os: macos-latest
             target: osx-arm64
-            file_suffix: osx-arm64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -40,18 +37,29 @@ jobs:
         shell: bash
         run: |
           tag=$(git describe --tags --abbrev=0)
-          release_name="Chirp-$tag-${{ matrix.file_suffix }}"
-          zip_file="${release_name}.zip"
-          
+          release_name="Chirp-$tag-${{ matrix.target }}"
+
           # Build everything
           dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --runtime "${{ matrix.target }}" -c Release -o "$release_name"
  
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             # Pack to zip for Windows
-            7z a -tzip "$zip_file" "./${release_name}/*"
+            7z a -tzip "${release_name}.zip" "./${release_name}/*"
           else
-            zip -r "$zip_file" "./${release_name}"/*
+            # Create a .tar.gz file
+            tar czvf "${release_name}.tar.gz" "$release_name"
+            
+            # Extract the .tar.gz file
+            mkdir "${release_name}_extracted"
+            tar -xzvf "${release_name}.tar.gz" -C "${release_name}_extracted"
+
+            # Create a .zip file from the extracted contents
+            zip -r "${release_name}.zip" "${release_name}_extracted/$release_name"
+
+            # Remove the .tar.gz and extracted directory
+            rm "${release_name}.tar.gz"
+            rm -r "${release_name}_extracted"
           fi
 
           # Delete output directory
