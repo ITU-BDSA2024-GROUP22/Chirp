@@ -20,9 +20,11 @@ jobs:
           - kind: macOS
             os: macos-latest
             target: osx-x64
+            file_suffix: osx-x64
           - kind: macOS
             os: macos-latest
             target: osx-arm64
+            file_suffix: osx-arm64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -37,9 +39,9 @@ jobs:
         shell: bash
         run: |
           tag=$(git describe --tags --abbrev=0)
-          release_name="Chirp-$tag-${{ matrix.target }}"
+          release_name="Chirp-$tag-${{ matrix.file_suffix }}"
           zip_file="${release_name}.zip"
-
+          
           # Build everything
           dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --runtime "${{ matrix.target }}" -c Release -o "$release_name"
  
