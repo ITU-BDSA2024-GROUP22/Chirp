@@ -50,7 +50,7 @@ jobs:
             # Pack to zip for Windows
             7z a -tzip "$zip_file" "./${release_name}/*"
           else
-            zip -r "$zip_file" "./${release_name}"/*
+            zip -r "$zip_file" "./${release_name}/*"
           fi
 
           # Delete output directory
