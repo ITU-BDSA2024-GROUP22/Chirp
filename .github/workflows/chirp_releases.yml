@@ -1,73 +1,57 @@
 name: Publish Chirp
 
 on:
-  push:
-    branches:
-      - main  # Trigger only when merging to the main branch
+  workflow_dispatch:
 
 jobs:
   release:
-    name: Release Chirp
-    runs-on: ubuntu-latest
-
+    name: Release
+    strategy:
+      matrix:
+        kind: ['linux', 'windows', 'macOS']
+        include:
+          - kind: linux
+            os: ubuntu-latest
+            target: linux-x64
+          - kind: windows
+            os: windows-latest
+            target: win-x64
+          - kind: macOS
+            os: macos-latest
+            target: osx-x64
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Setup .NET
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 7.0.x  # Update to .NET 7
+          dotnet-version: 3.1.101
 
-      - name: Get version from the last Git tag
-        id: get_tag
-        run: |
-          tag=$(git describe --tags --abbrev=0)
-          echo "::set-output name=tag::$tag"
-
-      - name: Create a new tag if not exists
-        run: |
-          # Create a new tag based on the current date and push it
-          new_tag="v$(date +'%Y%m%d%H%M%S')"
-          git tag $new_tag
-          git push origin $new_tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and Package for Linux, Windows, and macOS
+      - name: Build
         shell: bash
         run: |
-          # Use the new tag for release name
           tag=$(git describe --tags --abbrev=0)
-          
-          # Target platforms
-          targets=("linux-x64" "win-x64" "osx-x64")
+          release_name="App-$tag-${{ matrix.target }}"
 
-          for target in "${targets[@]}"; do
-            release_name="Chirp-${tag}-${target}"
+          # Build everything
+          dotnet publish src/App/App.csproj --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
 
-            # Build for each target
-            dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "$target" -c Release -o "$release_name" --self-contained false
+          # Pack files
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            # Pack to zip for Windows
+            7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          else
+          tar czvf "${release_name}.tar.gz" "$release_name"
+          fi
 
-            # Compress the output based on the platform
-            if [ "$target" == "win-x64" ]; then
-              # Pack for Windows into a zip
-              7z a -tzip "${release_name}.zip" "./${release_name}/*"
-            else
-              # Pack for Linux/macOS into a tar.gz
-              tar czvf "${release_name}.tar.gz" "$release_name"
-            fi
+          # Delete output directory
+          rm -r "$release_name"
 
-            # Clean up output directory after compression
-            rm -r "$release_name"
-          done
-
-      - name: Publish Releases
+      - name: Publish
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.get_tag.outputs.tag }}
-          name: "Chirp! Release ${{ steps.get_tag.outputs.tag }}"
-          files: "Chirp*"
+          files: "App*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
