@@ -1,9 +1,6 @@
-﻿using Chirp.CLI;
+﻿using System.Net.Http.Json;
+using Chirp.CLI;
 using DocoptNet;
-using SimpleDB;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 public class Program
 {
@@ -11,7 +8,7 @@ public class Program
     {
         //var baseURL = "https://bdsagroup22chirpremotedb.azurewebsites.net/";
         var baseURL = "http://localhost:5012";
-        
+
         const string usage = @"Chirp CLI version.
 
         Usage:
@@ -27,8 +24,6 @@ public class Program
 
         var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
 
-        IDatabaseRepository<Cheep> database = CSVDatabase<Cheep>.Instance;
-
         if (arguments["cheep"].IsTrue) // args 0 == "read" 
         {
             var message = arguments["<message>"].ToString();
@@ -38,10 +33,7 @@ public class Program
         {
             ReadCheep(baseURL);
         }
-        
     }
-
-    public record Cheep(string Author, string Message, long Timestamp);
 
     public static void WriteCheep(string message, string baseURL)
     {
@@ -50,16 +42,16 @@ public class Program
         using HttpClient client = new();
         client.BaseAddress = new Uri(baseURL);
         var response = client.PostAsJsonAsync("/cheep", cheep).Result;
-        response.EnsureSuccessStatusCode();   
+        response.EnsureSuccessStatusCode();
     }
-    
+
     public static void ReadCheep(string baseURL)
     {
         using HttpClient client = new();
         client.BaseAddress = new Uri(baseURL);
         var response = client.GetFromJsonAsync<List<Cheep>>("/cheeps").Result;
-        UserInterface.PrintCheeps(response); 
+        UserInterface.PrintCheeps(response);
     }
-    
-    
+
+    public record Cheep(string Author, string Message, long Timestamp);
 }
