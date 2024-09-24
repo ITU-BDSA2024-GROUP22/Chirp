@@ -1,85 +1,39 @@
 using System.Diagnostics;
+using System.Net.Http.Json;
 using Chirp.CLI;
 using SimpleDB;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
 
 namespace Chirp.Tests;
 
-public class End2End
+public class End2End : IClassFixture<WebApplicationFactory<Program>>
 {
-    [Fact]
-    public void TestReadCheep()
-    {
-        // Arrange
-        string output = "";
-        using (var process = new Process())
-        {
-            process.StartInfo.FileName = "dotnet";
-            process.StartInfo.Arguments = "run -- read 10"; // Kald CLI'en med "read 10"
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = "../../../../../src/Chirp.CLI"; // Korrekt sti
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            // Læs standard output
-            StreamReader reader = process.StandardOutput;
-            output = reader.ReadToEnd();
-            process.WaitForExit();
-        }
-
-        // Act
-        string[] cheeps = output.Trim().Split("\n");
-
-        // Assert: Kontroller at outputtet er som forventet
-        Assert.Equal("ropf @ 08/01/23 14:09:20: Hello, BDSA students!", cheeps[0].Trim());
-        Assert.Equal("adho @ 08/02/23 14:19:38: Welcome to the course!", cheeps[1].Trim());
-        Assert.Equal("adho @ 08/02/23 14:37:38: I hope you had a good summer.", cheeps[2].Trim());
-        Assert.Equal("ropf @ 08/02/23 15:04:47: Cheeping cheeps on Chirp :)", cheeps[3].Trim());
-    }
-
+    private readonly HttpClient client;
+    private readonly string baseUrl = "http://localhost:5012";
     
-    /*
+    public End2End(WebApplicationFactory<Program> factory)
+    {
+        client = factory.CreateClient();
+    }
 
     [Fact]
-    public void TestStoreCheep()
+    public void WriteCheepTest()
     {
-        string expectedCheep = "Hello!!!";
-        string output = "";
-        using (var process = new Process())
-        {
-
-            process.StartInfo.FileName = "dotnet";
-            process.StartInfo.Arguments = "run -- cheep \"" + expectedCheep + "\""; // Korrekt kommando
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = "../../../../../src/Chirp.CLI"; // Korrekt sti
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            // Læs standard output
-            StreamReader reader = process.StandardOutput;
-            output = reader.ReadToEnd();
-            process.WaitForExit();
-        }
-
-        Console.WriteLine("Full Output: " + output);
-
-        string filePath = "chirp_cli_db.csv"; // Erstat med din CSV-fil sti
-        string lastLine = string.Empty;
-
-        using (StreamReader reader = new StreamReader(filePath))
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                lastLine = line; // Opdater den sidste linje
-            }
-        }
-
-        string[] cheeps = output.Trim().Split('\n');
-        string latestCheep = cheeps.Length > 0 ? cheeps.Last().Trim() : string.Empty;
-        // Assert: Kontroller at outputtet er som forventet
-        Assert.Equal("Hello!!!", lastLine);
-
+        
+        string message = "This is a test cheep";
+        
+        Program.WriteCheep(message, baseUrl);
+        
+        var cheeps = client.GetFromJsonAsync<List<Cheep>>("/cheeps").Result;
+        
+        Assert.Contains(cheeps, c => c.Message == message);
     }
-    */
+    
+    public record Cheep(string Author, string Message, long Timestamp);
+
 }
+
+
 
