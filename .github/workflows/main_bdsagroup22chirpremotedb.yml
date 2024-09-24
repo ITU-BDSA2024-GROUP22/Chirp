@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup22chirpremotedb
 
 on:
@@ -31,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/Chirp
+          path: src/Chirp.CSVDBService/bin/Release/net8.0/publish/
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,7 +44,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+          path: ./deploy
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -61,5 +59,4 @@ jobs:
         with:
           app-name: 'bdsagroup22chirpremotedb'
           slot-name: 'Production'
-          package: .
-          
+          package: ./deploy
