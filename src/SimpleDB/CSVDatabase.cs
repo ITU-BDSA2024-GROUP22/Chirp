@@ -35,7 +35,6 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
             {
                 var cheeps = csvReader.GetRecords<T>().ToList();
                 return cheeps;
-                //
             }
         }
         catch (IOException e)
