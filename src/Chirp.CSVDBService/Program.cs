@@ -1,9 +1,8 @@
 using SimpleDB;
 using Chirp.CLI;
-using Microsoft.AspNetCore.Builder;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-WebApplication app = builder.Build();
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
 IDatabaseRepository<Cheep> database = CSVDatabase<Cheep>.Instance;
 
