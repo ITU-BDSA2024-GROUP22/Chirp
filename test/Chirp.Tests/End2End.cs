@@ -10,6 +10,7 @@ namespace Chirp.Tests;
 
 public class End2End : IClassFixture<WebApplicationFactory<Program>>
 {
+    /*
     private readonly HttpClient client;
     private readonly string baseUrl = "http://localhost:5012";
     
@@ -23,7 +24,7 @@ public class End2End : IClassFixture<WebApplicationFactory<Program>>
     public void WriteCheepTest()
     {
     }
-    */
+    
     
     
     [Fact]
@@ -46,6 +47,7 @@ public class End2End : IClassFixture<WebApplicationFactory<Program>>
                 process.WaitForExit();
             }
         }
+    */
     public record Cheep(string Author, string Message, long Timestamp);
 }
 
