@@ -8,7 +8,8 @@ public class Program
     {
         //var baseURL = "https://bdsagroup22chirpremotedb.azurewebsites.net/";
         var baseURL = "http://localhost:5012";
-
+        
+        //test message (delete after)
         const string usage = @"Chirp CLI version.
 
         Usage:
