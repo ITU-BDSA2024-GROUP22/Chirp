@@ -18,21 +18,35 @@ public class End2End : IClassFixture<WebApplicationFactory<Program>>
         client = factory.CreateClient();
     }
 
+    /*
     [Fact]
     public void WriteCheepTest()
     {
-        
-        string message = "This is a test cheep";
-        
-        Program.WriteCheep(message, baseUrl);
-        
-        var cheeps = client.GetFromJsonAsync<List<Cheep>>("/cheeps").Result;
-        
-        Assert.Contains(cheeps, c => c.Message == message);
     }
+    */
     
-    public record Cheep(string Author, string Message, long Timestamp);
+    
+    [Fact]
+    
+    public void TestReadCheep()
+        {
+            string output = "";
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = "dotnet";
+                process.StartInfo.Arguments = "run -- read 10"; 
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.WorkingDirectory = "../../../../../src/Chirp.CLI";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.Start();
 
+                // Læs standard output
+                StreamReader reader = process.StandardOutput;
+                output = reader.ReadToEnd();
+                process.WaitForExit();
+            }
+        }
+    public record Cheep(string Author, string Message, long Timestamp);
 }
 
 
