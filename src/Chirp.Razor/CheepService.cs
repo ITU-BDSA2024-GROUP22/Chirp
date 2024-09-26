@@ -18,6 +18,8 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheeps()
     {
+        //Modify the code in the method GetCheeps() in CheepService.cs
+        //so that it executes an SQL query against the SQLite database
         return _cheeps;
     }
 
