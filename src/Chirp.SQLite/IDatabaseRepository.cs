@@ -2,6 +2,6 @@ namespace SimpleDB;
 
 public interface IDatabaseRepository<T>
 {
-    public IEnumerable<T> Read(int? limit = null);
+    public List<T> Read(int pageNumber);
     public void Store(T record);
 }

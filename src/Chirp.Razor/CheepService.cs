@@ -1,21 +1,19 @@
-using Chirp.CLI;
-using Chirp.Razor;
-
-public record CheepViewModel(string Author, string Message, string Timestamp);
+using Chirp.SQLite;
+using DBFacade = Chirp.Razor.DBFacade;
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps(int pageNumber);
-    
-    public List<CheepViewModel> GetCheepsFromAuthor(string author);
+    public List<Cheep> GetCheeps(int pageNumber);
+
+    public List<Cheep> GetCheepsFromAuthor(string author, int pageNumber);
 }
 
 public class CheepService : ICheepService
 {
-
     public readonly SQLiteDB database = SQLiteDB.Instance;
-    
-    DBFacade facade;
+
+    private readonly DBFacade facade;
+
     public CheepService()
     {
         facade = new DBFacade();
@@ -23,32 +21,16 @@ public class CheepService : ICheepService
     }
 
 
-    public List<CheepViewModel> GetCheeps(int pageNumber)
+    public List<Cheep> GetCheeps(int pageNumber)
     {
+        var results = database.Read(pageNumber);
 
-        int pageSize = 32;
-        int lowerBound = (pageNumber - 1) * pageSize;
-
-        string query = "SELECT * FROM Cheeps ORDER BY CreatedDate DESC LIMIT {pageSize} OFFSET {lowerBound}";
-
-        return 
+        return results;
     }
 
-
-    
-    /*
-    public List<CheepViewModel> GetCheeps()
-    {
-        
-        return facade.GetCheeps();
-    }
-    */
-
-    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+    public List<Cheep> GetCheepsFromAuthor(string author, int pageNumber)
     {
         // filter by the provided author name
-        return GetCheeps().Where(x => x.Author == author).ToList();
+        return GetCheeps(pageNumber).Where(x => x.Author == author).ToList();
     }
-
-
 }
