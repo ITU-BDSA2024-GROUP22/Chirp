@@ -3,7 +3,7 @@ using CsvHelper;
 
 namespace SimpleDB;
 
-public sealed class CSVDatabase<T> : IDataaseRepository<T>
+public sealed class CSVDatabase<T>
 {
     private static CSVDatabase<T> instance;
     private static readonly object padlock = new();

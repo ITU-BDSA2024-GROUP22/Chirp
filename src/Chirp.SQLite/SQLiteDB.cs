@@ -43,6 +43,8 @@ public class SQLiteDB : IDatabaseRepository<Cheep>
 
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
         {
+            var results = new List<Cheep>();
+
             var lowerBound = (pageNumber - 1) * pageSize;
             var pageQuery = "SELECT * FROM Cheeps ORDER BY CreatedDate DESC LIMIT {pageSize} OFFSET {lowerBound}";
 
@@ -50,7 +52,17 @@ public class SQLiteDB : IDatabaseRepository<Cheep>
             var command = connection.CreateCommand();
             command.CommandText = pageQuery;
 
-            throw new NotImplementedException();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var user = reader.GetString(0);
+                var message = reader.GetString(1);
+                var unixTime = reader.GetInt64(2);
+
+                results.Add(new Cheep(user, message, unixTime));
+            }
+
+            return results;
         }
     }
 
