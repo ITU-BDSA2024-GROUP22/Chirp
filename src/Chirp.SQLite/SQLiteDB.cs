@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using Microsoft.Data.Sqlite;
+using SimpleDB;
+using Chirp.CLI;
 
-public class SQLiteDB 
+public class SQLiteDB : IDatabaseRepository<Cheeps>
 {
     string sqlDBFilePath = "/tmp/chirp.db";
 
