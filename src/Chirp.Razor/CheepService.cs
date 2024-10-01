@@ -10,8 +10,6 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    public readonly SQLiteDB database = SQLiteDB.Instance;
-
     private readonly DBFacade facade;
 
     public CheepService()
@@ -23,7 +21,7 @@ public class CheepService : ICheepService
 
     public List<Cheep> GetCheeps(int pageNumber)
     {
-        var results = database.Read(pageNumber);
+        var results = facade.GetCheeps(pageNumber);
 
         return results;
     }

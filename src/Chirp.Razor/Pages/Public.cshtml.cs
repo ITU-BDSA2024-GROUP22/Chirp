@@ -10,7 +10,7 @@ public class PublicModel : PageModel
 
     public PublicModel(ICheepService service)
     {
-        var _service = service;
+        _service = service;
     }
 
     public List<Cheep> Cheeps { get; set; }
