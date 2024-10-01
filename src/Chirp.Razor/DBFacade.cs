@@ -1,5 +1,4 @@
 using System.Data;
-using Chirp.SQLite;
 using Microsoft.Data.Sqlite;
 
 namespace Chirp.Razor;
@@ -34,7 +33,7 @@ public class DBFacade
         {
             var dataRecord = (IDataRecord)reader;
             result.Add(new Cheep(dataRecord[0].ToString(), dataRecord[1].ToString(),
-                (((long)dataRecord[2])))); // Tjek at den viser unix ordentligt på hjemmeside
+                (long)dataRecord[2])); // Tjek at den viser unix ordentligt på hjemmeside
         }
 
         return result;
