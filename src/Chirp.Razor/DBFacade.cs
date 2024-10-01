@@ -5,33 +5,33 @@ namespace Chirp.Razor;
 public class DBFacade
 {
     private const string sqlGetCheeps = "SELECT username, text, pub_date FROM message JOIN user ON user_id = author_id";
-    //Vi skal ike have alle cheeps på samme tid mere, kun 32 stk ad gangen
     // var sqlQuery = @"SELECT * FROM message ORDER by message.pub_date desc";
 
     private readonly SqliteConnection connection;
-    //private const string sqlGetAuthor = 
 
     public DBFacade()
     {
         var sqlDBFilePath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? "/tmp/chirp.db";
         connection =
             new SqliteConnection($"Data Source={sqlDBFilePath}"); //vi har nu en connection til en database
-        CreateDB();
-        // Lav metode og kald den her til at lave query med dump og schema
+        CreateDB(sqlDBFilePath);
     }
 
-    private void CreateDB()
+    private void CreateDB(string sqlDBFilePath)
     {
-        ExecuteQuery("sqlite3 /tmp/chirp.db < data/schema.sql");
-        ExecuteQuery("sqlite3 /tmp/chirp.db < data/dump.sql");
+        var schemaSQL = File.ReadAllText("data/schema.sql");
+        ExecuteQuery(schemaSQL);
+
+        var dumpSQL = File.ReadAllText("data/dump.sql");
+        ExecuteQuery(dumpSQL);
     }
 
-    private void ExecuteQuery(string query)
+    private void ExecuteQuery(string sqlFile)
     {
         connection.Open();
         var command = connection.CreateCommand();
-        command.CommandText = query;
-        
+
+        command.CommandText = sqlFile;
         command.ExecuteNonQuery();
     }
 
@@ -49,7 +49,6 @@ public class DBFacade
             var results = new List<Cheep>();
 
             var lowerBound = (pageNumber - 1) * pageSize;
-            //var pageQuery = "SELECT * FROM Cheeps ORDER BY CreatedDate DESC LIMIT @pageSize OFFSET @lowerBound";
             var pageQuery =
                 "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
 
@@ -71,29 +70,15 @@ public class DBFacade
             }
 
             return results;
-            /*
-            var result = new List<Cheep>();
-            var command = connection.CreateCommand();
-            command.CommandText = sqlGetCheeps; // husk at indsætte den rigtige query
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                var dataRecord = (IDataRecord)reader;
-                result.Add(new Cheep(dataRecord[0].ToString(), dataRecord[1].ToString(),
-                    (long)dataRecord[2])); // Tjek at den viser unix ordentligt på hjemmeside
-            }
-
-            return result;
-            */
         }
     }
 
     public List<Cheep> GetCheepsFromAuthor(string author)
     {
+        // Mangler logikken for den enkelte 'author'
+
         return new List<Cheep>();
     }
-
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
