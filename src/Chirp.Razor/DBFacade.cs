@@ -16,6 +16,23 @@ public class DBFacade
         var sqlDBFilePath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? "/tmp/chirp.db";
         connection =
             new SqliteConnection($"Data Source={sqlDBFilePath}"); //vi har nu en connection til en database
+        CreateDB();
+        // Lav metode og kald den her til at lave query med dump og schema
+    }
+
+    private void CreateDB()
+    {
+        ExecuteQuery("sqlite3 /tmp/chirp.db < data/schema.sql");
+        ExecuteQuery("sqlite3 /tmp/chirp.db < data/dump.sql");
+    }
+
+    private void ExecuteQuery(string query)
+    {
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = query;
+        
+        command.ExecuteNonQuery();
     }
 
     public void Open()
