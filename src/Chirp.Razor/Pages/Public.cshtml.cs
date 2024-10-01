@@ -22,13 +22,4 @@ public class PublicModel : PageModel
         Cheeps = _service.GetCheeps(currentPage);
         return Page();
     }
-
-
-    /*
-    public ActionResult OnGet()
-    {
-        Cheeps = _service.GetCheeps();
-        return Page();
-    }
-    */
 }

@@ -4,7 +4,6 @@ namespace Chirp.Razor;
 
 public class DBFacade
 {
-    private const string sqlGetCheeps = "SELECT username, text, pub_date FROM message JOIN user ON user_id = author_id";
     // var sqlQuery = @"SELECT * FROM message ORDER by message.pub_date desc";
 
     private readonly SqliteConnection connection;
@@ -40,6 +39,32 @@ public class DBFacade
         connection.Open();
     }
 
+    public List<Cheep> GetAllCheeps()
+    {
+        using (connection)
+        {
+            var results = new List<Cheep>();
+
+            var allCheepsQuery = "SELECT username, text, pub_date FROM message JOIN user ON user_id = author_id";
+
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = allCheepsQuery;
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var user = reader.GetString(0);
+                var message = reader.GetString(1);
+                var unixTime = reader.GetInt64(2);
+
+                results.Add(new Cheep(user, message, unixTime));
+            }
+
+            return results;
+        }
+    }
+
     public List<Cheep> GetCheeps(int pageNumber)
     {
         var pageSize = 32;
@@ -73,11 +98,38 @@ public class DBFacade
         }
     }
 
-    public List<Cheep> GetCheepsFromAuthor(string author)
+    public List<Cheep> GetCheepsFromAuthor(int pageNumber, string username)
     {
-        // Mangler logikken for den enkelte 'author'
+        var pageSize = 32;
 
-        return new List<Cheep>();
+        using (connection)
+        {
+            var results = new List<Cheep>();
+
+            var lowerBound = (pageNumber - 1) * pageSize;
+            var pageQuery =
+                "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id WHERE u.username = @username ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
+
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = pageQuery;
+
+            command.Parameters.AddWithValue("@pageSize", pageSize);
+            command.Parameters.AddWithValue("@lowerBound", lowerBound);
+            command.Parameters.AddWithValue("@username", username);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var user = reader.GetString(0);
+                var message = reader.GetString(1);
+                var unixTime = reader.GetInt64(2);
+
+                results.Add(new Cheep(user, message, unixTime));
+            }
+
+            return results;
+        }
     }
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)

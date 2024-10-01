@@ -28,7 +28,9 @@ public class CheepService : ICheepService
 
     public List<Cheep> GetCheepsFromAuthor(string author, int pageNumber)
     {
+        var results = facade.GetCheepsFromAuthor(pageNumber, author);
+        return results;
         // filter by the provided author name
-        return GetCheeps(pageNumber).Where(x => x.Author == author).ToList();
+        //var cheepSort = results.Where(x => x.Author == author).ToList();
     }
 }
