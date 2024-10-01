@@ -1,4 +1,3 @@
-using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace Chirp.Razor;
@@ -6,6 +5,8 @@ namespace Chirp.Razor;
 public class DBFacade
 {
     private const string sqlGetCheeps = "SELECT username, text, pub_date FROM message JOIN user ON user_id = author_id";
+    //Vi skal ike have alle cheeps på samme tid mere, kun 32 stk ad gangen
+    // var sqlQuery = @"SELECT * FROM message ORDER by message.pub_date desc";
 
     private readonly SqliteConnection connection;
     //private const string sqlGetAuthor = 
@@ -22,21 +23,48 @@ public class DBFacade
         connection.Open();
     }
 
-    public List<Cheep> GetCheeps()
+    public List<Cheep> GetCheeps(int pageNumber)
     {
-        var result = new List<Cheep>();
-        var command = connection.CreateCommand();
-        command.CommandText = sqlGetCheeps;
+        var pageSize = 32;
 
-        using var reader = command.ExecuteReader();
-        while (reader.Read())
+        using (connection)
         {
-            var dataRecord = (IDataRecord)reader;
-            result.Add(new Cheep(dataRecord[0].ToString(), dataRecord[1].ToString(),
-                (long)dataRecord[2])); // Tjek at den viser unix ordentligt på hjemmeside
-        }
+            var results = new List<Cheep>();
 
-        return result;
+            var lowerBound = (pageNumber - 1) * pageSize;
+            var pageQuery = "SELECT * FROM Cheeps ORDER BY CreatedDate DESC LIMIT {pageSize} OFFSET {lowerBound}";
+
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = pageQuery;
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var user = reader.GetString(0);
+                var message = reader.GetString(1);
+                var unixTime = reader.GetInt64(2);
+
+                results.Add(new Cheep(user, message, unixTime));
+            }
+
+            return results;
+            /*
+            var result = new List<Cheep>();
+            var command = connection.CreateCommand();
+            command.CommandText = sqlGetCheeps; // husk at indsætte den rigtige query
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var dataRecord = (IDataRecord)reader;
+                result.Add(new Cheep(dataRecord[0].ToString(), dataRecord[1].ToString(),
+                    (long)dataRecord[2])); // Tjek at den viser unix ordentligt på hjemmeside
+            }
+
+            return result;
+            */
+        }
     }
 
     public List<Cheep> GetCheepsFromAuthor(string author)
