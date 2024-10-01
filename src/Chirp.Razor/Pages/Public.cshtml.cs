@@ -5,17 +5,21 @@ namespace Chirp.Razor.Pages;
 
 public class PublicModel : PageModel
 {
+    private const int PageSize = 32;
     private readonly ICheepService _service;
-    public List<CheepViewModel> Cheeps { get; set; }
 
     public PublicModel(ICheepService service)
     {
         _service = service;
     }
 
-    public ActionResult OnGet()
+    public List<Cheep> Cheeps { get; set; }
+
+
+    public ActionResult OnGet([FromQuery] int? page)
     {
-        Cheeps = _service.GetCheeps();
+        var currentPage = page ?? 1; // Default to page 1 if no page parameter
+        Cheeps = _service.GetCheeps(currentPage);
         return Page();
     }
 }

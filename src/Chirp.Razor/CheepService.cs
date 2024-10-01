@@ -1,37 +1,36 @@
-public record CheepViewModel(string Author, string Message, string Timestamp);
+using Chirp.Razor;
+using DBFacade = Chirp.Razor.DBFacade;
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps();
-    public List<CheepViewModel> GetCheepsFromAuthor(string author);
+    public List<Cheep> GetCheeps(int pageNumber);
+
+    public List<Cheep> GetCheepsFromAuthor(string author, int pageNumber);
 }
 
 public class CheepService : ICheepService
 {
-    // These would normally be loaded from a database for example
-    private static readonly List<CheepViewModel> _cheeps = new()
-        {
-            new CheepViewModel("Helge", "Hello, BDSA students!", UnixTimeStampToDateTimeString(1690892208)),
-            new CheepViewModel("Adrian", "Hej, velkommen til kurset.", UnixTimeStampToDateTimeString(1690895308)),
-        };
+    private readonly DBFacade facade;
 
-    public List<CheepViewModel> GetCheeps()
+    public CheepService()
     {
-        return _cheeps;
+        facade = new DBFacade();
+        facade.Open();
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+
+    public List<Cheep> GetCheeps(int pageNumber)
     {
+        var results = facade.GetCheeps(pageNumber);
+
+        return results;
+    }
+
+    public List<Cheep> GetCheepsFromAuthor(string author, int pageNumber)
+    {
+        var results = facade.GetCheepsFromAuthor(pageNumber, author);
+        return results;
         // filter by the provided author name
-        return _cheeps.Where(x => x.Author == author).ToList();
+        //var cheepSort = results.Where(x => x.Author == author).ToList();
     }
-
-    private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
-    {
-        // Unix timestamp is seconds past epoch
-        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        dateTime = dateTime.AddSeconds(unixTimeStamp);
-        return dateTime.ToString("MM/dd/yy H:mm:ss");
-    }
-
 }
