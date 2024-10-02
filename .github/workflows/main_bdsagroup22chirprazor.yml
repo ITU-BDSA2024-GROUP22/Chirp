@@ -22,16 +22,16 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build src/Chirp.Razor/Chirp.Razor.csproj -c Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish src/Chirp.Razor/Chirp.Razor.csproj -c Release
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: src/Chirp.Razor/bin/Release/net8.0/publish/
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,15 +47,22 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+          path: ./deploy
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_67E586426F554E8EB8479F9DCA40C659 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0B1C4E871F8146CBB3FCEC405A84E424 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_92DB0AA47447431EBE3589AABBCEABEC }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6628DA30A917496AB1F6BFB3415DB986 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6449BD1A77184B59914C6A5D3543A9DF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F4CE60902F2644658A21CDCD4BA979B2 }}
 
       - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'bdsagroup22chirpremotedb'
+          slot-name: 'Production'
+          package: ./deploy
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
