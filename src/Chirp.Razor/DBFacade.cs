@@ -137,11 +137,12 @@ public class DBFacade
         }
     }
 
-    private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
+    public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
         var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds(unixTimeStamp);
-        return dateTime.ToString("MM/dd/yy H:mm:ss");
+        var newdateTime = dateTime.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+        return newdateTime;
     }
 }
