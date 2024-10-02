@@ -136,12 +136,41 @@ public class DBFacade
             return results;
         }
     }
+    //Metode der returnerer alle cheeps en author (user) har skrevet
+    public List<Cheep> GetAllCheepsFromAuthor(string username)
+    {
+        using (connection)
+        {
+            var results = new List<Cheep>();
 
-    private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
+            var allCheepsQuery = "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id WHERE u.username = @username ORDER BY m.pub_date DESC ";
+
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = allCheepsQuery;
+            command.Parameters.AddWithValue("@username", username);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var user = reader.GetString(0);
+                var message = reader.GetString(1);
+                var unixTime = reader.GetInt64(2);
+
+                results.Add(new Cheep(user, message, unixTime));
+            }
+
+            return results;
+        }
+    }
+
+
+    public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
         var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds(unixTimeStamp);
-        return dateTime.ToString("MM/dd/yy H:mm:ss");
+        var newdateTime = dateTime.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+        return newdateTime;
     }
 }
