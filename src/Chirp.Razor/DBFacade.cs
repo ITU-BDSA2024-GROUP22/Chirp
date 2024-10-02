@@ -1,4 +1,6 @@
+using System.Reflection;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.FileProviders;
 
 namespace Chirp.Razor;
 
@@ -13,24 +15,27 @@ public class DBFacade
         var sqlDBFilePath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? "/tmp/chirp.db";
         connection =
             new SqliteConnection($"Data Source={sqlDBFilePath}"); //vi har nu en connection til en database
-        CreateDB(sqlDBFilePath);
+        CreateDB("data/schema.sql");
+        CreateDB("data/dump.sql");
     }
 
-    private void CreateDB(string sqlDBFilePath)
+    private void CreateDB(string sqlPath)
     {
-        var schemaSQL = File.ReadAllText("data/schema.sql");
-        ExecuteQuery(schemaSQL);
+        var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+        using var reader = embeddedProvider.GetFileInfo(sqlPath).CreateReadStream();
+        using var sr = new StreamReader(reader);
 
-        var dumpSQL = File.ReadAllText("data/dump.sql");
-        ExecuteQuery(dumpSQL);
+        var query = sr.ReadToEnd();
+
+        ExecuteQuery(query);
     }
 
-    private void ExecuteQuery(string sqlFile)
+    private void ExecuteQuery(string sqlQuery)
     {
         connection.Open();
         var command = connection.CreateCommand();
 
-        command.CommandText = sqlFile;
+        command.CommandText = sqlQuery;
         command.ExecuteNonQuery();
     }
 
