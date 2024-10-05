@@ -39,8 +39,6 @@ public class DBFacade
 
         command.CommandText = sqlQuery;
         command.ExecuteNonQuery();
-
-        Close();
     }
 
     public void Open()
@@ -75,7 +73,6 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
-            Close();
             return results;
         }
     }
@@ -90,7 +87,7 @@ public class DBFacade
             var pageQuery =
                 "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
 
-            //Open();
+            Open();
             var command = connection.CreateCommand();
             command.CommandText = pageQuery;
 
@@ -107,7 +104,6 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
-            //Close();
             return results;
         }
     }
@@ -117,17 +113,12 @@ public class DBFacade
         using (connection)
         {
             var results = new List<Cheep>();
-
-            Console.WriteLine("pagenumber" + pageNumber);
-
             var lowerBound = (pageNumber - 1) * pageSize;
-
-            Console.WriteLine("lowerBound" + lowerBound);
 
             var authorPageQuery =
                 "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id WHERE u.username = @username ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
 
-            //Open();
+            Open();
             var command = connection.CreateCommand();
             command.CommandText = authorPageQuery;
 
@@ -145,7 +136,6 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
-            //Close();
             return results;
         }
     }
@@ -175,7 +165,6 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
-            Close();
             return results;
         }
     }
