@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.FileProviders;
@@ -9,6 +10,7 @@ public class DBFacade
     // var sqlQuery = @"SELECT * FROM message ORDER by message.pub_date desc";
 
     private readonly SqliteConnection connection;
+    private readonly int pageSize = 32;
 
     public DBFacade()
     {
@@ -32,16 +34,23 @@ public class DBFacade
 
     private void ExecuteQuery(string sqlQuery)
     {
-        connection.Open();
+        Open();
         var command = connection.CreateCommand();
 
         command.CommandText = sqlQuery;
         command.ExecuteNonQuery();
+
+        Close();
     }
 
     public void Open()
     {
         connection.Open();
+    }
+
+    public void Close()
+    {
+        connection.Close();
     }
 
     public List<Cheep> GetAllCheeps()
@@ -52,7 +61,7 @@ public class DBFacade
 
             var allCheepsQuery = "SELECT username, text, pub_date FROM message JOIN user ON user_id = author_id";
 
-            connection.Open();
+            Open();
             var command = connection.CreateCommand();
             command.CommandText = allCheepsQuery;
 
@@ -66,14 +75,13 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
+            Close();
             return results;
         }
     }
 
     public List<Cheep> GetCheeps(int pageNumber)
     {
-        var pageSize = 32;
-
         using (connection)
         {
             var results = new List<Cheep>();
@@ -82,7 +90,7 @@ public class DBFacade
             var pageQuery =
                 "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
 
-            connection.Open();
+            //Open();
             var command = connection.CreateCommand();
             command.CommandText = pageQuery;
 
@@ -99,25 +107,29 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
+            //Close();
             return results;
         }
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, string username)
     {
-        var pageSize = 32;
-
         using (connection)
         {
             var results = new List<Cheep>();
 
+            Console.WriteLine("pagenumber" + pageNumber);
+
             var lowerBound = (pageNumber - 1) * pageSize;
-            var pageQuery =
+
+            Console.WriteLine("lowerBound" + lowerBound);
+
+            var authorPageQuery =
                 "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id WHERE u.username = @username ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
 
-            connection.Open();
+            //Open();
             var command = connection.CreateCommand();
-            command.CommandText = pageQuery;
+            command.CommandText = authorPageQuery;
 
             command.Parameters.AddWithValue("@pageSize", pageSize);
             command.Parameters.AddWithValue("@lowerBound", lowerBound);
@@ -133,9 +145,11 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
+            //Close();
             return results;
         }
     }
+
     //Metode der returnerer alle cheeps en author (user) har skrevet
     public List<Cheep> GetAllCheepsFromAuthor(string username)
     {
@@ -143,9 +157,10 @@ public class DBFacade
         {
             var results = new List<Cheep>();
 
-            var allCheepsQuery = "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id WHERE u.username = @username ORDER BY m.pub_date DESC ";
+            var allCheepsQuery =
+                "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id WHERE u.username = @username ORDER BY m.pub_date DESC ";
 
-            connection.Open();
+            Open();
             var command = connection.CreateCommand();
             command.CommandText = allCheepsQuery;
             command.Parameters.AddWithValue("@username", username);
@@ -160,6 +175,7 @@ public class DBFacade
                 results.Add(new Cheep(user, message, unixTime));
             }
 
+            Close();
             return results;
         }
     }
@@ -170,7 +186,7 @@ public class DBFacade
         // Unix timestamp is seconds past epoch
         var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds(unixTimeStamp);
-        var newdateTime = dateTime.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+        var newdateTime = dateTime.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture);
         return newdateTime;
     }
 }
