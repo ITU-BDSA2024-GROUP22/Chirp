@@ -1,3 +1,9 @@
 namespace Chirp.Razor;
 
-public record Cheep(string Author, string Message, long Timestamp);
+public class Cheep
+{
+    string text { get; set; }
+    DateTime timeStamp { get; set; }
+    int authorID { get; set; }
+    Author author { get; set; }
+}
