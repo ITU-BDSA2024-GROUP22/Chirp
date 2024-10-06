@@ -2,8 +2,9 @@ namespace Chirp.Razor;
 
 public class Cheep
 {
-    string text { get; set; }
-    DateTime timeStamp { get; set; }
-    int authorID { get; set; }
-    Author author { get; set; }
+    public Author author { get; set; }
+    public string text { get; set; }
+    public DateTime timeStamp { get; set; }
+    public int authorID { get; set; }
+
 }

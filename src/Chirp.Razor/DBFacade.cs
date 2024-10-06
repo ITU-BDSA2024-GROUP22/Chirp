@@ -66,11 +66,12 @@ public class DBFacade
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                var user = reader.GetString(0);
+                Author user = reader.GetString(0);
                 var message = reader.GetString(1);
                 var unixTime = reader.GetInt64(2);
 
-                results.Add(new Cheep(user, message, unixTime));
+                //results.Add(new Cheep(user, message, unixTime));
+                Cheep user1 = new Cheep() { author = user, text = message, timeStamp = unixTime };
             }
 
             return results;
