@@ -4,8 +4,8 @@ namespace Chirp.Razor;
 
 public class DBContext(DbContextOptions<DBContext> options) : DbContext(options)
 {
-    DbSet<Cheep> messages { get; set; }
-    DbSet<Author> users { get; set; }
+    public static DbSet<Cheep> messages { get; set; }
+    public static DbSet<Author> users { get; set; }
 
 
 

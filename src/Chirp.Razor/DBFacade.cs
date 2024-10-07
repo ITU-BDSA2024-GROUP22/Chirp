@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
 namespace Chirp.Razor;
@@ -86,9 +87,18 @@ public class DBFacade
             var results = new List<Cheep>();
 
             var lowerBound = (pageNumber - 1) * pageSize;
-            var pageQuery =
-                "SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
+            //var pageQuery =
+                //"SELECT u.username, m.text, m.pub_date FROM message m JOIN user u ON m.author_id = u.user_id ORDER BY m.pub_date DESC LIMIT @pageSize OFFSET @lowerBound";
 
+            var pageQuery = DBContext.messages
+                .Include(c => c.author)
+                .OrderByDescending(c => c.timeStamp) // Sort by pub_date (TimeStamp in Cheep)
+                .Skip((pageNumber - 1) * pageSize) // Skip items for pagination
+                .Take(pageSize) // Limit results to pageSize
+                .ToList();
+
+            return pageQuery;
+            /*
             Open();
             var command = connection.CreateCommand();
             command.CommandText = pageQuery;
@@ -107,6 +117,7 @@ public class DBFacade
             }
 
             return results;
+            */
         }
     }
 
