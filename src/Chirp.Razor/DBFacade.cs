@@ -12,6 +12,8 @@ public class DBFacade
     private readonly SqliteConnection connection;
     private readonly int pageSize = 32;
 
+
+
     public DBFacade()
     {
         var sqlDBFilePath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? "/tmp/chirp.db";
@@ -66,12 +68,11 @@ public class DBFacade
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                Author user = reader.GetString(0);
+                var user = reader.GetString(0);
                 var message = reader.GetString(1);
                 var unixTime = reader.GetInt64(2);
 
-                //results.Add(new Cheep(user, message, unixTime));
-                Cheep user1 = new Cheep() { author = user, text = message, timeStamp = unixTime };
+                addCheep(user, message, unixTime, results);
             }
 
             return results;
@@ -102,7 +103,7 @@ public class DBFacade
                 var message = reader.GetString(1);
                 var unixTime = reader.GetInt64(2);
 
-                results.Add(new Cheep(user, message, unixTime));
+                addCheep(user, message, unixTime, results);
             }
 
             return results;
@@ -134,7 +135,7 @@ public class DBFacade
                 var message = reader.GetString(1);
                 var unixTime = reader.GetInt64(2);
 
-                results.Add(new Cheep(user, message, unixTime));
+                addCheep(user, message, unixTime, results);
             }
 
             return results;
@@ -163,7 +164,7 @@ public class DBFacade
                 var message = reader.GetString(1);
                 var unixTime = reader.GetInt64(2);
 
-                results.Add(new Cheep(user, message, unixTime));
+                addCheep(user, message, unixTime, results);
             }
 
             return results;
@@ -178,5 +179,13 @@ public class DBFacade
         dateTime = dateTime.AddSeconds(unixTimeStamp);
         var newdateTime = dateTime.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture);
         return newdateTime;
+    }
+
+    public void addCheep(string user, string message, long unixTime, List<Cheep> results)
+    {
+        Author author = new Author { name = user };
+        DateTime timestamp = DateTimeOffset.FromUnixTimeSeconds(unixTime).DateTime;
+        Cheep cheep = new Cheep() { author = author, text = message, timeStamp = timestamp };
+        results.Add(cheep);
     }
 }
