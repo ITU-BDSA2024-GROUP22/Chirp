@@ -23,6 +23,7 @@ public class CheepRepository : ICheepRepository
                 select cheep)
             .Include(c => c.Author)
             .Skip(pageNumber * 32).Take(32);
+
         var result = await pageQuery.ToListAsync();
 
         return result;
@@ -34,14 +35,33 @@ public class CheepRepository : ICheepRepository
 
         var pageQuery = (from cheep in _dbContext.Cheeps
                 where cheep.Author.Name == username // Filter by the author's name
-                orderby cheep.TimeStamp descending
-                select cheep)
-            .Include(c => c.Author)
-            .Skip(lowerBound) // Use lowerBound instead of pageNumber * pageSize
-            .Take(pageSize);
+                orderby (cheep.TimeStamp) descending
+                .Include(c => c.Author)
+                .Skip(lowerBound) // Use lowerBound instead of pageNumber * pageSize
+                .Take(pageSize)
+                .Select (cheep => new CheepDTO()
+                    {
+                        Author = cheep.Author.Name,
+                        Text = cheep.Text,
+                        TimeStamp = cheep.TimeStamp.toString(),
+                    });
+
 
         var result = await pageQuery.ToListAsync();
         return result;
+    }
+
+    public class CheepDTO
+    {
+        public string Author {get; set;}
+        public string Text {get; set;}
+        public string TimeStamp {get; set;}
+    }
+
+    public class AuthorDTO
+    {
+        public string Name {get; set;}
+        public string Email {get; set;}
     }
 }
 
