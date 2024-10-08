@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
@@ -29,7 +30,7 @@ public class CheepRepository : ICheepRepository
             {
                 Author = cheep.Author.Name,
                 Text = cheep.Text,
-                TimeStamp = cheep.TimeStamp.ToString(),
+                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
             });
 
         var result = await pageQuery.ToListAsync();
@@ -52,7 +53,7 @@ public class CheepRepository : ICheepRepository
             {
                 Author = cheep.Author.Name,
                 Text = cheep.Text,
-                TimeStamp = cheep.TimeStamp.ToString(),
+                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
 
         var result = await pageQuery.ToListAsync();
