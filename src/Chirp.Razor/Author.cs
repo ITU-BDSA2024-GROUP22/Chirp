@@ -2,7 +2,8 @@ namespace Chirp.Razor;
 
 public class Author
 {
-    public string name { get; set; }
-    public string email { get; set; }
-    public ICollection<Cheep> cheeps { get; set; }
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public ICollection<Cheep> Cheeps { get; set; }
+    public int AuthorId { get; set; }
 }

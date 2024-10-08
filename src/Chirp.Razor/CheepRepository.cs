@@ -17,10 +17,10 @@ public class CheepRepository : ICheepRepository
     public async Task<List<Cheep>> GetCheeps(int pageNumber)
     {
         var lowerBound = (pageNumber - 1) * pageSize;
-        var pageQuery = (from cheep in DBContext.messages
-                orderby cheep.timeStamp descending
+        var pageQuery = (from cheep in _dbContext.messages
+                orderby cheep.TimeStamp descending
                 select cheep)
-            .Include(c => c.author)
+            .Include(c => c.Author)
             .Skip(pageNumber * 32).Take(32);
         var result = await pageQuery.ToListAsync();
 
@@ -31,11 +31,11 @@ public class CheepRepository : ICheepRepository
     {
         var lowerBound = (pageNumber - 1) * pageSize;
 
-        var pageQuery = (from cheep in DBContext.messages
-                where cheep.author.name == username // Filter by the author's name
-                orderby cheep.timeStamp descending
+        var pageQuery = (from cheep in _dbContext.messages
+                where cheep.Author.Name == username // Filter by the author's name
+                orderby cheep.TimeStamp descending
                 select cheep)
-            .Include(c => c.author)
+            .Include(c => c.Author)
             .Skip(lowerBound) // Use lowerBound instead of pageNumber * pageSize
             .Take(pageSize);
 

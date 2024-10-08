@@ -8,16 +8,15 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddRazorPages();
-        builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+        builder.Services.AddScoped<CheepRepository>();
         //builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
-// Load database connection via configuration
+        // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
-
+        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString)); // we might need different path
         var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+        // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");

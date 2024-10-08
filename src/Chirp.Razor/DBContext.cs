@@ -2,9 +2,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Razor;
 
-public class DBContext(DbContextOptions<DBContext> options) : DbContext(options)
+public class DBContext : DbContext
 {
-    public static DbSet<Cheep> messages { get; set; }
-    public static DbSet<Author> users { get; set; }
+    public DbSet<Cheep> messages { get; set; }
+    public DbSet<Author> users { get; set; }
+
+    public DBContext(DbContextOptions<DBContext> options) : base(options)
+    {
+
+    }
 
 }
