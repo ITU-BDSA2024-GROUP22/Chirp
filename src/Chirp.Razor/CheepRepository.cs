@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
@@ -23,12 +24,13 @@ public class CheepRepository : ICheepRepository
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
-            .Skip(pageNumber * 32).Take(32)
+            .Skip(lowerBound)
+            .Take(pageSize)
             .Select(cheep => new CheepDTO
             {
                 Author = cheep.Author.Name,
                 Text = cheep.Text,
-                TimeStamp = cheep.TimeStamp.ToString(),
+                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
             });
 
         var result = await pageQuery.ToListAsync();
@@ -51,7 +53,7 @@ public class CheepRepository : ICheepRepository
             {
                 Author = cheep.Author.Name,
                 Text = cheep.Text,
-                TimeStamp = cheep.TimeStamp.ToString(),
+                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
 
         var result = await pageQuery.ToListAsync();
