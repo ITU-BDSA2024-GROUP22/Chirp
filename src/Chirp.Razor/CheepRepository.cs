@@ -23,7 +23,8 @@ public class CheepRepository : ICheepRepository
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
-            .Skip(pageNumber * 32).Take(32)
+            .Skip(lowerBound)
+            .Take(pageSize)
             .Select(cheep => new CheepDTO
             {
                 Author = cheep.Author.Name,
