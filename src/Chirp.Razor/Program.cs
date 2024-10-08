@@ -7,15 +7,13 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddRazorPages();
+        builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+        //builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
-
-// Add services to the container.
-        builder.Services.AddRazorPages();
-        builder.Services.AddSingleton<ICheepService, CheepService>();
-
 
         var app = builder.Build();
 
