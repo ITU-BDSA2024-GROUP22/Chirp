@@ -13,7 +13,7 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public Task<List<Cheep>> Cheeps { get; set; }
+    public Task<List<CheepRepository.CheepDTO>> Cheeps { get; set; }
 
 
     public ActionResult OnGet([FromQuery] int? page)

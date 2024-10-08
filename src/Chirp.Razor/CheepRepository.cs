@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Chirp.Razor;
 
@@ -15,20 +16,27 @@ public class CheepRepository : ICheepRepository
         _dbContext = dbContext;
     }
 
-    public async Task<List<Cheep>> GetCheeps(int pageNumber)
+    public async Task<List<CheepDTO>> GetCheeps(int pageNumber)
     {
         var lowerBound = (pageNumber - 1) * pageSize;
         var pageQuery = (from cheep in _dbContext.Cheeps
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
-            .Skip(pageNumber * 32).Take(32);
+            .Skip(pageNumber * 32).Take(32)
+            .Select(cheep => new CheepDTO
+            {
+                Author = cheep.Author.Name,
+                Text = cheep.Text,
+                TimeStamp = cheep.TimeStamp.ToString(),
+            });
+
         var result = await pageQuery.ToListAsync();
 
         return result;
     }
 
-    public async Task<List<Cheep>> GetCheepsFromAuthor(int pageNumber, string username)
+    public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * pageSize;
 
@@ -38,10 +46,29 @@ public class CheepRepository : ICheepRepository
                 select cheep)
             .Include(c => c.Author)
             .Skip(lowerBound) // Use lowerBound instead of pageNumber * pageSize
-            .Take(pageSize);
+            .Take(pageSize)
+            .Select(cheep => new CheepDTO
+            {
+                Author = cheep.Author.Name,
+                Text = cheep.Text,
+                TimeStamp = cheep.TimeStamp.ToString(),
+            });
 
         var result = await pageQuery.ToListAsync();
         return result;
+    }
+
+    public class CheepDTO
+    {
+        public string Author {get; set;}
+        public string Text {get; set;}
+        public string TimeStamp {get; set;}
+    }
+
+    public class AuthorDTO
+    {
+        public string Name {get; set;}
+        public string Email {get; set;}
     }
 }
 
