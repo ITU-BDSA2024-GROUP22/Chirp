@@ -5,7 +5,7 @@ public static class DbInitializer
 {
     public static void SeedDatabase(DBContext chirpContext)
     {
-        if (!(chirpContext.users.Any() && chirpContext.messages.Any()))
+        if (!(chirpContext.Authors.Any() && chirpContext.Cheeps.Any()))
         {
             var a1 = new Author() { AuthorId = 1, Name = "Roger Histand", Email = "Roger+Histand@hotmail.com", Cheeps = new List<Cheep>() };
             var a2 = new Author() { AuthorId = 2, Name = "Luanna Muro", Email = "Luanna-Muro@ku.dk", Cheeps = new List<Cheep>() };
@@ -694,8 +694,8 @@ public static class DbInitializer
             a11.Cheeps = new List<Cheep>() { c656 };
             a12.Cheeps = new List<Cheep>() { c657 };
 
-            chirpContext.users.AddRange(authors);
-            chirpContext.messages.AddRange(cheeps);
+            chirpContext.Authors.AddRange(authors);
+            chirpContext.Cheeps.AddRange(cheeps);
             chirpContext.SaveChanges();
         }
     }

@@ -24,6 +24,13 @@ public class Program
             app.UseHsts();
         }
 
+        using (var scope = app.Services.CreateScope())
+        {
+            var _dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
+            _dbContext.Database.EnsureCreated();
+            DbInitializer.SeedDatabase(_dbContext);
+        }
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 

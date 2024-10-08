@@ -9,6 +9,7 @@ public class CheepRepository : ICheepRepository
     private readonly int pageSize = 32;
     private readonly DBContext _dbContext;
 
+
     public CheepRepository(DBContext dbContext)
     {
         _dbContext = dbContext;
@@ -17,7 +18,7 @@ public class CheepRepository : ICheepRepository
     public async Task<List<Cheep>> GetCheeps(int pageNumber)
     {
         var lowerBound = (pageNumber - 1) * pageSize;
-        var pageQuery = (from cheep in _dbContext.messages
+        var pageQuery = (from cheep in _dbContext.Cheeps
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
@@ -31,7 +32,7 @@ public class CheepRepository : ICheepRepository
     {
         var lowerBound = (pageNumber - 1) * pageSize;
 
-        var pageQuery = (from cheep in _dbContext.messages
+        var pageQuery = (from cheep in _dbContext.Cheeps
                 where cheep.Author.Name == username // Filter by the author's name
                 orderby cheep.TimeStamp descending
                 select cheep)
