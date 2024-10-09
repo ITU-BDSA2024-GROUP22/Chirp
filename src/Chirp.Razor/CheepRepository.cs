@@ -4,7 +4,13 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Chirp.Razor;
 
-public interface ICheepRepository;
+public interface ICheepRepository
+{
+    public Task<List<CheepRepository.CheepDTO>> GetCheeps(int pageNumber);
+    public Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username);
+    public Author GetAuthorByName(String name);
+
+}
 
 public class CheepRepository : ICheepRepository
 {
@@ -58,6 +64,11 @@ public class CheepRepository : ICheepRepository
 
         var result = await pageQuery.ToListAsync();
         return result;
+    }
+
+    public Author GetAuthorByName(String name)
+    {
+        return _dbContext.Authors.SingleOrDefault(a => a.Name == name);
     }
 
     public class CheepDTO
