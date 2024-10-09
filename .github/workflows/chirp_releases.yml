@@ -1,15 +1,18 @@
 name: Publish Chirp
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
 
 jobs:
   release:
     name: Release
     strategy:
       matrix:
-        kind: ['linux']
+        kind: ['linux', 'windows', 'macOS']
         include:
           - kind: linux
             os: ubuntu-latest
