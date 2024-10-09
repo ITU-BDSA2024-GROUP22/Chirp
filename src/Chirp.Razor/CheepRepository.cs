@@ -8,7 +8,7 @@ public interface ICheepRepository
 {
     public Task<List<CheepRepository.CheepDTO>> GetCheeps(int pageNumber);
     public Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username);
-    public Author GetAuthorByName(String name)
+    public Author GetAuthorByName(String name);
 
 }
 
