@@ -12,7 +12,6 @@ public interface ICheepRepository
     public Author GetAuthorByEmail(String name);
     public void CreateAuthor(string name, string email);
     public void CreateCheep(Author author, string text, DateTime timeStamp);
-    //test merge tags
 }
 
 public class CheepRepository : ICheepRepository
@@ -24,6 +23,7 @@ public class CheepRepository : ICheepRepository
     public CheepRepository(DBContext dbContext)
     {
         _dbContext = dbContext;
+        //DB context is the best
     }
 
     public async Task<List<CheepDTO>> GetCheeps(int pageNumber)
