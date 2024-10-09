@@ -9,6 +9,7 @@ public interface ICheepRepository
     public Task<List<CheepRepository.CheepDTO>> GetCheeps(int pageNumber);
     public Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username);
     public Author GetAuthorByName(String name);
+    public Author GetAuthorByEmail(String name);
 
 }
 
@@ -69,6 +70,11 @@ public class CheepRepository : ICheepRepository
     public Author GetAuthorByName(String name)
     {
         return _dbContext.Authors.SingleOrDefault(a => a.Name == name);
+    }
+
+    public Author GetAuthorByEmail(String name)
+    {
+        return _dbContext.Authors.SingleOrDefault(a => a.Email == name);
     }
 
     public class CheepDTO
