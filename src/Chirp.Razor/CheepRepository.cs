@@ -11,6 +11,7 @@ public interface ICheepRepository
     public Author GetAuthorByName(String name);
     public Author GetAuthorByEmail(String name);
     public void CreateAuthor(string name, string email);
+    public void CreateCheep(Author author, string text, DateTime timeStamp);
 
 }
 
@@ -82,6 +83,13 @@ public class CheepRepository : ICheepRepository
     {
         Author author = new (){Name = name, Email = email};
         await _dbContext.Authors.AddAsync(author);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async void CreateCheep(Author author, string text, DateTime timeStamp)
+    {
+        Cheep cheep = new (){Author = author, Text = text, TimeStamp = timeStamp};
+        await _dbContext.Cheeps.AddAsync(cheep);
         await _dbContext.SaveChangesAsync();
     }
 
