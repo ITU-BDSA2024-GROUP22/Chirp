@@ -12,7 +12,6 @@ public interface ICheepRepository
     public Author GetAuthorByEmail(String name);
     public void CreateAuthor(string name, string email);
     public void CreateCheep(Author author, string text, DateTime timeStamp);
-    //test
 
 }
 
