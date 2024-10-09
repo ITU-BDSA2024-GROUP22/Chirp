@@ -10,6 +10,7 @@ public interface ICheepRepository
     public Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username);
     public Author GetAuthorByName(String name);
     public Author GetAuthorByEmail(String name);
+    public void CreateAuthor(string name, string email);
 
 }
 
@@ -67,14 +68,21 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public Author GetAuthorByName(String name)
+    public Author GetAuthorByName(string name)
     {
         return _dbContext.Authors.SingleOrDefault(a => a.Name == name);
     }
 
-    public Author GetAuthorByEmail(String name)
+    public Author GetAuthorByEmail(string name)
     {
         return _dbContext.Authors.SingleOrDefault(a => a.Email == name);
+    }
+
+    public async void CreateAuthor(string name, string email) //Add id when in use
+    {
+        Author author = new (){Name = name, Email = email};
+        await _dbContext.Authors.AddAsync(author);
+        await _dbContext.SaveChangesAsync();
     }
 
     public class CheepDTO
