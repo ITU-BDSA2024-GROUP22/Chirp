@@ -71,12 +71,26 @@ public class CheepRepository : ICheepRepository
 
     public Author GetAuthorByName(string name)
     {
-        return _dbContext.Authors.SingleOrDefault(a => a.Name == name);
+        var author =  _dbContext.Authors.SingleOrDefault(a => a.Name == name);
+
+        if (author == null)
+        {
+            throw new KeyNotFoundException($"No author with name {name} was found.");
+        }
+
+        return author;
     }
 
     public Author GetAuthorByEmail(string name)
     {
-        return _dbContext.Authors.SingleOrDefault(a => a.Email == name);
+        var author = _dbContext.Authors.SingleOrDefault(a => a.Email == name);
+
+        if (author == null)
+        {
+            throw new KeyNotFoundException($"No author with name {name} was found.");
+        }
+
+        return author;
     }
 
     public async void CreateAuthor(string name, string email) //Add id when in use
@@ -95,15 +109,15 @@ public class CheepRepository : ICheepRepository
 
     public class CheepDTO
     {
-        public string Author {get; set;}
-        public string Text {get; set;}
-        public string TimeStamp {get; set;}
+        public required string Author {get; set;}
+        public required string Text {get; set;}
+        public required string TimeStamp {get; set;}
     }
 
     public class AuthorDTO
     {
-        public string Name {get; set;}
-        public string Email {get; set;}
+        public required string Name {get; set;}
+        public required string Email {get; set;}
     }
 }
 
