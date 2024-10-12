@@ -1,5 +1,6 @@
 using Chirp.Core.DTOs;
-using Chirp.Razor;
+using Chirp.Infrastructure;
+using Chirp.Infrastructure.Repositories;
 
 public interface ICheepService
 {

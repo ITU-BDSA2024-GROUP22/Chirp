@@ -18,6 +18,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="Migrations\20241008070301_InitialDBSchema.cs" />
+        <Content Include="Migrations\20241008070301_InitialDBSchema.Designer.cs" />
+        <Content Include="Migrations\DBContextModelSnapshot.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <EmbeddedResource Include="data\dump.sql" />
       <EmbeddedResource Include="data\schema.sql" />
     </ItemGroup>
