@@ -17,7 +17,7 @@ jobs:
           ISSUE_BODY="${{ github.event.issue.body }}"
 
           # Initialize LABELS variable
-          LABELS=""
+          LABELS="unlabeled"
 
           # Check if the issue contains the keyword 'testing' in the title or body
           if echo "$ISSUE_TITLE" | grep -i "testing" || echo "$ISSUE_BODY" | grep -i "testing"; then
