@@ -1,18 +1,9 @@
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Chirp.Core.DTOs;
 
 namespace Chirp.Razor;
-
-public interface ICheepRepository
-{
-    public Task<List<CheepRepository.CheepDTO>> GetCheeps(int pageNumber);
-    public Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username);
-    public Author GetAuthorByName(String name);
-    public Author GetAuthorByEmail(String name);
-    public void CreateAuthor(string name, string email);
-    public void CreateCheep(Author author, string text, DateTime timeStamp);
-}
 
 public class CheepRepository : ICheepRepository
 {
@@ -107,17 +98,6 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public class CheepDTO
-    {
-        public required string Author {get; set;}
-        public required string Text {get; set;}
-        public required string TimeStamp {get; set;}
-    }
 
-    public class AuthorDTO
-    {
-        public required string Name {get; set;}
-        public required string Email {get; set;}
-    }
 }
 
