@@ -1,10 +1,11 @@
+using Chirp.Core.DTOs;
 using Chirp.Razor;
 
 public interface ICheepService
 {
-    public Task<List<CheepRepository.CheepDTO>> GetCheeps(int pageNumber);
+    public Task<List<CheepDTO>> GetCheeps(int pageNumber);
 
-    public Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber);
+    public Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber);
 }
 
 public class CheepService : ICheepService
@@ -20,14 +21,14 @@ public class CheepService : ICheepService
     }
 
 
-    public async Task<List<CheepRepository.CheepDTO>> GetCheeps(int pageNumber)
+    public async Task<List<CheepDTO>> GetCheeps(int pageNumber)
     {
         var results = cheepRepository.GetCheeps(pageNumber);
 
         return await results;
     }
 
-    public async Task<List<CheepRepository.CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber)
+    public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber)
     {
         var results = cheepRepository.GetCheepsFromAuthor(pageNumber, author);
         return await results;

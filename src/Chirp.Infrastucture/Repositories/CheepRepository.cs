@@ -1,9 +1,12 @@
 using System.Globalization;
+using Chirp.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Chirp.Core.DTOs;
+using Chirp.Core.Interfaces;
+using Chirp.Razor;
 
-namespace Chirp.Razor;
+namespace Chirp.Infrastructure.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
