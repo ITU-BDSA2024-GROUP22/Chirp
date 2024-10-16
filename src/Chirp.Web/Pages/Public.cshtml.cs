@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Chirp.Core.DTOs;
+using Chirp.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Chirp.Razor.Pages;
+namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
@@ -13,7 +15,7 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public Task<List<CheepRepository.CheepDTO>> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; }
 
 
     public ActionResult OnGet([FromQuery] int? page)

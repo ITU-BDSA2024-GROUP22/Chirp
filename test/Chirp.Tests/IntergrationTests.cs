@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Chirp.Tests;
-using Chirp.Razor;
+using Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 public class TestGetHttpClient : IClassFixture<WebApplicationFactory<Program>>

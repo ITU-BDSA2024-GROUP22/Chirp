@@ -43,8 +43,8 @@ jobs:
           release_name="Chirp-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish src/Chirp.Razor/Chirp.Razor.csproj --runtime "${{ matrix.target }}" -c Release -o "$release_name"
- 
+          dotnet publish src/Chirp.Web/Chirp.Web.csproj --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             # Pack to zip for Windows
@@ -52,7 +52,7 @@ jobs:
           else
             # Create a .tar.gz file
             tar czvf "${release_name}.tar.gz" "$release_name"
-            
+
             # Extract the .tar.gz file
             mkdir "${release_name}_extracted"
             tar -xzvf "${release_name}.tar.gz" -C "${release_name}_extracted"
