@@ -9,9 +9,8 @@ namespace Chirp.Infrastructure.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
-    private readonly int pageSize = 32;
+    private readonly int _pageSize = 32;
     private readonly DBContext _dbContext;
-
 
     public CheepRepository(DBContext dbContext)
     {
@@ -21,13 +20,13 @@ public class CheepRepository : ICheepRepository
 
     public async Task<List<CheepDTO>> GetCheeps(int pageNumber)
     {
-        var lowerBound = (pageNumber - 1) * pageSize;
+        var lowerBound = (pageNumber - 1) * _pageSize;
         var pageQuery = (from cheep in _dbContext.Cheeps
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
             .Skip(lowerBound)
-            .Take(pageSize)
+            .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
                 Author = cheep.Author.Name,
@@ -42,7 +41,7 @@ public class CheepRepository : ICheepRepository
 
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username)
     {
-        var lowerBound = (pageNumber - 1) * pageSize;
+        var lowerBound = (pageNumber - 1) * _pageSize;
 
         var pageQuery = (from cheep in _dbContext.Cheeps
                 where cheep.Author.Name == username // Filter by the author's name
@@ -50,7 +49,7 @@ public class CheepRepository : ICheepRepository
                 select cheep)
             .Include(c => c.Author)
             .Skip(lowerBound) // Use lowerBound instead of pageNumber * pageSize
-            .Take(pageSize)
+            .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
                 Author = cheep.Author.Name,

@@ -14,7 +14,7 @@ public class UserTimelineModel : PageModel
         _service = service;
     }
 
-    public Task<List<CheepDTO>> Cheeps { get; set; }
+    public required Task<List<CheepDTO>> Cheeps { get; set; }
 
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
