@@ -10,9 +10,16 @@ public class DBContext : DbContext
 
     public DBContext(DbContextOptions<DBContext> options) : base(options)
     {
-
     }
 
+    public override void Dispose()
+    {
+        base.Dispose();
+    }
 
+    public override ValueTask DisposeAsync()
+    {
+        return base.DisposeAsync();
+    }
 
 }
