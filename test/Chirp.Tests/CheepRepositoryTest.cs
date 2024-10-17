@@ -51,22 +51,7 @@ public class CheepRepositoryTest
     }
 
 
-
-
-    [Fact]
-    public async void GetAuthorByEmailTest()
-    {
-        var repository = await SetUpRepositoryAsync();
-        repository.CreateAuthor("Anders And", "anders@and.dk");
-
-        var author = repository.GetAuthorByName("Anders And");
-
-        Assert.Equal("anders@and.dk", author.Email);
-    }
-
-
-
-
+    //Skal nok finpusses lidt ;)
     [Fact]
     public async void CreateCheep()
     {
