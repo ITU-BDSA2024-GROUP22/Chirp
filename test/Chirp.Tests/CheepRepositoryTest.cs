@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Chirp.Core;
 using Chirp.Core.Interfaces;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
@@ -49,4 +50,35 @@ public class CheepRepositoryTest
         Assert.Throws<KeyNotFoundException>(() => repository.GetAuthorByName("Anna"));
     }
 
+
+
+
+    [Fact]
+    public async void GetAuthorByEmailTest()
+    {
+        var repository = await SetUpRepositoryAsync();
+        repository.CreateAuthor("Anders And", "anders@and.dk");
+
+        var author = repository.GetAuthorByName("Anders And");
+
+        Assert.Equal("anders@and.dk", author.Email);
+    }
+
+
+
+
+    [Fact]
+    public async void CreateCheep()
+    {
+        var repository = await SetUpRepositoryAsync();
+        //Create author first
+        repository.CreateAuthor("Anders And", "anders@and.dk");
+        var author = repository.GetAuthorByName("Anders And");
+
+        //Now create new cheep with the author
+        repository.CreateCheep(author, "Group 22 is so cool", DateTime.Now);
+
+        //Check if the Anders Ands page has cheeps now
+        Assert.NotNull(repository.GetCheepsFromAuthor(1, "Anders And"));
+    }
 }
