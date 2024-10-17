@@ -94,7 +94,7 @@ public class CheepRepository : ICheepRepository
 
     public async void CreateCheep(Author author, string text, DateTime timeStamp)
     {
-        Cheep cheep = new (){Author = author, Text = text, TimeStamp = timeStamp};
+        Cheep cheep = new (){ Author = author, Text = text, TimeStamp = timeStamp};
         await _dbContext.Cheeps.AddAsync(cheep);
         await _dbContext.SaveChangesAsync();
     }
