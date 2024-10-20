@@ -37,7 +37,7 @@ public class CheepRepositoryTest
     public async void CreateAuthor()
     {
         var repository = await SetUpRepositoryAsync();
-        repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = repository.GetAuthorByName("Anders And");
         Assert.NotNull(author);
     }
