@@ -8,6 +8,6 @@ public interface ICheepRepository
     public Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username);
     public Author GetAuthorByName(String name);
     public Author GetAuthorByEmail(String name);
-    public void CreateAuthor(string name, string email);
-    public void CreateCheep(Author author, string text, DateTime timeStamp);
+    public Task CreateAuthor(string name, string email);
+    public Task CreateCheep(Author author, string text, DateTime timeStamp);
 }
