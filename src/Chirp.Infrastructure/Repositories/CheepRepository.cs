@@ -85,14 +85,14 @@ public class CheepRepository : ICheepRepository
         return author;
     }
 
-    public async Task CreateAuthor(string name, string email) //Add id when in use
+    public async Task CreateAuthor(string name, string email) //Add id when in use and returns task instead of void to make the method awaitable
     {
         Author author = new (){Name = name, Email = email};
         await _dbContext.Authors.AddAsync(author);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task CreateCheep(Author author, string text, DateTime timeStamp)
+    public async Task CreateCheep(Author author, string text, DateTime timeStamp) //returns task instead of void to make the method awaitable
     {
         Cheep cheep = new (){Author = author, Text = text, TimeStamp = timeStamp};
         await _dbContext.Cheeps.AddAsync(cheep);
