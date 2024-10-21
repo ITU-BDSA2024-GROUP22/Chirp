@@ -25,7 +25,7 @@ public class CheepRepositoryTest
     }
 
     [Fact]
-    public async void CheckThatRepositoryIsEmpty()
+    public async void CheckThatRepositoryIsEmptyTest()
     {
         var repository = await SetUpRepositoryAsync();
 
@@ -35,7 +35,7 @@ public class CheepRepositoryTest
     }
 
     [Fact]
-    public async void CreateAuthor()
+    public async void CreateAuthorTest()
     {
         var repository = await SetUpRepositoryAsync();
         repository.CreateAuthor("Anders And", "anders@and.dk");
@@ -44,7 +44,7 @@ public class CheepRepositoryTest
     }
 
     [Fact]
-    public async void GetAuthorByNameNotFound()
+    public async void GetAuthorByNameNotFoundTest()
     {
         var repository = await SetUpRepositoryAsync();
         Assert.Throws<KeyNotFoundException>(() => repository.GetAuthorByName("Anna"));
@@ -68,6 +68,32 @@ public class CheepRepositoryTest
         Assert.NotNull(repository.GetCheepsFromAuthor(1, "Anders And"));
         Assert.Single(cheeps);
         Assert.Equal("Group 22 is so cool", cheeps.First().Text);
+    }
+
+    [Fact]
+    public async void GetCheepTest()
+    {
+        var repository = await SetUpRepositoryAsync();
+        repository.CreateAuthor("Anders And", "anders@and.dk");
+        var author = repository.GetAuthorByName("Anders And");
+
+        //Create 33 cheeps
+        for (var i = 1; i <= 33; i++)
+        {
+            string number = i.ToString();
+            var date = DateTime.Now.AddDays(i);
+            repository.CreateCheep(author, number, date);
+        }
+        var cheepsPage1 = await repository.GetCheeps(1);
+        var cheepsPage2 = await repository.GetCheeps(2);
+
+        //Nyeste cheep skal være den på første side
+        Assert.NotNull(cheepsPage1);
+        Assert.Equal("33", cheepsPage1[0].Text);
+
+        //Første cheep lavet skal være den første på side 2
+        Assert.NotNull(cheepsPage2);
+        Assert.Equal("1", cheepsPage2[0].Text);
     }
 
 
