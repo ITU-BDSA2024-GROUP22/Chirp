@@ -66,4 +66,34 @@ public class CheepRepositoryTest
         //Check if the Anders Ands page has cheeps now
         Assert.NotNull(repository.GetCheepsFromAuthor(1, "Anders And"));
     }
+
+
+    [Fact]
+    public async void GetCheepsFromAuthorTest()
+    {
+        // Arrange
+        var repository = await SetUpRepositoryAsync();
+
+        // Opret en forfatter og nogle cheeps for denne forfatter
+        repository.CreateAuthor("Anders And", "anders@and.dk");
+
+        //Gemme vores nye author i en instans af Author
+        var author = repository.GetAuthorByName("Anders And");
+
+        // Opret flere cheeps for forfatteren
+        repository.CreateCheep(author, "Første Cheep", DateTime.Now.AddMinutes(-10));
+        repository.CreateCheep(author, "Andet Cheep", DateTime.Now.AddMinutes(-5));
+        repository.CreateCheep(author, "Tredje Cheep", DateTime.Now);
+
+        // Act
+        var result = await repository.GetCheepsFromAuthor(1, "Anders And");
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(3, result.Count); // Der skulle være 3 cheeps for denne forfatter
+        Assert.Equal("Tredje Cheep", result[0].Text); // Den nyeste cheep skulle være først
+        Assert.Equal("Andet Cheep", result[1].Text);
+        Assert.Equal("Første Cheep", result[2].Text);
+    }
+
 }
