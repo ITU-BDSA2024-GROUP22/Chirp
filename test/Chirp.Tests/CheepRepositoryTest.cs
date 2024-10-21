@@ -51,11 +51,11 @@ public class CheepRepositoryTest
     }
 
 
-    //Skal nok finpusses lidt ;)
     [Fact]
-    public async void CreateCheep()
+    public async Task CreateCheepTest()
     {
         var repository = await SetUpRepositoryAsync();
+
         //Create author first
         repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = repository.GetAuthorByName("Anders And");
@@ -63,8 +63,11 @@ public class CheepRepositoryTest
         //Now create new cheep with the author
         repository.CreateCheep(author, "Group 22 is so cool", DateTime.Now);
 
+        var cheeps = await repository.GetCheepsFromAuthor(1, "Anders And");
         //Check if the Anders Ands page has cheeps now
         Assert.NotNull(repository.GetCheepsFromAuthor(1, "Anders And"));
+        Assert.Single(cheeps);
+        Assert.Equal("Group 22 is so cool", cheeps.First().Text);
     }
 
 
