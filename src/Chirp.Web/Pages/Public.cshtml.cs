@@ -8,9 +8,9 @@ namespace Chirp.Web.Pages;
 public class PublicModel : PageModel
 {
     private const int PageSize = 32;
-    private readonly CheepRepository _service;
+    private readonly CheepService _service;
 
-    public PublicModel(CheepRepository service)
+    public PublicModel(CheepService service)
     {
         _service = service;
     }

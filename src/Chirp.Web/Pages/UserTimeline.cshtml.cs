@@ -7,9 +7,9 @@ namespace Chirp.Web.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly CheepRepository _service;
+    private readonly CheepService _service;
 
-    public UserTimelineModel(CheepRepository service)
+    public UserTimelineModel(CheepService service)
     {
         _service = service;
     }
@@ -19,7 +19,7 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
         var currentPage = page ?? 1;
-        Cheeps = _service.GetCheepsFromAuthor(currentPage, author);
+        Cheeps = _service.GetCheepsFromAuthor(author, currentPage);
         return Page();
     }
 }
