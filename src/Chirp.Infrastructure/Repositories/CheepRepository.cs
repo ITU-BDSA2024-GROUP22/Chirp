@@ -15,7 +15,6 @@ public class CheepRepository : ICheepRepository
     public CheepRepository(DBContext dbContext)
     {
         _dbContext = dbContext;
-        //DB context is the best
     }
 
     public async Task<List<CheepDTO>> GetCheeps(int pageNumber)

@@ -1,4 +1,4 @@
-/*
+
 using Chirp.Core.DTOs;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
@@ -13,13 +13,11 @@ public interface ICheepService
 public class CheepService : ICheepService
 {
     private readonly CheepRepository cheepRepository;
-
-    private readonly DBContext dbContext;
     // Might need to revisit this implementation of dbContext
 
-    public CheepService()
+    public CheepService(CheepRepository _cheepRepository)
     {
-        cheepRepository = new CheepRepository(dbContext);
+        cheepRepository = _cheepRepository;
     }
 
 
@@ -39,4 +37,3 @@ public class CheepService : ICheepService
     }
 }
 
-*/
