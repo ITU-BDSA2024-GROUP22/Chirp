@@ -93,7 +93,7 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateCheep(Author author, string text, DateTime timeStamp) //returns task instead of void to make the method awaitable
     {
-        Cheep cheep = new (){Author = author, Text = text, TimeStamp = timeStamp};
+        Cheep cheep = new (){ Author = author, Text = text, TimeStamp = timeStamp};
         await _dbContext.Cheeps.AddAsync(cheep);
         await _dbContext.SaveChangesAsync();
     }
