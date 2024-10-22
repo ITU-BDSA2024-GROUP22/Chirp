@@ -28,7 +28,7 @@ public class AuthorTest
     public async void GetEmail()
     {
         var repository = await SetUpRepositoryAsync();
-        repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
 
         var author = repository.GetAuthorByName("Anders And");
 
@@ -39,7 +39,7 @@ public class AuthorTest
     public async void GetName()
     {
         var repository = await SetUpRepositoryAsync();
-        repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
 
         var author = repository.GetAuthorByName("Anders And");
 

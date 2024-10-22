@@ -57,11 +57,11 @@ public class CheepRepositoryTest
         var repository = await SetUpRepositoryAsync();
 
         //Create author first
-        repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = repository.GetAuthorByName("Anders And");
 
         //Now create new cheep with the author
-        repository.CreateCheep(author, "Group 22 is so cool", DateTime.Now);
+        await repository.CreateCheep(author, "Group 22 is so cool", DateTime.Now);
 
         var cheeps = await repository.GetCheepsFromAuthor(1, "Anders And");
         //Check if the Anders Ands page has cheeps now
@@ -74,7 +74,7 @@ public class CheepRepositoryTest
     public async void GetCheepTest()
     {
         var repository = await SetUpRepositoryAsync();
-        repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = repository.GetAuthorByName("Anders And");
 
         //Create 33 cheeps
@@ -104,15 +104,15 @@ public class CheepRepositoryTest
         var repository = await SetUpRepositoryAsync();
 
         // Opret en forfatter og nogle cheeps for denne forfatter
-        repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
 
         //Gemme vores nye author i en instans af Author
         var author = repository.GetAuthorByName("Anders And");
 
         // Opret flere cheeps for forfatteren
-        repository.CreateCheep(author, "Første Cheep", DateTime.Now.AddMinutes(-10));
-        repository.CreateCheep(author, "Andet Cheep", DateTime.Now.AddMinutes(-5));
-        repository.CreateCheep(author, "Tredje Cheep", DateTime.Now);
+        await repository.CreateCheep(author, "Første Cheep", DateTime.Now.AddMinutes(-10));
+        await repository.CreateCheep(author, "Andet Cheep", DateTime.Now.AddMinutes(-5));
+        await repository.CreateCheep(author, "Tredje Cheep", DateTime.Now);
 
         // Act
         var result = await repository.GetCheepsFromAuthor(1, "Anders And");
