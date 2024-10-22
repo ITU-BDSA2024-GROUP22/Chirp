@@ -1,48 +1,119 @@
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-
-namespace Chirp.Tests;
-using Web;
+using Chirp.Core;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Chirp.Infrastructure;
+using Chirp.Web;
 
-public class TestGetHttpClient : IClassFixture<WebApplicationFactory<Program>>
+namespace Chirp.Tests
 {
-    private readonly WebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
-
-    public TestGetHttpClient(WebApplicationFactory<Program> factory)
+    public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {
-        _factory = factory;
-        _client = factory.CreateClient();
-    }
+        private readonly WebApplicationFactory<Program> _factory;
+        private readonly HttpClient _client;
 
-    [Fact]
-    public async void TimeLineTest()
-    {
-        var response = await _client.GetAsync("/");
-        response.EnsureSuccessStatusCode();
+        public IntegrationTests(WebApplicationFactory<Program> factory)
+        {
+            _factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    var descriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(DbContextOptions<DBContext>));
 
-        var publicTL = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Public Timeline", publicTL);
-    }
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
 
-    [Fact]
-    public async void AuthorTest()
-    {
-        var response = await _client.GetAsync("/Helge");
-        response.EnsureSuccessStatusCode();
+                    services.AddDbContext<DBContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryChirpTestDB");
+                    });
 
-        var helgeCheep = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Hello, BDSA students!", helgeCheep);
-    }
+                    var sp = services.BuildServiceProvider();
+                    using (var scope = sp.CreateScope())
+                    {
+                        var scopedServices = scope.ServiceProvider;
+                        var db = scopedServices.GetRequiredService<DBContext>();
 
-    [Fact]
-    public async void PrivateTimeLineTest()
-    {
-        var response = await _client.GetAsync("/Adrian");
-        response.EnsureSuccessStatusCode();
+                        db.Database.EnsureCreated();
 
-        var responseString = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Hej, velkommen til kurset", responseString);
-        Assert.Contains("Adrian", responseString);
+                        SeedTestData(db);
+                    }
+                });
+            });
+            _client = _factory.CreateClient();
+        }
+
+        // Seed test data in the in-memory database
+        private void SeedTestData(DBContext context)
+        {
+            var authorAdrian = new Author
+            {
+                Name = "Adrian",
+                Email = "adrian@example.com"
+            };
+
+            var authorHelge = new Author
+            {
+                Name = "Helge",
+                Email = "helge@example.com"
+            };
+
+            context.Authors.Add(authorAdrian);
+            context.Authors.Add(authorHelge);
+
+            var adrianCheep = new Cheep
+            {
+                Author = authorAdrian,
+                Text = "Hej, velkommen til kurset",
+                TimeStamp = DateTime.Now
+            };
+
+            var helgeCheep = new Cheep
+            {
+                Author = authorHelge,
+                Text = "Hello, BDSA students!",
+                TimeStamp = DateTime.Now
+            };
+
+            context.Cheeps.Add(adrianCheep);
+            context.Cheeps.Add(helgeCheep);
+
+            context.SaveChanges();
+        }
+
+
+        [Fact]
+        public async void TimeLineTest()
+        {
+            var response = await _client.GetAsync("/");
+            response.EnsureSuccessStatusCode();
+
+            var publicTL = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Public Timeline", publicTL);
+        }
+
+        [Fact]
+        public async void AuthorTest()
+        {
+            var response = await _client.GetAsync("/Helge");
+            response.EnsureSuccessStatusCode();
+
+            var helgeCheep = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Hello, BDSA students!", helgeCheep);
+        }
+
+        [Fact]
+        public async void PrivateTimeLineTest()
+        {
+            var response = await _client.GetAsync("/Adrian");
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Hej, velkommen til kurset", responseString);
+            Assert.Contains("Adrian", responseString);
+        }
     }
 }
