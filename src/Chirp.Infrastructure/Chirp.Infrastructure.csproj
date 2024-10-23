@@ -34,4 +34,8 @@
         <ProjectReference Include="..\Chirp.Core\Chirp.Core.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Database\" />
+    </ItemGroup>
+
 </Project>

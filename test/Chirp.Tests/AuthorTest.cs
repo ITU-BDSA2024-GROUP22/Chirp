@@ -43,7 +43,7 @@ public class AuthorTest
 
         var author = repository.GetAuthorByName("Anders And");
 
-        Assert.Equal("Anders And", author.Name);
+        Assert.Equal("Anders And", author.UserName);
     }
 
 }

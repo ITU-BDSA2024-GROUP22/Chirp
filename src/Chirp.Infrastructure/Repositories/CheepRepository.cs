@@ -28,7 +28,7 @@ public class CheepRepository : ICheepRepository
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
-                Author = cheep.Author.Name,
+                Author = cheep.Author.UserName,
                 Text = cheep.Text,
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
             });
@@ -43,7 +43,7 @@ public class CheepRepository : ICheepRepository
         var lowerBound = (pageNumber - 1) * _pageSize;
 
         var pageQuery = (from cheep in _dbContext.Cheeps
-                where cheep.Author.Name == username // Filter by the author's name
+                where cheep.Author.UserName == username // Filter by the author's name
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
@@ -51,7 +51,7 @@ public class CheepRepository : ICheepRepository
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
-                Author = cheep.Author.Name,
+                Author = cheep.Author.UserName,
                 Text = cheep.Text,
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
@@ -62,7 +62,7 @@ public class CheepRepository : ICheepRepository
 
     public Author GetAuthorByName(string name)
     {
-        var author =  _dbContext.Authors.SingleOrDefault(a => a.Name == name);
+        var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
 
         if (author == null)
         {
@@ -86,7 +86,7 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateAuthor(string name, string email) //Add id when in use, and returns task instead of void to make the method awaitable
     {
-        Author author = new (){Name = name, Email = email};
+        Author author = new (){UserName = name, Email = email};
         await _dbContext.Authors.AddAsync(author);
         await _dbContext.SaveChangesAsync();
     }
