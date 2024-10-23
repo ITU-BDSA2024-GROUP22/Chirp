@@ -18,8 +18,9 @@ public class Program
 
         // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString)); // we might need different path
-        builder.Services.AddDefaultIdentity<Author>(options =>
+        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
+
+        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
             options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DBContext>();
 
         var app = builder.Build();

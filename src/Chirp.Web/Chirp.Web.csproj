@@ -24,6 +24,4 @@
         <ProjectReference Include="..\Chirp.Core\Chirp.Core.csproj" />
     </ItemGroup>
 
-
-
 </Project>

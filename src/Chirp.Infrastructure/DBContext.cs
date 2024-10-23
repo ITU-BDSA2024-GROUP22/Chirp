@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure;
 
-public class DBContext : IdentityDbContext
+public class DBContext : IdentityDbContext<Author>
 {
     public DBContext(DbContextOptions<DBContext> options) : base(options)
     {

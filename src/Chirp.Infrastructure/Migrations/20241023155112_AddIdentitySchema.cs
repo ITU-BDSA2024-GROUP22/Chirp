@@ -5,7 +5,7 @@
 namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDBSchema : Migration
+    public partial class AddIdentitySchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
