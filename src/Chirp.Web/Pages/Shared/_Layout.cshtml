@@ -8,14 +8,33 @@
 <body>
 <div class=page>
     <h1><img src="/images/icon1.png" alt="Icon1"/>Chirp!</h1>
-
+    <div class=navigation>
+        @if (User.Identity.IsAuthenticated)
+        {
+        <div>
+            <a href="/@(User.Identity.Name)">My Timeline</a> |
+            <a href="/">Public Timeline</a> |
+            <a ... >Logout [@(User.Identity.Name)]</a>
+        </div>
+        }
+        else
+        {
+        <div>
+            <a href="/">Public Timeline</a> |
+            <a ... >Register</a>
+            <a ... >Login</a>
+        </div>
+        }
+    </div>
     <div class=body>
-            @RenderBody()
+        @RenderBody()
     </div>
     <div class=footer>
         Chirp &mdash; An ASP.NET Application
     </div>
 </div>
+
+
 
 </body>
 @await RenderSectionAsync("Scripts", required: false)
