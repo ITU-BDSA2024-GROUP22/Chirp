@@ -12,17 +12,17 @@
         @if (User.Identity.IsAuthenticated)
         {
         <div>
-            <a href="/@(User.Identity.Name)">my timeline</a> |
-            <a href="/">public timeline</a> |
-            <a ... >logout [@(User.Identity.Name)]</a>
+            <a href="/@(User.Identity.Name)">My Timeline</a> |
+            <a href="/">Public Timeline</a> |
+            <a ... >Logout [@(User.Identity.Name)]</a>
         </div>
         }
         else
         {
         <div>
-            <a href="/">public timeline</a> |
-            <a ... >register</a>
-            <a ... >login</a>
+            <a href="/">Public Timeline</a> |
+            <a ... >Register</a>
+            <a ... >Login</a>
         </div>
         }
     </div>
