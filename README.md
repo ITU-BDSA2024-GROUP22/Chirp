@@ -10,9 +10,10 @@ Repository for SWU 3.semester BDSA
 - git push
 
 2. Merge pull-request
-  
+
 3. Add tag to main
 - git checkout main
+- git pull
 - git tag vX.X.X
 - git add .
 - git push origin vX.X.X

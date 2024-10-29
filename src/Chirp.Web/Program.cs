@@ -1,6 +1,8 @@
+using Chirp.Core;
 using Chirp.Core.Interfaces;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Web;
@@ -16,7 +18,11 @@ public class Program
 
         // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString)); // we might need different path
+        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
+
+        builder.Services.AddDefaultIdentity<Author>(options =>
+            options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DBContext>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -30,7 +36,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var _dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
-            _dbContext.Database.EnsureCreated();
+            _dbContext.Database.Migrate();
             DbInitializer.SeedDatabase(_dbContext);
         }
 
@@ -38,6 +44,10 @@ public class Program
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        // Need this for logout to work
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapRazorPages();
 

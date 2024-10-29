@@ -51,13 +51,13 @@ namespace Chirp.Tests
         {
             var authorAdrian = new Author
             {
-                Name = "Adrian",
+                UserName = "Adrian",
                 Email = "adrian@example.com"
             };
 
             var authorHelge = new Author
             {
-                Name = "Helge",
+                UserName = "Helge",
                 Email = "helge@example.com"
             };
 
