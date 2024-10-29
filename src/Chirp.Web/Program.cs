@@ -2,6 +2,7 @@ using Chirp.Core;
 using Chirp.Core.Interfaces;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,20 @@ public class Program
 
         builder.Services.AddDefaultIdentity<Author>(options =>
             options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DBContext>();
+
+        builder.Services.AddAuthentication(options =>
+            {
+                //options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+               // options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                //options.DefaultChallengeScheme = "GitHub";
+            })
+            //.AddCookie()
+            .AddGitHub(o =>
+            {
+                o.ClientId = builder.Configuration["authentication_github_clientId"];
+                o.ClientSecret = builder.Configuration["authentication_github_clientSecret"];
+                o.CallbackPath = "/signin-github";
+            });
 
         var app = builder.Build();
 
@@ -48,6 +63,7 @@ public class Program
         // Need this for logout to work
         app.UseAuthentication();
         app.UseAuthorization();
+        //app.UseSession();
 
         app.MapRazorPages();
 
