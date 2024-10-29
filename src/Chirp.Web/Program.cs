@@ -20,7 +20,7 @@ public class Program
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        builder.Services.AddDefaultIdentity<Author>(options =>
             options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DBContext>();
 
         var app = builder.Build();
@@ -44,6 +44,10 @@ public class Program
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        // Need this for logout to work
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapRazorPages();
 
