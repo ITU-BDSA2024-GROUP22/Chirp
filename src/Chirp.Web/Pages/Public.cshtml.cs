@@ -39,6 +39,6 @@ public class PublicModel : PageModel
 
         await _service.CreateCheep(author, Text, DateTime.UtcNow);
 
-        return RedirectToPage(new { page = 1 });
+        return RedirectToPage("/Public", new { page = 1 });
     }
 }
