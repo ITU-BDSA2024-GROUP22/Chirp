@@ -18,7 +18,7 @@ public class Program
         builder.Services.AddScoped<CheepService>();
 
         // Load database connection via configuration
-        string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=Database/Chirp.db";
         builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
 
         builder.Services.AddDefaultIdentity<Author>(options =>
