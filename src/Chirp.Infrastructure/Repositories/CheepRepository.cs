@@ -60,7 +60,7 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public Author GetAuthorByName(string name)
+    public async Task<Author> GetAuthorByName(string name)
     {
         var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
 
@@ -97,7 +97,6 @@ public class CheepRepository : ICheepRepository
         await _dbContext.Cheeps.AddAsync(cheep);
         await _dbContext.SaveChangesAsync();
     }
-
 
 }
 
