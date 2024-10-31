@@ -19,7 +19,8 @@ public class Program
 
         // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=Database/Chirp.db";
-        builder.Services.AddDbContext<DBContext>(options => options.UseSqlite(connectionString));
+        builder.Services.AddDbContext<DBContext>(options =>
+            options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
 
         builder.Services.AddDefaultIdentity<Author>(options =>
             options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DBContext>();
