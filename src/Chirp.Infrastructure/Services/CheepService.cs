@@ -1,4 +1,5 @@
 
+using Chirp.Core;
 using Chirp.Core.DTOs;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
@@ -35,5 +36,18 @@ public class CheepService : ICheepService
         // filter by the provided author name
         //var cheepSort = results.Where(x => x.Author == author).ToList();
     }
+
+    public async Task<Author> GetAuthorByName(string name)
+    {
+        var author = await cheepRepository.GetAuthorByName(name);
+        return author;
+    }
+
+    public async Task CreateCheep(Author author, string text, DateTime timeStamp)
+    {
+        await cheepRepository.CreateCheep(author, text, timeStamp);
+    }
+
 }
+
 

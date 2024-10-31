@@ -47,7 +47,7 @@ public class CheepRepositoryTest
     public async void GetAuthorByNameNotFoundTest()
     {
         var repository = await SetUpRepositoryAsync();
-        Assert.Throws<KeyNotFoundException>(() => repository.GetAuthorByName("Anna"));
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => repository.GetAuthorByName("Anna"));
     }
 
 
@@ -61,7 +61,7 @@ public class CheepRepositoryTest
         var author = repository.GetAuthorByName("Anders And");
 
         //Now create new cheep with the author
-        await repository.CreateCheep(author, "Group 22 is so cool", DateTime.Now);
+        await repository.CreateCheep(await author, "Group 22 is so cool", DateTime.Now);
 
         var cheeps = await repository.GetCheepsFromAuthor(1, "Anders And");
         //Check if the Anders Ands page has cheeps now
@@ -82,7 +82,7 @@ public class CheepRepositoryTest
         {
             string number = i.ToString();
             var date = DateTime.Now.AddDays(i);
-            repository.CreateCheep(author, number, date);
+            await repository.CreateCheep(await author, number, date);
         }
         var cheepsPage1 = await repository.GetCheeps(1);
         var cheepsPage2 = await repository.GetCheeps(2);
@@ -110,9 +110,9 @@ public class CheepRepositoryTest
         var author = repository.GetAuthorByName("Anders And");
 
         // Opret flere cheeps for forfatteren
-        await repository.CreateCheep(author, "Første Cheep", DateTime.Now.AddMinutes(-10));
-        await repository.CreateCheep(author, "Andet Cheep", DateTime.Now.AddMinutes(-5));
-        await repository.CreateCheep(author, "Tredje Cheep", DateTime.Now);
+        await repository.CreateCheep(await author, "Første Cheep", DateTime.Now.AddMinutes(-10));
+        await repository.CreateCheep(await author, "Andet Cheep", DateTime.Now.AddMinutes(-5));
+        await repository.CreateCheep(await author, "Tredje Cheep", DateTime.Now);
 
         // Act
         var result = await repository.GetCheepsFromAuthor(1, "Anders And");
