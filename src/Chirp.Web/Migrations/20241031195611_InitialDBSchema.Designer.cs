@@ -3,16 +3,19 @@ using System;
 using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Chirp.Infrastructure.Migrations
+namespace Chirp.Web.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20241031195611_InitialDBSchema")]
+    partial class InitialDBSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -23,9 +26,6 @@ namespace Chirp.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AuthorId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -90,10 +90,7 @@ namespace Chirp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AuthorId1")
+                    b.Property<string>("AuthorId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -107,7 +104,7 @@ namespace Chirp.Infrastructure.Migrations
 
                     b.HasKey("CheepId");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Cheeps");
                 });
@@ -248,7 +245,7 @@ namespace Chirp.Infrastructure.Migrations
                 {
                     b.HasOne("Chirp.Core.Author", "Author")
                         .WithMany("Cheeps")
-                        .HasForeignKey("AuthorId1")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
