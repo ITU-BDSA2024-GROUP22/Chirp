@@ -19,11 +19,12 @@ public class PublicModel : PageModel
 
     [BindProperty]
     public string Text { get; set; }
+    public int CurrentPage { get; set; }
 
     public ActionResult OnGet([FromQuery] int? page)
     {
-        var currentPage = page ?? 1; // Default to page 1 if no page parameter
-        Cheeps = _service.GetCheeps(currentPage);
+        CurrentPage = page ?? 1; // Default to page 1 if no page parameter
+        Cheeps = _service.GetCheeps(CurrentPage);
         return Page();
     }
 
