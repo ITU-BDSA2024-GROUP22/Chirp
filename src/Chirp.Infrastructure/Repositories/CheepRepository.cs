@@ -26,7 +26,12 @@ public class CheepRepository : ICheepRepository
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
-                Author = cheep.Author.UserName,
+                Author = new AuthorDTO() {
+                    DisplayName = string.IsNullOrEmpty(cheep.Author.DisplayName)
+                    ? cheep.Author.UserName
+                    : cheep.Author.DisplayName,
+                    UserName = cheep.Author.UserName,
+                    },
                 Text = cheep.Text,
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
             });
@@ -49,7 +54,12 @@ public class CheepRepository : ICheepRepository
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
-                Author = cheep.Author.UserName,
+                Author = new AuthorDTO() {
+                    DisplayName = string.IsNullOrEmpty(cheep.Author.DisplayName)
+                        ? cheep.Author.UserName
+                        : cheep.Author.DisplayName,
+                    UserName = cheep.Author.UserName
+                },
                 Text = cheep.Text,
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
