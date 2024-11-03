@@ -26,12 +26,7 @@ public class CheepRepository : ICheepRepository
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
-                Author = new AuthorDTO() {
-                    DisplayName = string.IsNullOrEmpty(cheep.Author.DisplayName)
-                    ? cheep.Author.UserName
-                    : cheep.Author.DisplayName,
-                    UserName = cheep.Author.UserName,
-                    },
+                Author = AuthorDTO.fromAuthor(cheep.Author),
                 Text = cheep.Text,
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
             });
@@ -54,12 +49,7 @@ public class CheepRepository : ICheepRepository
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {
-                Author = new AuthorDTO() {
-                    DisplayName = string.IsNullOrEmpty(cheep.Author.DisplayName)
-                        ? cheep.Author.UserName
-                        : cheep.Author.DisplayName,
-                    UserName = cheep.Author.UserName
-                },
+                Author = AuthorDTO.fromAuthor(cheep.Author),
                 Text = cheep.Text,
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
@@ -68,7 +58,7 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public async Task<Author> GetAuthorByName(string name)
+    public async Task<AuthorDTO> GetAuthorByName(string name)
     {
         var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
 
@@ -77,7 +67,7 @@ public class CheepRepository : ICheepRepository
             throw new KeyNotFoundException($"No author with name {name} was found.");
         }
 
-        return author;
+        return AuthorDTO.fromAuthor(author);
     }
 
     public Author GetAuthorByEmail(string name)
@@ -99,8 +89,9 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task CreateCheep(Author author, string text, DateTime timeStamp) //returns task instead of void to make the method awaitable
+    public async Task CreateCheep(AuthorDTO authorDTO, string text, DateTime timeStamp) //returns task instead of void to make the method awaitable
     {
+        var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
         Cheep cheep = new (){ Author = author, Text = text, TimeStamp = timeStamp};
         await _dbContext.Cheeps.AddAsync(cheep);
         await _dbContext.SaveChangesAsync();
