@@ -12,7 +12,7 @@
         @if (User.Identity is { IsAuthenticated: true })
         {
         <div>
-            <a href="/@(User.Identity.Name)">My Timeline</a> |
+            <a href="/@((await Model.Author).UserName)">My Timeline</a> |
             <a href="/">Public Timeline</a> |
             <a href="/Identity/Account/Logout">Logout [@(User.Identity.Name)]</a>
         </div>

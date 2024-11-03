@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Chirp.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Repositories;
@@ -15,9 +16,13 @@ public class UserTimelineModel : PageModel
     }
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
+    public required Task<AuthorDTO> Author { get; set; }
 
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
+
+        this.Author = _service.GetAuthorByName(author);
+
         var currentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, currentPage);
         return Page();

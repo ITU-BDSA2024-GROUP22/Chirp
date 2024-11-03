@@ -17,7 +17,7 @@ public class PublicModel : PageModel
     }
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
-    public required Task<Author> Author { get; set; }
+    public required Task<AuthorDTO> Author { get; set; }
 
     [BindProperty]
     public string Text { get; set; }
