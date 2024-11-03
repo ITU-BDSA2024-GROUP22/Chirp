@@ -9,13 +9,13 @@
     <h2> Public Timeline </h2>
     @if (User.Identity.IsAuthenticated)
     {
-    <div class="cheepbox">
-        <h3>What's on your mind @(User.Identity.Name)?</h3>
-        <form method="post">
-            <input style="float: left" type="text" asp-for="Text">
-            <input type="submit" value="Share">
-        </form>
-    </div>
+        <div class="cheepbox">
+            <h3>What's on your mind @(User.Identity.Name)?</h3>
+            <form method="post">
+                <input style="float: left" type="text" asp-for="Text">
+                <input type="submit" value="Share">
+            </form>
+        </div>
     }
 
     @if ((await Model.Cheeps).Any())
@@ -39,4 +39,25 @@
     {
         <em>There are no cheeps so far.</em>
     }
+
+    <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+        @{
+            int currentPage = Model.CurrentPage;
+
+            if (currentPage > 1)
+            {
+                <a href="?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                    <button>Previous</button>
+                </a>
+            }
+
+            <span class="current-page">@currentPage</span>
+
+            <a href="?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                <button>Next</button>
+            </a>
+        }
+    </div>
+
 </div>
+
