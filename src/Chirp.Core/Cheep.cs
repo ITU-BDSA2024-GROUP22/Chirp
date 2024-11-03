@@ -8,7 +8,7 @@ public class Cheep
     public required Author Author { get; set; }
 
     [Required]
-    [StringLength(160)] // Work to do this differently later
+    [StringLength(160, ErrorMessage = "Cheeps cannot be longer than 160 characters.")] // Work to do this differently later
     public required string Text { get; set; }
     public required DateTime TimeStamp { get; set; }
     public string AuthorId { get; set; }
