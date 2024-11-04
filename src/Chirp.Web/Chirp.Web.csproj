@@ -33,4 +33,9 @@
       <Folder Include="Database\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="PlaywrightTests\obj\PlaywrightTests.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="PlaywrightTests\obj\project.assets.json" />
+    </ItemGroup>
+
 </Project>
