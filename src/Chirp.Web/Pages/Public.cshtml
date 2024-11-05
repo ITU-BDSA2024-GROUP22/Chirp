@@ -13,7 +13,7 @@
     <div class="cheepbox">
         <h3>What's on your mind @((await Model.Author).DisplayName)?</h3>
         <form method="post">
-            <input style="float: left" type="text" asp-for="Text">
+            <input style="float: left" type="text" asp-for="Text" maxlength="160">
             <input type="submit" value="Share">
         </form>
     </div>
