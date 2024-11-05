@@ -37,13 +37,13 @@ public class CheepService : ICheepService
         //var cheepSort = results.Where(x => x.Author == author).ToList();
     }
 
-    public async Task<Author> GetAuthorByName(string name)
+    public async Task<AuthorDTO> GetAuthorByName(string name)
     {
         var author = await cheepRepository.GetAuthorByName(name);
         return author;
     }
 
-    public async Task CreateCheep(Author author, string text, DateTime timeStamp)
+    public async Task CreateCheep(AuthorDTO author, string text, DateTime timeStamp)
     {
         await cheepRepository.CreateCheep(author, text, timeStamp);
     }

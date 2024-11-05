@@ -7,7 +7,7 @@
 }
 
 <div>
-    <h2> @routeName's Timeline </h2>
+    <h2> @((await Model.Author).DisplayName)'s Timeline </h2>
 
     @if ((await Model.Cheeps).Any())
     {
@@ -17,7 +17,7 @@
                 <li>
                     <p>
                         <strong>
-                            <a href="/@cheep.Author">@cheep.Author</a>
+                            <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.TimeStamp</small>

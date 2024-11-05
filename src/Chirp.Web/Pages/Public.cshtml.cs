@@ -1,4 +1,5 @@
-﻿using Chirp.Core.DTOs;
+﻿using Chirp.Core;
+using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +17,7 @@ public class PublicModel : PageModel
     }
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
+    public required Task<AuthorDTO> Author { get; set; }
 
     [BindProperty]
     public string Text { get; set; }
@@ -23,8 +25,13 @@ public class PublicModel : PageModel
 
     public ActionResult OnGet([FromQuery] int? page)
     {
-        CurrentPage = page ?? 1; // Default to page 1 if no page parameter
-        Cheeps = _service.GetCheeps(CurrentPage);
+        if (User.Identity.IsAuthenticated)
+        {
+            this.Author = _service.GetAuthorByName(User.Identity.Name);
+        }
+
+        var currentPage = page ?? 1; // Default to page 1 if no page parameter
+        Cheeps = _service.GetCheeps(currentPage);
         return Page();
     }
 

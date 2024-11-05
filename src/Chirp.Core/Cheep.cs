@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.Core;
 
@@ -11,7 +10,7 @@ public class Cheep
     [StringLength(160, ErrorMessage = "Cheeps cannot be longer than 160 characters.")]
     public required string Text { get; set; }
     public required DateTime TimeStamp { get; set; }
-    public string AuthorId { get; set; }
+    public string? AuthorId { get; set; }
     public int CheepId { get; set; }
 
 
