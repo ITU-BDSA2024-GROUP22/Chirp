@@ -53,7 +53,11 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var _dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
-            _dbContext.Database.Migrate();
+
+            if (_dbContext.Database.IsRelational())
+            {
+                _dbContext.Database.Migrate();
+            }
             DbInitializer.SeedDatabase(_dbContext);
         }
 
