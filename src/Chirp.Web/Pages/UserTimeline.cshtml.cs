@@ -24,8 +24,8 @@ public class UserTimelineModel : PageModel
 
         this.Author = _service.GetAuthorByName(author);
 
-        var currentPage = page ?? 1;
-        Cheeps = _service.GetCheepsFromAuthor(author, currentPage);
+        CurrentPage = page ?? 1;
+        Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
 }
