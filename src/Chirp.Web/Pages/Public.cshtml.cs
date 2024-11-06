@@ -30,8 +30,8 @@ public class PublicModel : PageModel
             this.Author = _service.GetAuthorByName(User.Identity.Name);
         }
 
-        var currentPage = page ?? 1; // Default to page 1 if no page parameter
-        Cheeps = _service.GetCheeps(currentPage);
+        CurrentPage = page ?? 1; // Default to page 1 if no page parameter
+        Cheeps = _service.GetCheeps(CurrentPage);
         return Page();
     }
 
