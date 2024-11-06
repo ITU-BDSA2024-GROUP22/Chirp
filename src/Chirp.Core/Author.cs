@@ -9,7 +9,6 @@ public class Author : IdentityUser
     //public int AuthorId { get; set; }
     //Author now uses the build-in IdentityUser's Id property
 
-    [Required]
-    [StringLength(160)]
-    public string? DisplayName { get; set; }
+    //[Required]
+    [StringLength(160)] public string? DisplayName { get; set; }
 }
