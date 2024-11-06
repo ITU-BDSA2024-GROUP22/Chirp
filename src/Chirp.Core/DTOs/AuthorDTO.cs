@@ -6,8 +6,8 @@ public class AuthorDTO
     {
         return new AuthorDTO()
         {
-            DisplayName = string.IsNullOrEmpty(author.DisplayName)
-                ? author.UserName
+            DisplayName = string.IsNullOrWhiteSpace(author.DisplayName)
+                ? author.UserName ?? "Anonymous"
                 : author.DisplayName,
             UserName = author.UserName
         };
