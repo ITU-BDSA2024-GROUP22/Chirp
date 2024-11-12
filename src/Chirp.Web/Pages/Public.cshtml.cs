@@ -25,9 +25,9 @@ public class PublicModel : PageModel
 
     public ActionResult OnGet([FromQuery] int? page)
     {
-        if (User.Identity.IsAuthenticated)
+        if (User.Identity != null && User.Identity.IsAuthenticated)
         {
-            this.Author = _service.GetAuthorByName(User.Identity.Name);
+            if (User.Identity.Name != null) this.Author = _service.GetAuthorByName(User.Identity.Name);
         }
 
         var currentPage = page ?? 1; // Default to page 1 if no page parameter
