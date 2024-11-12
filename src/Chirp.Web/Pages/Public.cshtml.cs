@@ -43,9 +43,12 @@ public class PublicModel : PageModel
         }
 
         var authorName = User.Identity.Name;
-        var author = await _service.GetAuthorByName(authorName);
+        if (authorName != null)
+        {
+            var author = await _service.GetAuthorByName(authorName);
 
-        await _service.CreateCheep(author, Text, DateTime.UtcNow);
+            await _service.CreateCheep(author, Text, DateTime.UtcNow);
+        }
 
         return RedirectToPage("/Public", new { page = 1 });
     }
