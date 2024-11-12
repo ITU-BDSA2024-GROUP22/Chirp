@@ -20,7 +20,7 @@ public class PublicModel : PageModel
     public required Task<AuthorDTO> Author { get; set; }
 
     [BindProperty]
-    public string Text { get; set; }
+    public required string Text { get; set; }
     public int CurrentPage { get; set; }
 
     public ActionResult OnGet([FromQuery] int? page)
