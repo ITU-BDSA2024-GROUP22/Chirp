@@ -37,17 +37,20 @@ public class PublicModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text))
+        if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
         {
             return Page();
         }
 
-        var authorName = User.Identity.Name;
-        if (authorName != null)
+        if (User.Identity != null)
         {
-            var author = await _service.GetAuthorByName(authorName);
+            var authorName = User.Identity.Name;
+            if (authorName != null)
+            {
+                var author = await _service.GetAuthorByName(authorName);
 
-            await _service.CreateCheep(author, Text, DateTime.UtcNow);
+                await _service.CreateCheep(author, Text, DateTime.UtcNow);
+            }
         }
 
         return RedirectToPage("/Public", new { page = 1 });
