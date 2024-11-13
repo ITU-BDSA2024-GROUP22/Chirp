@@ -56,6 +56,11 @@
                         <strong>
                             <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
                         </strong>
+                        @if (User.Identity?.Name != cheep.Author.UserName)
+                        {
+                            <button class="follow-btn" data-author-username="@cheep.Author.UserName">Follow</button>
+                        }
+                        <br/>
                         @cheep.Text
                         <small>&mdash; @cheep.TimeStamp</small>
                     </p>
@@ -86,6 +91,30 @@
             </a>
         }
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const followButtons = document.querySelectorAll('.follow-btn');
+
+        followButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const authorUsername = this.dataset.authorUsername;
+
+                // Find all buttons with the same authorUsername
+                const relatedButtons = document.querySelectorAll(`.follow-btn[data-author-username="${authorUsername}"]`);
+
+                // Toggle state for all buttons associated with this author
+                relatedButtons.forEach(btn => {
+                    if (btn.innerText === 'Follow') {
+                        btn.innerText = 'Unfollow';
+                    } else {
+                        btn.innerText = 'Follow';
+                    }
+                });
+            });
+        });
+    });
+</script>
 
 </div>
 
