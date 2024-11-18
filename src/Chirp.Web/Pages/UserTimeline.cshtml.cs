@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Repositories;
+using Microsoft.Build.Framework;
 
 namespace Chirp.Web.Pages;
 
@@ -18,6 +19,7 @@ public class UserTimelineModel : PageModel
     public required Task<List<CheepDTO>> Cheeps { get; set; }
     public required Task<AuthorDTO> Author { get; set; }
     public int CurrentPage { get; set; }
+    [BindProperty]
     public string Text { get; set; }
 
     public ActionResult OnGet([FromQuery] int? page, string author)
@@ -31,15 +33,14 @@ public class UserTimelineModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text))
+        if (!User.Identity.IsAuthenticated)
         {
-            return Page();
+            return NotFound();
         }
 
-        var author = await this.Author;
+        var authorName = User.Identity.Name;
 
-        var postingAuthorName = User.Identity.Name;
-        var postingAuthor = await _service.GetAuthorByName(postingAuthorName);
+        var author = await _service.GetAuthorByName(authorName);
 
         await _service.CreateCheep(author, Text, DateTime.UtcNow);
 
