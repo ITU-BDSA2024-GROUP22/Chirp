@@ -475,3 +475,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# databse and releted files
+*.db
+*.db-shm
+*.db-wal
