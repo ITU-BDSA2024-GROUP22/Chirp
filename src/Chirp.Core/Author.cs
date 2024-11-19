@@ -12,7 +12,9 @@ public class Author : IdentityUser
     //[Required]
     [StringLength(160)] public string? DisplayName { get; set; }
 
+    [Required]
     public required ICollection<Follow> FollowersList { get; set; }
 
+    [Required]
     public required ICollection<Follow> FollowingList { get; set; }
 }

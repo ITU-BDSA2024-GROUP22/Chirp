@@ -22,8 +22,17 @@ public class DBContext : IdentityDbContext<Author>
         base.OnModelCreating(builder);
 
         builder.Entity<Follow>()
-            .HasIndex(f => new { f.FollowerUserId, f.AuthorUserId })
-            .IsUnique();
+            .HasKey(f => new { f.FollowerUserId, f.AuthorUserId });
+
+    builder.Entity<Follow>()
+            .HasOne(f => f.Follower)
+            .WithMany(a => a.FollowingList)
+            .HasForeignKey(f => f.FollowerUserId);
+
+        builder.Entity<Follow>()
+            .HasOne(f => f.Following)
+            .WithMany(a => a.FollowersList)
+            .HasForeignKey(f => f.AuthorUserId);
     }
     public override void Dispose()
     {
