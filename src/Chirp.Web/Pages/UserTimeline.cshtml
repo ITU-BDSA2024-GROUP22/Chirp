@@ -8,6 +8,29 @@
 
 <div>
     <h2> @((await Model.Author).DisplayName)'s Timeline </h2>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+    <div class="cheepbox">
+        <h3>What's on your mind @((await Model.Author).DisplayName)?</h3>
+        <form method="post">
+            <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" >
+            <input type="submit" value="Share">
+            <span id="charLimitMessage" style="color: red; display: none; flex: 1"> you can write a maximum of 160 characters... </span>
+        </form>
+    </div>
+    }
+
+    <script>
+        function checkCharacterLimit() {
+            var cheepInput = document.getElementById("cheepText");
+            var message = document.getElementById("charLimitMessage");
+            if (cheepInput.value.length >= 160) {
+                message.style.display = "inline";  // Show message
+            } else {
+                message.style.display = "none";  // Hide message if under limit
+            }
+        }
+    </script>
 
     @if ((await Model.Cheeps).Any())
     {

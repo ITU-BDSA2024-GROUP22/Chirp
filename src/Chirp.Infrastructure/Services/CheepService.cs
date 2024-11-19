@@ -39,8 +39,7 @@ public class CheepService : ICheepService
 
     public async Task<AuthorDTO> GetAuthorByName(string name)
     {
-        var author = await cheepRepository.GetAuthorByName(name);
-        return author;
+        return await cheepRepository.GetAuthorByName(name);
     }
 
     public async Task CreateCheep(AuthorDTO author, string text, DateTime timeStamp)
