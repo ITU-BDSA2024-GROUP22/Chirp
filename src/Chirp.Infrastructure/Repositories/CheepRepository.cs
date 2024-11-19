@@ -101,5 +101,38 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-}
+    public async Task<List<CheepDTO>>GetCheepsFromFollowedUsers(Author author, int pageNumber)
+    {
+        var ifollow = await _dbContext.Follows
+            .Where(f => f.FollowerUserId == author.Id)
+            .Select(f => f.AuthorUserId)
+            .ToListAsync();
+
+        return await _dbContext.Cheeps
+            .Where(c => c.AuthorId != null && ifollow.Contains(c.AuthorId))
+            .OrderByDescending(c => c.TimeStamp)
+            .Skip((pageNumber - 1) * _pageSize)
+            .Take(_pageSize)
+            .Select(cheep => new CheepDTO
+            {
+                Author = AuthorDTO.fromAuthor(cheep.Author),
+                Text = cheep.Text,
+                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+            })
+            .ToListAsync();
+    }
+
+    public async Task AddFollow()
+    {
+
+    }
+
+
+    }
+
+    //Unfollow
+
+    //AddFollow
+
+    //Is following
 

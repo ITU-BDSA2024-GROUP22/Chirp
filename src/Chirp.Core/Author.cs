@@ -11,4 +11,8 @@ public class Author : IdentityUser
 
     //[Required]
     [StringLength(160)] public string? DisplayName { get; set; }
+
+    public required ICollection<Follow> FollowersList { get; set; }
+
+    public required ICollection<Follow> FollowingList { get; set; }
 }
