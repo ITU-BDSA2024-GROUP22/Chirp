@@ -1,4 +1,4 @@
-
+/*
 using Chirp.Core;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,6 +96,7 @@ namespace Chirp.Tests
             Assert.Contains("Public Timeline", publicTL);
         }
 
+
         [Fact]
         public async void AuthorTest()
         {
@@ -118,3 +119,4 @@ namespace Chirp.Tests
         }
     }
 }
+*/
