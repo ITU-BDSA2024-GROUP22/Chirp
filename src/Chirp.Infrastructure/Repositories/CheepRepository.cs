@@ -84,7 +84,7 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateAuthor(string name, string email) //Add id when in use, and returns task instead of void to make the method awaitable
     {
-        Author author = new (){UserName = name, Email = email};
+        Author author = new Author (){UserName = name, Email = email, EmailConfirmed = true, FollowingList = new List<Follow>(), FollowersList = new List<Follow>() };
         await _dbContext.Authors.AddAsync(author);
         await _dbContext.SaveChangesAsync();
     }
@@ -122,17 +122,38 @@ public class CheepRepository : ICheepRepository
             .ToListAsync();
     }
 
-    public async Task AddFollow()
+    public async Task AddFollow(string followerId, string followeeId)
     {
+        if (!await IsFollowing(followerId, followeeId))
+        {
+            _dbContext.Follows.Add(new Follow
+            {
+                FollowerUserId = followerId,
+                AuthorUserId = followeeId,
+            });
+            await _dbContext.SaveChangesAsync();
+        }
 
     }
 
+    public async Task<bool> IsFollowing(string followerId, string followeeId)
+    {
+        return await _dbContext.Follows
+            .AnyAsync(f => f.FollowerUserId == followerId && f.AuthorUserId == followeeId);
+    }
+
+    public async Task Unfollow(string followerId, string followeeId)
+    {
+        var follow = await _dbContext.Follows
+            .FirstOrDefaultAsync(f => f.FollowerUserId== followerId && f.AuthorUserId == followeeId);
+
+        if (follow != null)
+        {
+            _dbContext.Follows.Remove(follow);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 
     }
 
-    //Unfollow
-
-    //AddFollow
-
-    //Is following
 

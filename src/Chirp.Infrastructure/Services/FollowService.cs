@@ -8,10 +8,10 @@ namespace Chirp.Infrastructure.Services;
 
 public interface IFollowService
 {
-    Task FollowAuthor(int followerId, int followeeId);
-    Task UnfollowAuthor(int followerId, int followeeId);
-    Task <bool> IsFollowing(int followerId, int followeeId);
-    Task<List<CheepDTO>> GetTimeline(int followerId, int pageNumber);
+    Task FollowAuthor(string followerId, string followeeId);
+    Task UnfollowAuthor(string followerId, string followeeId);
+    Task <bool> IsFollowing(string followerId, string followeeId);
+    Task<List<CheepDTO>> GetCheepsFromFollowedUsers(Author author, int pageNumber);
 }
 
 public class FollowService : IFollowService
@@ -24,7 +24,7 @@ public class FollowService : IFollowService
         _cheepRepository = followRepository;
     }
 
-    public async Task FollowAuthor(int followerId, int followeeId)
+    public async Task FollowAuthor(string followerId, string followeeId)
     {
         // Check if already following to avoid duplication
         if (!await _cheepRepository.IsFollowing(followerId, followeeId))
@@ -33,7 +33,7 @@ public class FollowService : IFollowService
         }
     }
 
-    public async Task UnfollowAuthor(int followerId, int followeeId)
+    public async Task UnfollowAuthor(string followerId, string followeeId)
     {
         if (await _cheepRepository.IsFollowing(followerId, followeeId))
         {
@@ -41,14 +41,14 @@ public class FollowService : IFollowService
         }
     }
 
-    public Task<bool> IsFollowing(int followerId, int followeeId)
+    public Task<bool> IsFollowing(string followerId, string followeeId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<List<CheepDTO>> GetTimeline(int followerId, int pageNumber)
+    public async Task<List<CheepDTO>> GetCheepsFromFollowedUsers(Author author, int pageNumber)
     {
-        return await _cheepRepository.GetTimeline(followerId, pageNumber);
+        return await _cheepRepository.GetCheepsFromFollowedUsers(author, pageNumber);
     }
 
 }
