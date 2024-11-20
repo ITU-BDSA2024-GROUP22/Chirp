@@ -9,7 +9,6 @@
 
 @if (User.Identity?.IsAuthenticated == true)
 {
-
     <div class="user-info">
         <h2> User information </h2>
         <br/>
@@ -30,7 +29,7 @@
             <div class="info-box">
                 <div class="box-title"></div>
                 <form method="post">
-                    <textarea name="bio" class="bio-input" rows="5" placeholder="Write your bio here...">@Model.Bio</textarea>
+                    <textarea name="bio" class="bio-input" rows="5" placeholder="Write your bio here...">@(Model.Bio ?? "")</textarea>
                     <br />
                     <button type="submit" class="bio-submit">Save Bio</button>
                 </form>

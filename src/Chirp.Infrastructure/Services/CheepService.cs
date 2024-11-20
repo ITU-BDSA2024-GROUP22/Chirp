@@ -46,12 +46,6 @@ public class CheepService : ICheepService
     {
         await cheepRepository.CreateCheep(author, text, timeStamp);
     }
-
-    public async Task UpdateAuthor(AuthorDTO author)
-    {
-        await cheepRepository..UpdateAsync(author);
-    }
-
 }
 
 
