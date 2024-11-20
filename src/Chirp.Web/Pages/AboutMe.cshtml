@@ -27,8 +27,16 @@
                     @((await Model.Author)?.UserName ?? "Unknown")
                 </div>
             </div>
+            <div class="info-box">
+                <div class="box-title"></div>
+                <form method="post">
+                    <textarea name="bio" class="bio-input" rows="5" placeholder="Write your bio here...">@Model.Bio</textarea>
+                    <br />
+                    <button type="submit" class="bio-submit">Save Bio</button>
+                </form>
+                </div>
+            </div>
         </div>
-    </div>
 
     <div>
         @if ((await Model.Cheeps).Any())
