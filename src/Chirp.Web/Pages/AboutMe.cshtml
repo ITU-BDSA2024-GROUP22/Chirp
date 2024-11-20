@@ -6,6 +6,7 @@
     var routeName = HttpContext.GetRouteValue("author");
 }
 
+<div>
 @if ((await Model.Cheeps).Any())
 {
 <ul id="messagelist" class="cheeps">
@@ -27,6 +28,7 @@ else
 {
 <em>There are no cheeps so far.</em>
 }
+
 <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
     @{
     int currentPage = Model.CurrentPage;
@@ -45,5 +47,7 @@ else
     </a>
     }
 </div>
+</div>
+
 
 
