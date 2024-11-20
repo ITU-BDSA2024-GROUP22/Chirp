@@ -7,17 +7,23 @@
     var routeName = HttpContext.GetRouteValue("author");
 }
 
+
 <div class="user-info">
-    <div class="info-box">
-        <div class="box-title">Display Name</div>
-        <div class="box-content">
-            @((await Model.Author)?.DisplayName ?? "Unknown")
+    <h2> User information </h2>
+    <br/>
+    <div>
+        <div class="info-box">
+            <div class="box-title">Displayname</div>
+            <div class="box-content">
+                @((await Model.Author)?.DisplayName ?? "Unknown")
+            </div>
         </div>
-    </div>
-    <div class="info-box">
-        <div class="box-title">Username</div>
-        <div class="box-content">
-            @((await Model.Author)?.UserName ?? "Unknown")
+        <br/>
+        <div class="info-box">
+            <div class="box-title">Username</div>
+            <div class="box-content">
+                @((await Model.Author)?.UserName ?? "Unknown")
+            </div>
         </div>
     </div>
 </div>
