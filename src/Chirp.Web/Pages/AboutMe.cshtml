@@ -8,8 +8,18 @@
 }
 
 <div class="user-info">
-    <h1>@((await Model.Author)?.DisplayName ?? "unknown")</h1>
-    <h2>@((await Model.Author)?.UserName ?? "unknown")</h2>
+    <div class="info-box">
+        <div class="box-title">Display Name</div>
+        <div class="box-content">
+            @((await Model.Author)?.DisplayName ?? "Unknown")
+        </div>
+    </div>
+    <div class="info-box">
+        <div class="box-title">Username</div>
+        <div class="box-content">
+            @((await Model.Author)?.UserName ?? "Unknown")
+        </div>
+    </div>
 </div>
 
 <div>
