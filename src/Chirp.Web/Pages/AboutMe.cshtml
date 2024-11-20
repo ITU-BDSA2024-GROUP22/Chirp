@@ -1,10 +1,16 @@
 @page "/{author}/about-me"
+@using Chirp.Core
 @model Chirp.Web.Pages.AboutMeModel
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
 }
+
+<div class="user-info">
+    <h1>@((await Model.Author)?.DisplayName ?? "unknown")</h1>
+    <h2>@((await Model.Author)?.UserName ?? "unknown")</h2>
+</div>
 
 <div>
 @if ((await Model.Cheeps).Any())
