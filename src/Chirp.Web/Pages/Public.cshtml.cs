@@ -55,4 +55,6 @@ public class PublicModel : PageModel
 
         return RedirectToPage("/Public", new { page = 1 });
     }
+
+
 }
