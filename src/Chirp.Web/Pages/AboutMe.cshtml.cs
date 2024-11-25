@@ -22,7 +22,7 @@ public class AboutMeModel : PageModel
     public string Text { get; set; }
     public string Username { get; set; }
     public string Displayname { get; set; }
-    public string Email { get; set; }
+    //public string Email { get; set; }
     [BindProperty]
     public string Bio { get; set; }
 
@@ -47,17 +47,15 @@ public class AboutMeModel : PageModel
         return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
     }
 
-    public ActionResult OnGet([FromQuery] int? page, string author)
+    public async Task<IActionResult> OnGet([FromQuery] int? page, string author)
     {
         if (string.IsNullOrEmpty(author))
         {
             return NotFound("Author parameter is missing");
         }
 
-        Author = _service.GetAuthorByName(author);
-
-        Bio = Author.Result.Bio ?? "";
-        this.Author = _service.GetAuthorByName(author);
+        Author =  _service.GetAuthorByName(author);
+        Bio = (await Author)?.Bio ?? "";
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
@@ -72,6 +70,11 @@ public class AboutMeModel : PageModel
         }
 
         var authorName = User.Identity.Name;
+        if (authorName == null)
+        {
+            return NotFound("author parameter is null");
+        }
+
         var author = await _service.GetAuthorByName(authorName);
 
         if (string.IsNullOrEmpty(Bio))
