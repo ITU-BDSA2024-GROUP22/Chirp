@@ -47,9 +47,9 @@ public class CheepService : ICheepService
         await cheepRepository.CreateCheep(author, text, timeStamp);
     }
 
-    public async Task UpdateBio(AuthorDTO author, string bio)
+    public async Task UpdateBio(AuthorDTO authorDTO, string bio)
     {
-
+        await cheepRepository.UpdateBio(authorDTO, bio);
     }
 }
 

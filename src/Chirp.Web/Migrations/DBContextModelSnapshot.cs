@@ -25,12 +25,14 @@ namespace Chirp.Web.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Bio")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
                         .HasMaxLength(160)
                         .HasColumnType("TEXT");
 
@@ -93,7 +95,6 @@ namespace Chirp.Web.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AuthorId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Text")
@@ -247,9 +248,7 @@ namespace Chirp.Web.Migrations
                 {
                     b.HasOne("Chirp.Core.Author", "Author")
                         .WithMany("Cheeps")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });

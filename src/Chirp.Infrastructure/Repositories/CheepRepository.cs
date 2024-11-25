@@ -101,5 +101,16 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task UpdateBio(AuthorDTO authorDTO, string bio)
+    {
+        var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
+        if (author == null)
+        {
+            throw new KeyNotFoundException($"No author with name {authorDTO.DisplayName} was found.");
+        }
+
+        author.Bio = bio;
+    }
+
 }
 

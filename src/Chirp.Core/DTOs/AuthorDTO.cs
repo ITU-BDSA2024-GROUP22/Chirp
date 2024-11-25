@@ -15,5 +15,5 @@ public class AuthorDTO
 
     public required string? DisplayName {get; set;}
     public required string? UserName {get; set;}
-    public string Bio {get; set;}
+    public string? Bio {get; set;}
 }

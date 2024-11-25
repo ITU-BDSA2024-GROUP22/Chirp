@@ -79,7 +79,7 @@ public class AboutMeModel : PageModel
             return NotFound("Bio parameter is missing");
         }
 
-        author.Bio = Bio;
+        await _service.UpdateBio(author, Bio);
 
         return RedirectToPage("/AboutMe", new { author = author.UserName, page = 1 });
     }
