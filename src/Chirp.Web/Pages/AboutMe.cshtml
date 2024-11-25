@@ -28,27 +28,12 @@
             </div>
             <br/>
             <div class="info-box">
-                @if (String.IsNullOrEmpty((await Model.Author)?.Bio))
-                {
                     <div class="box-title"></div>
                     <form method="post">
-                        <textarea name="bio" class="bio-input" rows="5" placeholder="Write your bio here...">@(((await Model.Author)?.Bio) ?? "")</textarea>
+                        <textarea name="Bio" class="bio-input" rows="5" placeholder="Write your bio here...">@((await Model.Author)?.Bio)</textarea>
                         <br/>
-                        <button type="submit" class="bio-submit">Save Bio</button>
+                        <button input type="submit" value="Save" class="bio-submit">Save Bio</button>
                     </form>
-                }
-                else
-                {
-                    <div class="bio-display">
-                        <p>@((await Model.Author)?.Bio)</p>
-                        <button type="button" class="edit-bio-button" onclick="enableBioEdit()">Edit Bio</button>
-                    </div>
-                    <form method="post" id="edit-bio-form" style="display:none;">
-                        <textarea name="bio" class="bio-input" rows="5">@((await Model.Author)?.Bio)</textarea>
-                        <br />
-                        <button type="submit" class="bio-submit">Save Bio</button>
-                    </form>
-                }
             </div>
             </div>
         </div>

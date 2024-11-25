@@ -110,6 +110,9 @@ public class CheepRepository : ICheepRepository
         }
 
         author.Bio = bio;
+        authorDTO.Bio = author.Bio;
+
+        await _dbContext.SaveChangesAsync();
     }
 
 }

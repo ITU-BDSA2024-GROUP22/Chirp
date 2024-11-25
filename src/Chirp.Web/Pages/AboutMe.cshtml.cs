@@ -55,7 +55,7 @@ public class AboutMeModel : PageModel
         }
 
         Author =  _service.GetAuthorByName(author);
-        Bio = (await Author)?.Bio ?? "";
+        Bio = (await Author)?.Bio;
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
@@ -82,6 +82,7 @@ public class AboutMeModel : PageModel
             return NotFound("Bio parameter is missing");
         }
 
+        author.Bio = Bio;
         await _service.UpdateBio(author, Bio);
 
         return RedirectToPage("/AboutMe", new { author = author.UserName, page = 1 });
