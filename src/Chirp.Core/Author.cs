@@ -11,4 +11,6 @@ public class Author : IdentityUser
 
     //[Required]
     [StringLength(160)] public string? DisplayName { get; set; }
+
+    public string Bio {get; set;}
 }

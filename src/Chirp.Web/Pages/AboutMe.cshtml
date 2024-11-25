@@ -26,14 +26,30 @@
                     @((await Model.Author)?.UserName ?? "Unknown")
                 </div>
             </div>
+            <br/>
             <div class="info-box">
-                <div class="box-title"></div>
-                <form method="post">
-                    <textarea name="bio" class="bio-input" rows="5" placeholder="Write your bio here...">@(Model.Bio ?? "")</textarea>
-                    <br />
-                    <button type="submit" class="bio-submit">Save Bio</button>
-                </form>
-                </div>
+                @if (String.IsNullOrEmpty((await Model.Author)?.Bio))
+                {
+                    <div class="box-title"></div>
+                    <form method="post">
+                        <textarea name="bio" class="bio-input" rows="5" placeholder="Write your bio here...">@(((await Model.Author)?.Bio) ?? "")</textarea>
+                        <br/>
+                        <button type="submit" class="bio-submit">Save Bio</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="bio-display">
+                        <p>@((await Model.Author)?.Bio)</p>
+                        <button type="button" class="edit-bio-button" onclick="enableBioEdit()">Edit Bio</button>
+                    </div>
+                    <form method="post" id="edit-bio-form" style="display:none;">
+                        <textarea name="bio" class="bio-input" rows="5">@((await Model.Author)?.Bio)</textarea>
+                        <br />
+                        <button type="submit" class="bio-submit">Save Bio</button>
+                    </form>
+                }
+            </div>
             </div>
         </div>
 
@@ -66,14 +82,14 @@
 
                 if (currentPage > 1)
                 {
-                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                    <a href="/@routeName/about-me?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
                         <button>Previous</button>
                     </a>
                 }
 
                 <span class="current-page">@currentPage</span>
 
-                <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                <a href="/@routeName/about-me?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
                     <button>Next</button>
                 </a>
             }

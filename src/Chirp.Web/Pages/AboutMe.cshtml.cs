@@ -63,6 +63,26 @@ public class AboutMeModel : PageModel
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return NotFound("User is not authenticated");
+        }
+
+        var authorName = User.Identity.Name;
+        var author = await _service.GetAuthorByName(authorName);
+
+        if (string.IsNullOrEmpty(Bio))
+        {
+            return NotFound("Bio parameter is missing");
+        }
+
+        author.Bio = Bio;
+
+        return RedirectToPage("/AboutMe", new { author = author.UserName, page = 1 });
+    }
 }
 
 
