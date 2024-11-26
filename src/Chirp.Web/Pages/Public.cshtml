@@ -1,9 +1,18 @@
 ﻿@page "/"
 @using Chirp.Core
+@using Chirp.Core.DTOs
+@using Chirp.Infrastructure.Services
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.PublicModel
+@inject IFollowService FollowService;
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
+    List<AuthorDTO> FollowingList;
+    if (User.Identity!.IsAuthenticated)
+    {
+        FollowingList FollowService.GetFollowing
+    }
 }
 
 <div>
@@ -60,8 +69,20 @@
                         {
                             @if (User.Identity?.Name != cheep.Author.UserName)
                             {
-                                <button class="follow-btn" data-author-username="@cheep.Author.UserName">Follow</button>
+                                @if(FollowingList)
+                                <form method="post" asp-page-handler="Follow">
+                                    <input type="hidden" name="authorUsername" value="@cheep.Author.UserName" />
+                                    <button type="submit" class="follow-btn">
+                                    </button>
+                                </form>
+
+                                <form method="post" asp-page-handler="Unfollow" >
+                                    <input type="hidden" name="authorUsername" value="@cheep.Author.UserName" />
+                                    <button type="submit" class="follow-btn">
+                                    </button>
+                                </form>
                             }
+
                             <br/>
                         }
 
@@ -95,35 +116,6 @@
             </a>
         }
     </div>
-
-
-
-     @if (User.Identity?.IsAuthenticated == true)
-    {
-        <script>
-             document.addEventListener('DOMContentLoaded', function () {
-             const followButtons = document.querySelectorAll('.follow-btn');
-
-             followButtons.forEach(button => {
-             button.addEventListener('click', function () {
-             const authorUsername = this.dataset.authorUsername;
-
-             // Find all buttons with the same authorUsername
-             const relatedButtons = document.querySelectorAll(`.follow-btn[data-author-username="${authorUsername}"]`);
-
-             // Toggle state for all buttons associated with this author
-             relatedButtons.forEach(btn => {
-             if (btn.innerText === 'Follow') {
-             btn.innerText = 'Unfollow';
-             } else {
-             btn.innerText = 'Follow';
-             }
-             });
-             });
-             });
-             });
-         </script>
-     }
 
 
 

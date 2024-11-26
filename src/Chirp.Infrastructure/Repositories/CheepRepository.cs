@@ -57,8 +57,29 @@ public class CheepRepository : ICheepRepository
         var result = await pageQuery.ToListAsync();
         return result;
     }
+    public async Task<List<AuthorDTO>> GetFollowingDTO(string user)
+    {
+        // Get the list of authors the user is following
+        var followingList = await GetFollowingList(user);
 
-    public async Task<AuthorDTO> GetAuthorByName(string name)
+        // Map each Author to an AuthorDTO
+        return followingList.Select(author => new AuthorDTO
+        {
+            UserName = author.UserName,
+            DisplayName = string.IsNullOrWhiteSpace(author.DisplayName) ? author.UserName : author.DisplayName,
+            FollowingList = new List<Author>() // Optional: Populate this if needed
+        }).ToList();
+    }
+
+
+    public async Task<List<Author>> GetFollowingList(string user)
+    {
+        return await _dbContext.Authors.Where(a => a.UserName == user).Select(a => a.FollowingList)
+            .FirstOrDefaultAsync() ?? new List<Author>();
+    }
+
+
+    public async Task<AuthorDTO?> GetAuthorByName(string name)
     {
         var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
 
@@ -68,6 +89,18 @@ public class CheepRepository : ICheepRepository
         }
 
         return AuthorDTO.fromAuthor(author);
+    }
+
+    public async Task<Author?> GetAuthor(string name)
+    {
+        var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
+
+        if (author == null)
+        {
+            throw new KeyNotFoundException($"No author with name {name} was found.");
+        }
+
+        return author;
     }
 
     public Author GetAuthorByEmail(string name)
@@ -84,7 +117,7 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateAuthor(string name, string email) //Add id when in use, and returns task instead of void to make the method awaitable
     {
-        Author author = new Author (){UserName = name, Email = email, EmailConfirmed = true, FollowingList = new List<Follow>(), FollowersList = new List<Follow>() };
+        Author author = new Author (){UserName = name, Email = email, EmailConfirmed = true, FollowingList = new List<Author>() };
         await _dbContext.Authors.AddAsync(author);
         await _dbContext.SaveChangesAsync();
     }
@@ -101,59 +134,39 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<CheepDTO>>GetCheepsFromFollowedUsers(Author author, int pageNumber)
-    {
-        var ifollow = await _dbContext.Follows
-            .Where(f => f.FollowerUserId == author.Id)
-            .Select(f => f.AuthorUserId)
-            .ToListAsync();
 
-        return await _dbContext.Cheeps
-            .Where(c => c.AuthorId != null && ifollow.Contains(c.AuthorId))
-            .OrderByDescending(c => c.TimeStamp)
-            .Skip((pageNumber - 1) * _pageSize)
-            .Take(_pageSize)
-            .Select(cheep => new CheepDTO
+    public async Task AddFollow(string user, string userFollowed)
+    {
+            var author = await GetAuthor(user);
+            var authorFollowed = await GetAuthor(userFollowed);
+            if (author != null && author.FollowingList.All(a => a.UserName != userFollowed))
             {
-                Author = AuthorDTO.fromAuthor(cheep.Author),
-                Text = cheep.Text,
-                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
-            })
-            .ToListAsync();
+                author.FollowingList.Add(authorFollowed);
+                await _dbContext.SaveChangesAsync();
+            }
     }
 
-    public async Task AddFollow(string followerId, string followeeId)
+    public async Task<bool> IsFollowing(string user, string userFollowed)
     {
-        if (!await IsFollowing(followerId, followeeId))
+        var list = await _dbContext.Authors.Where(a => a.UserName == user).Select(a => a.FollowingList)
+            .FirstOrDefaultAsync();
+
+        if (list != null && list.Any(a => a.UserName == userFollowed))
         {
-            _dbContext.Follows.Add(new Follow
-            {
-                FollowerUserId = followerId,
-                AuthorUserId = followeeId,
-            });
-            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
+        return false;
     }
 
-    public async Task<bool> IsFollowing(string followerId, string followeeId)
+    public async Task Unfollow(string user, string userUnfollowed)
     {
-        return await _dbContext.Follows
-            .AnyAsync(f => f.FollowerUserId == followerId && f.AuthorUserId == followeeId);
-    }
+        var authorUnfollowed = await GetAuthor(userUnfollowed);
+            _dbContext.Authors.Where(a =>a.UserName == user)
+                .Include(a => a.FollowingList).FirstOrDefault()!.FollowingList.Remove(authorUnfollowed);
 
-    public async Task Unfollow(string followerId, string followeeId)
-    {
-        var follow = await _dbContext.Follows
-            .FirstOrDefaultAsync(f => f.FollowerUserId== followerId && f.AuthorUserId == followeeId);
-
-        if (follow != null)
-        {
-            _dbContext.Follows.Remove(follow);
             await _dbContext.SaveChangesAsync();
         }
-    }
-
     }
 
 
