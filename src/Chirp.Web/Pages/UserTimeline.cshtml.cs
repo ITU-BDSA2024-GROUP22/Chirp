@@ -1,9 +1,6 @@
-﻿using Chirp.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core.DTOs;
-using Chirp.Infrastructure.Repositories;
-using Microsoft.Build.Framework;
 
 namespace Chirp.Web.Pages;
 
@@ -33,14 +30,14 @@ public class UserTimelineModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!User.Identity.IsAuthenticated)
+        if (!User.Identity!.IsAuthenticated)
         {
             return NotFound();
         }
 
         var authorName = User.Identity.Name;
 
-        var author = await _service.GetAuthorByName(authorName);
+        var author = await _service.GetAuthorByName(authorName!);
 
         await _service.CreateCheep(author, Text, DateTime.UtcNow);
 
