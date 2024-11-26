@@ -31,10 +31,12 @@ public class CheepService : ICheepService
 
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber)
     {
-        var results = cheepRepository.GetCheepsFromAuthor(pageNumber, author);
-        return await results;
-        // filter by the provided author name
-        //var cheepSort = results.Where(x => x.Author == author).ToList();
+        var result = await cheepRepository.GetCheepsFromAuthor(pageNumber, author);
+
+        // Debugging linje til logning
+        Console.WriteLine($"Fetched {result.Count} cheeps for {author}");
+
+        return result;
     }
 
     public async Task<AuthorDTO> GetAuthorByName(string name)

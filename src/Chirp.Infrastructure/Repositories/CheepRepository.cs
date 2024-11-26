@@ -176,19 +176,20 @@ public class CheepRepository : ICheepRepository
 
             await _dbContext.SaveChangesAsync();
         }
-
     public async Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
 
-        var followingAuthors = await GetFollowingList(username);
+        var followingUsernames = (await GetFollowingList(username))
+            ?.Select(a => a.UserName)
+            .ToList();
 
-        if (followingAuthors == null || !followingAuthors.Any())
+        if (followingUsernames == null || !followingUsernames.Any())
         {
             return new List<CheepDTO>();
         }
         var pageQuery = (from cheep in _dbContext.Cheeps
-                where followingAuthors.Any(a => a.UserName == cheep.Author.UserName)
+                where followingUsernames.Contains(cheep.Author.UserName)
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
@@ -205,8 +206,7 @@ public class CheepRepository : ICheepRepository
         var result = await pageQuery.ToListAsync();
         return result;
     }
-    }
-
+}
 
 
 
