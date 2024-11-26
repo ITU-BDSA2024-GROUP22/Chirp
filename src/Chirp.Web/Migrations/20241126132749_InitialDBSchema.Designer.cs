@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Web.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20241125151820_InitialDBSchema")]
+    [Migration("20241126132749_InitialDBSchema")]
     partial class InitialDBSchema
     {
         /// <inheritdoc />
@@ -27,9 +27,6 @@ namespace Chirp.Web.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Bio")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

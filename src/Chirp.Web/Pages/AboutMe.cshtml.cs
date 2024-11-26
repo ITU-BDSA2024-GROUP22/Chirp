@@ -34,7 +34,7 @@ public class AboutMeModel : PageModel
 
         Username = author.UserName;
         Displayname = author.DisplayName;
-        Bio = author.Bio;
+        //Bio = author.Bio;
         //Email = User.Identity.;
 
         if (!User.Identity.IsAuthenticated)
@@ -61,7 +61,7 @@ public class AboutMeModel : PageModel
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
-
+    /*
     public async Task<IActionResult> OnPostAsync()
     {
         if (!User.Identity.IsAuthenticated)
@@ -87,6 +87,7 @@ public class AboutMeModel : PageModel
 
         return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
     }
+    */
 }
 
 
