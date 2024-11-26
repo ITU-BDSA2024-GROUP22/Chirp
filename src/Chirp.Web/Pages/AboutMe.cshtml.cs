@@ -17,14 +17,13 @@ public class AboutMeModel : PageModel
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
     public required Task<AuthorDTO> Author { get; set; }
+    public Task<Bio> Bio { get; set; }
     public int CurrentPage { get; set; }
     [BindProperty]
-    public string Text { get; set; }
+    public string BioText { get; set; }
     public string Username { get; set; }
     public string Displayname { get; set; }
     //public string Email { get; set; }
-    [BindProperty]
-    public string Bio { get; set; }
 
     public async Task<IActionResult> OnGetUserDetails()
     {
@@ -42,7 +41,7 @@ public class AboutMeModel : PageModel
             return NotFound();
         }
 
-        await _service.CreateCheep(author, Text, DateTime.UtcNow);
+        //await _service.CreateCheep(author, Text, DateTime.UtcNow);
 
         return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
     }
@@ -55,13 +54,13 @@ public class AboutMeModel : PageModel
         }
 
         Author =  _service.GetAuthorByName(author);
-        //Bio = _service.GetBioFromAuthor(await Author).ToString;
+        Bio = _service.GetBioFromAuthor((await Author).UserName);
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
-    /*
+
     public async Task<IActionResult> OnPostAsync()
     {
         if (!User.Identity.IsAuthenticated)
@@ -77,17 +76,16 @@ public class AboutMeModel : PageModel
 
         Author = _service.GetAuthorByName(author);
 
-        if (string.IsNullOrEmpty(Bio))
+        if (string.IsNullOrEmpty(BioText))
         {
             return NotFound("Bio parameter is missing");
         }
 
-        (await Author).Bio = Bio;
-        await _service.UpdateBio((await Author), Bio);
+        await _service.UpdateBio((await Author), BioText);
 
         return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
     }
-    */
+
 }
 
 

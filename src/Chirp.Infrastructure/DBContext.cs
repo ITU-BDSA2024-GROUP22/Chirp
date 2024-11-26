@@ -14,6 +14,8 @@ public class DBContext : IdentityDbContext<Author>
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
 
+    public DbSet<Bio> Bios { get; set; }
+
     public override void Dispose()
     {
         base.Dispose();
