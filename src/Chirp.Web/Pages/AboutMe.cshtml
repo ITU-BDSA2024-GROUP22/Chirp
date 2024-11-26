@@ -30,7 +30,7 @@
             <div class="info-box">
                     <div class="box-title"></div>
                     <form method="post">
-                        <textarea name="Bio" class="bio-input" rows="5" placeholder="Write your bio here...">@((await Model.Author)?.Bio)</textarea>
+                        <textarea asp-for="Bio" class="bio-input" rows="5" placeholder="Write your bio here...">@((await Model.Author)?.Bio)</textarea>
                         <br/>
                         <button input type="submit" value="Save" class="bio-submit">Save Bio</button>
                     </form>

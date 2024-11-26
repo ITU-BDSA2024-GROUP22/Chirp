@@ -55,7 +55,7 @@ public class AboutMeModel : PageModel
         }
 
         Author =  _service.GetAuthorByName(author);
-        Bio = (await Author)?.Bio;
+        //Bio = _service.GetBioFromAuthor(await Author).ToString;
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
@@ -69,23 +69,23 @@ public class AboutMeModel : PageModel
             return NotFound("User is not authenticated");
         }
 
-        var authorName = User.Identity.Name;
-        if (authorName == null)
+        var author = User.Identity.Name;
+        if (author == null)
         {
             return NotFound("author parameter is null");
         }
 
-        var author = await _service.GetAuthorByName(authorName);
+        Author = _service.GetAuthorByName(author);
 
         if (string.IsNullOrEmpty(Bio))
         {
             return NotFound("Bio parameter is missing");
         }
 
-        author.Bio = Bio;
-        await _service.UpdateBio(author, Bio);
+        (await Author).Bio = Bio;
+        await _service.UpdateBio((await Author), Bio);
 
-        return RedirectToPage("/AboutMe", new { author = author.UserName, page = 1 });
+        return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
     }
 }
 
