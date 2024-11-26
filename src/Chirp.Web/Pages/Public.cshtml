@@ -1,17 +1,18 @@
 ﻿@page "/"
 @using Chirp.Core
 @using Chirp.Core.DTOs
-@using Chirp.Infrastructure.Services
+@using Chirp.Infrastructure
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.PublicModel
-@inject IFollowService FollowService;
+@using IFollowService FollowService;
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    List<AuthorDTO> FollowingList;
+    List<AuthorDTO> FollowingList = null;
+
     if (User.Identity!.IsAuthenticated)
     {
-        FollowingList FollowService.GetFollowing
+        FollowingList = FollowService.GetFollowing(User.Identity.Name);
     }
 }
 
@@ -69,21 +70,23 @@
                         {
                             @if (User.Identity?.Name != cheep.Author.UserName)
                             {
-                                @if(FollowingList)
-                                <form method="post" asp-page-handler="Follow">
-                                    <input type="hidden" name="authorUsername" value="@cheep.Author.UserName" />
-                                    <button type="submit" class="follow-btn">
-                                    </button>
-                                </form>
+                                @if (FollowingList.Contains(cheep.Author))
+                                {
+                                    <form method="post" asp-page-handler="Follow">
+                                        <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
+                                        <button type="submit" class="follow-btn">
+                                        </button>
+                                    </form>
 
-                                <form method="post" asp-page-handler="Unfollow" >
-                                    <input type="hidden" name="authorUsername" value="@cheep.Author.UserName" />
-                                    <button type="submit" class="follow-btn">
-                                    </button>
-                                </form>
+                                    <form method="post" asp-page-handler="Unfollow">
+                                        <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
+                                        <button type="submit" class="follow-btn">
+                                        </button>
+                                    </form>
+                                }
+
+                                <br/>
                             }
-
-                            <br/>
                         }
 
                         @cheep.Text

@@ -2,7 +2,7 @@ using Chirp.Core;
 using Chirp.Core.Interfaces;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
-using Chirp.Infrastructure.Services;
+using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

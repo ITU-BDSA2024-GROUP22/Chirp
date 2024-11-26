@@ -4,8 +4,6 @@ using Chirp.Core.DTOs;
 using Chirp.Core.Interfaces;
 using Chirp.Infrastructure.Repositories;
 
-namespace Chirp.Infrastructure.Services;
-
 public interface IFollowService
 {
     Task FollowAuthor(string followerId, string followeeId);
@@ -48,7 +46,7 @@ public class FollowService : IFollowService
 
     public List<AuthorDTO> GetFollowing(string username)
     {
-        var authorlist = _cheepRepository.GetFollowings(username);
+        var authorlist = _cheepRepository.GetFollowingDTO(username).Result;
         return authorlist;
     }
 

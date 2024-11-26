@@ -1,7 +1,7 @@
 ﻿using Chirp.Core;
 using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Repositories;
-using Chirp.Infrastructure.Services;
+using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -81,7 +81,4 @@ public class PublicModel : PageModel
         }
         return Redirect($"/?page={CurrentPage}");
     }
-
-    //OnPostFollow
-
 }
