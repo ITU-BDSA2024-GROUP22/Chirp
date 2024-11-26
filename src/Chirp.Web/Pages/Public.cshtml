@@ -4,7 +4,7 @@
 @using Chirp.Infrastructure
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.PublicModel
-@using IFollowService FollowService;
+@inject FollowService FollowService;
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
@@ -74,13 +74,13 @@
                                 {
                                     <form method="post" asp-page-handler="Follow">
                                         <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
-                                        <button type="submit" class="follow-btn">
+                                        <button input type="submit" class="follow-btn">
                                         </button>
                                     </form>
 
                                     <form method="post" asp-page-handler="Unfollow">
                                         <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
-                                        <button type="submit" class="follow-btn">
+                                        <button input type="submit" class="follow-btn">
                                         </button>
                                     </form>
                                 }
