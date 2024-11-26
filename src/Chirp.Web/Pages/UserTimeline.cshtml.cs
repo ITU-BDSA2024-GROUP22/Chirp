@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core.DTOs;
-using Chirp.Infrastructure.Repositories;
-using Microsoft.Build.Framework;
 
 namespace Chirp.Web.Pages;
 
