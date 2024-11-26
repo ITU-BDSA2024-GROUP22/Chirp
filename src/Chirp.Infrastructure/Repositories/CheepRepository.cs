@@ -107,6 +107,7 @@ public class CheepRepository : ICheepRepository
         if (author != null)
         {
             Bio bio = new (){ Author = author, Text = text };
+            await _dbContext.Bios.AddAsync(bio);
         }
 
         await _dbContext.SaveChangesAsync();
@@ -126,6 +127,7 @@ public class CheepRepository : ICheepRepository
             });
 
         var bioResult = await bioQuery.FirstOrDefaultAsync();
+        Console.WriteLine("BioText: " + bioResult.Text);
         return bioResult;
     }
 

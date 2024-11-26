@@ -55,6 +55,7 @@ public class AboutMeModel : PageModel
 
         Author =  _service.GetAuthorByName(author);
         Bio = _service.GetBioFromAuthor((await Author).UserName);
+        Console.WriteLine("bio in cshtml.cs: " + (await Bio).Text);
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
