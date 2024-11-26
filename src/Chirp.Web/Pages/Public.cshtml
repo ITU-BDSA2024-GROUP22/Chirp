@@ -11,7 +11,7 @@
     @if (User.Identity?.IsAuthenticated == true)
     {
     <div class="cheepbox">
-        <h3>What's on your mind @((await Model.Author).DisplayName)?</h3>
+        <h3>What's on your mind, @((await Model.Author).DisplayName)?</h3>
         <form method="post">
             <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" >
             <input type="submit" value="Share">
