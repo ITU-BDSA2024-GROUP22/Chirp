@@ -158,6 +158,25 @@ namespace Chirp.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bios",
+                columns: table => new
+                {
+                    BioId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    Text = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bios", x => x.BioId);
+                    table.ForeignKey(
+                        name: "FK_Bios_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cheeps",
                 columns: table => new
                 {
@@ -215,6 +234,11 @@ namespace Chirp.Web.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bios_AuthorId",
+                table: "Bios",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cheeps_AuthorId",
                 table: "Cheeps",
                 column: "AuthorId");
@@ -237,6 +261,9 @@ namespace Chirp.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Bios");
 
             migrationBuilder.DropTable(
                 name: "Cheeps");

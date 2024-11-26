@@ -17,35 +17,10 @@ public class AboutMeModel : PageModel
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
     public required Task<AuthorDTO> Author { get; set; }
+    public Task<Bio> Bio { get; set; }
     public int CurrentPage { get; set; }
     [BindProperty]
-    public string Text { get; set; }
-    public string Username { get; set; }
-    public string Displayname { get; set; }
-    //public string Email { get; set; }
-    [BindProperty]
-    public string Bio { get; set; }
-
-    public async Task<IActionResult> OnGetUserDetails()
-    {
-        var authorName = User.Identity.Name;
-
-        var author = await _service.GetAuthorByName(authorName);
-
-        Username = author.UserName;
-        Displayname = author.DisplayName;
-        //Bio = author.Bio;
-        //Email = User.Identity.;
-
-        if (!User.Identity.IsAuthenticated)
-        {
-            return NotFound();
-        }
-
-        await _service.CreateCheep(author, Text, DateTime.UtcNow);
-
-        return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
-    }
+    public string BioText { get; set; }
 
     public async Task<IActionResult> OnGet([FromQuery] int? page, string author)
     {
@@ -55,13 +30,17 @@ public class AboutMeModel : PageModel
         }
 
         Author =  _service.GetAuthorByName(author);
-        //Bio = _service.GetBioFromAuthor(await Author).ToString;
+
+        Bio = _service.GetBioFromAuthor((await Author).UserName);
+        BioText = (await Bio)?.Text ?? string.Empty;
+
+        Console.WriteLine("bio in cshtml.cs: " + (await Bio)?.Text);
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
-    /*
+
     public async Task<IActionResult> OnPostAsync()
     {
         if (!User.Identity.IsAuthenticated)
@@ -77,17 +56,16 @@ public class AboutMeModel : PageModel
 
         Author = _service.GetAuthorByName(author);
 
-        if (string.IsNullOrEmpty(Bio))
+        if (string.IsNullOrEmpty(BioText))
         {
             return NotFound("Bio parameter is missing");
         }
 
-        (await Author).Bio = Bio;
-        await _service.UpdateBio((await Author), Bio);
+        await _service.UpdateBio((await Author), BioText);
 
         return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
     }
-    */
+
 }
 
 

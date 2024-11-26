@@ -85,6 +85,25 @@ namespace Chirp.Web.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Chirp.Core.Bio", b =>
+                {
+                    b.Property<int>("BioId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BioId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Bios");
+                });
+
             modelBuilder.Entity("Chirp.Core.Cheep", b =>
                 {
                     b.Property<int>("CheepId")
@@ -239,6 +258,15 @@ namespace Chirp.Web.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Chirp.Core.Bio", b =>
+                {
+                    b.HasOne("Chirp.Core.Author", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Chirp.Core.Cheep", b =>

@@ -101,19 +101,42 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    /* public async Task UpdateBio(AuthorDTO authorDTO, string bio)
+    public async Task UpdateBio(AuthorDTO authorDTO, string text)
     {
         var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
-        if (author == null)
+        if (author != null)
         {
-            throw new KeyNotFoundException($"No author with name {authorDTO.DisplayName} was found.");
+            var oldBio = _dbContext.Bios.SingleOrDefault(b => b.AuthorId == author.Id);
+            if (oldBio != null)
+            {
+                oldBio.Text = text;
+            }
+            else
+            {
+                Bio bio = new() {
+                    Author = author,
+                    Text = text
+                };
+                await _dbContext.Bios.AddAsync(bio);
+            }
         }
-
-        author.Bio = bio;
-        authorDTO.Bio = author.Bio;
-
         await _dbContext.SaveChangesAsync();
-    } */
+    }
+
+    public async Task<Bio> GetBioFromAuthor(string username)
+    {
+        var bioQuery = _dbContext.Bios
+            .Where(bio => bio.Author.UserName == username)
+            .OrderByDescending(bio => bio.BioId)
+            .Include(bio => bio.Author)
+            .Select(bio => new Bio
+            {
+                Author = bio.Author,
+                Text = bio.Text
+            });
+
+        return await bioQuery.FirstOrDefaultAsync();
+    }
 
 }
 

@@ -47,12 +47,16 @@ public class CheepService : ICheepService
         await cheepRepository.CreateCheep(author, text, timeStamp);
     }
 
-    /*
-    public async Task UpdateBio(AuthorDTO authorDTO, string bio)
+    public async Task UpdateBio(AuthorDTO authorDTO, string text)
     {
-        await cheepRepository.UpdateBio(authorDTO, bio);
+        await cheepRepository.UpdateBio(authorDTO, text);
     }
-    */
+
+    public async Task<Bio> GetBioFromAuthor(string username)
+    {
+        return await cheepRepository.GetBioFromAuthor(username);
+    }
+
 }
 
 

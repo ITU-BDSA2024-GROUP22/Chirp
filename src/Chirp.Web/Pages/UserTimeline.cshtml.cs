@@ -15,6 +15,7 @@ public class UserTimelineModel : PageModel
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
     public required Task<AuthorDTO> Author { get; set; }
+    public Task<Bio> Bio { get; set; }
     public int CurrentPage { get; set; }
     [BindProperty]
     public string Text { get; set; }
@@ -22,6 +23,8 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
         this.Author = _service.GetAuthorByName(author);
+
+        Bio = _service.GetBioFromAuthor(author);
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
