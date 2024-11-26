@@ -39,9 +39,9 @@ public class FollowService : IFollowService
         }
     }
 
-    public Task<bool> IsFollowing(string followerId, string followeeId)
+    public async Task<bool> IsFollowing(string followerId, string followeeId)
     {
-        throw new NotImplementedException();
+        return await _cheepRepository.IsFollowing(followerId, followeeId);
     }
 
     public List<AuthorDTO> GetFollowing(string username)
@@ -49,5 +49,9 @@ public class FollowService : IFollowService
         var authorlist = _cheepRepository.GetFollowingDTO(username).Result;
         return authorlist;
     }
-
+    public async Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username)
+    {
+        var cheeps = await _cheepRepository.GetCheepsFromFollowing(pageNumber, username);
+        return cheeps;
+    }
 }

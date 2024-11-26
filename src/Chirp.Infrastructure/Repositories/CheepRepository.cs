@@ -85,15 +85,16 @@ public class CheepRepository : ICheepRepository
 
         if (author == null)
         {
-            throw new KeyNotFoundException($"No author with name {name} was found.");
+            throw new KeyNotFoundException($"No author with name {name} was found. DTO");
         }
 
         return AuthorDTO.fromAuthor(author);
     }
 
-    public async Task<Author?> GetAuthor(string name)
+    public async Task<Author> GetAuthor(string name)
     {
         var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
+        Console.WriteLine("HER ER FEJLEN" + author);
 
         if (author == null)
         {
@@ -119,6 +120,8 @@ public class CheepRepository : ICheepRepository
     {
         Author author = new Author (){UserName = name, Email = email, EmailConfirmed = true, FollowingList = new List<Author>() };
         await _dbContext.Authors.AddAsync(author);
+        Console.WriteLine("YooooooooooooooooooooooooooooO");
+        Console.WriteLine($"Author {name} has been created."+ author.DisplayName + author.Email);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -137,12 +140,18 @@ public class CheepRepository : ICheepRepository
 
     public async Task AddFollow(string user, string userFollowed)
     {
+        Console.WriteLine("HER ER NR 1" + user);
+        Console.WriteLine("HER ER NR 1" + userFollowed);
             var author = await GetAuthor(user);
             var authorFollowed = await GetAuthor(userFollowed);
-            if (author != null && author.FollowingList.All(a => a.UserName != userFollowed))
+            if (author.FollowingList.All(a => a.UserName != userFollowed))
             {
                 author.FollowingList.Add(authorFollowed);
                 await _dbContext.SaveChangesAsync();
+
+                var followedUsers = string.Join(", ", author.FollowingList.Select(a => a.UserName));
+                Console.WriteLine($"FollowingList: {followedUsers}");
+
             }
     }
 
@@ -167,6 +176,39 @@ public class CheepRepository : ICheepRepository
 
             await _dbContext.SaveChangesAsync();
         }
+
+    public async Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username)
+    {
+        var lowerBound = (pageNumber - 1) * _pageSize;
+
+        var followingAuthors = await GetFollowingList(username);
+
+        if (followingAuthors == null || !followingAuthors.Any())
+        {
+            return new List<CheepDTO>();
+        }
+        var pageQuery = (from cheep in _dbContext.Cheeps
+                where followingAuthors.Any(a => a.UserName == cheep.Author.UserName)
+                orderby cheep.TimeStamp descending
+                select cheep)
+            .Include(c => c.Author)
+            .Skip(lowerBound)
+            .Take(_pageSize)
+            .Select(cheep => new CheepDTO
+            {
+                Author = AuthorDTO.fromAuthor(cheep.Author),
+                Text = cheep.Text,
+                TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
+            });
+
+        // Hent og returner resultatet
+        var result = await pageQuery.ToListAsync();
+        return result;
     }
+    }
+
+
+
+
 
 

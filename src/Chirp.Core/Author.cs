@@ -13,5 +13,5 @@ public class Author : IdentityUser
     [StringLength(160)] public string? DisplayName { get; set; }
 
     [Required]
-    public required List<Author> FollowingList { get; set; }
+    public required List<Author> FollowingList { get; set; }  = new List<Author>();
 }

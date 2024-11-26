@@ -10,10 +10,12 @@ namespace Chirp.Web.Pages;
 public class UserTimelineModel : PageModel
 {
     private readonly CheepService _service;
+    private readonly FollowService _followService;
 
-    public UserTimelineModel(CheepService service)
+    public UserTimelineModel(CheepService service, FollowService followService)
     {
         _service = service;
+        _followService = followService;
     }
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
@@ -27,7 +29,8 @@ public class UserTimelineModel : PageModel
         this.Author = _service.GetAuthorByName(author);
 
         CurrentPage = page ?? 1;
-        Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
+        Cheeps = _followService.GetCheepsFromFollowing(CurrentPage, author);
+          //  _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
 
