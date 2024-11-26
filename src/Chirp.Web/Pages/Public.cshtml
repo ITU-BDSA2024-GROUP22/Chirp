@@ -72,15 +72,19 @@
                             {
                                 @if (FollowingList.Contains(cheep.Author))
                                 {
-                                    <form method="post" asp-page-handler="Follow">
-                                        <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
-                                        <button input type="submit" class="follow-btn">
-                                        </button>
-                                    </form>
-
                                     <form method="post" asp-page-handler="Unfollow">
                                         <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
                                         <button input type="submit" class="follow-btn">
+                                            Unfollow
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-page-handler="Follow">
+                                        <input type="hidden" name="authorUsername" value="@cheep.Author.UserName"/>
+                                        <button input type="submit" class="follow-btn">
+                                            Follow
                                         </button>
                                     </form>
                                 }
