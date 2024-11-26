@@ -20,6 +20,7 @@ public class Program
         builder.Services.AddScoped<FollowService>();
 
 
+
         // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=Database/Chirp.db";
         builder.Services.AddDbContext<DBContext>(options =>

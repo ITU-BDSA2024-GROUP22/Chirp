@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.PublicModel
 @inject FollowService FollowService;
+
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
@@ -17,44 +18,33 @@
 }
 
 <div>
-    <h2> Public Timeline </h2>
+    <h2>Public Timeline</h2>
+
     @if (User.Identity?.IsAuthenticated == true)
     {
-    <div class="cheepbox">
-        <h3>What's on your mind @((await Model.Author).DisplayName)?</h3>
-        <form method="post">
-            <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" >
-            <input type="submit" value="Share">
-            <span id="charLimitMessage" style="color: red; display: none; flex: 1"> you can write a maximum of 160 characters... </span>
-        </form>
-    </div>
+        <div class="cheepbox">
+            <h3>What's on your mind @((await Model.Author).DisplayName)?</h3>
+            <form method="post">
+                <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" />
+                <input type="submit" value="Share" />
+                <span id="charLimitMessage" style="color: red; display: none; flex: 1">
+                    You can write a maximum of 160 characters...
+                </span>
+            </form>
+        </div>
     }
 
     <script>
-    function checkCharacterLimit() {
-        var cheepInput = document.getElementById("cheepText");
-        var message = document.getElementById("charLimitMessage");
-        if (cheepInput.value.length >= 160) {
-            message.style.display = "inline";  // Show message
-        } else {
-            message.style.display = "none";  // Hide message if under limit
+        function checkCharacterLimit() {
+            var cheepInput = document.getElementById("cheepText");
+            var message = document.getElementById("charLimitMessage");
+            if (cheepInput.value.length >= 160) {
+                message.style.display = "inline";  // Show message
+            } else {
+                message.style.display = "none";  // Hide message if under limit
+            }
         }
-    }
-</script>
-
-
-    <script>
-    function checkCharacterLimit() {
-        var cheepInput = document.getElementById("cheepText");
-        var message = document.getElementById("charLimitMessage");
-
-        if (cheepInput.value.length >= 160) {
-            message.style.display = "inline";  // Show message
-        } else {
-            message.style.display = "none";  // Hide message if under limit
-        }
-    }
-</script>
+    </script>
 
     @if ((await Model.Cheeps).Any())
     {
@@ -70,28 +60,27 @@
                         {
                             @if (User.Identity?.Name != cheep.Author.UserName)
                             {
-                                @if (FollowingList.Contains(cheep.Author))
+                                @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                                 {
+                                    <!-- Unfollow Button -->
                                     <form method="post" asp-page-handler="Unfollow">
-                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                        <button input type="submit" class="follow-btn">
+                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                        <button type="submit" class="follow-btn">
                                             Unfollow
                                         </button>
                                     </form>
                                 }
                                 else
                                 {
+                                    <!-- Follow Button -->
                                     <form method="post" asp-page-handler="Follow">
-                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                        <p>Debug: @cheep.Author?.UserName</p>
-                                        <button input type="submit" class="follow-btn">
+                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                        <button type="submit" class="follow-btn">
                                             Follow
                                         </button>
-
                                     </form>
                                 }
-
-                                <br/>
+                                <br />
                             }
                         }
 
@@ -125,8 +114,4 @@
             </a>
         }
     </div>
-
-
-
 </div>
-
