@@ -51,43 +51,45 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in await Model.Cheeps)
             {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                        </strong>
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            @if (User.Identity?.Name != cheep.Author.UserName)
+                {
+                    <li>
+                        <p>
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                            </strong>
+                            @if (User.Identity?.IsAuthenticated == true)
                             {
-                                @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
+                                @if (User.Identity?.Name != cheep.Author.UserName)
                                 {
-                                    <!-- Unfollow Button -->
-                                    <form method="post" asp-page-handler="Unfollow">
-                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
-                                        <button type="submit" class="follow-btn">
-                                            Unfollow
-                                        </button>
-                                    </form>
+                                    @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
+                                    {
+                                        <!-- Unfollow Button -->
+                                        <form method="post" asp-page-handler="Unfollow">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <button type="submit" class="follow-btn">
+                                                Unfollow
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <!-- Follow Button -->
+                                        <form method="post" asp-page-handler="Follow">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <button type="submit" class="follow-btn">
+                                                Follow
+                                            </button>
+                                        </form>
+                                    }
+                                    <br />
                                 }
-                                else
-                                {
-                                    <!-- Follow Button -->
-                                    <form method="post" asp-page-handler="Follow">
-                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
-                                        <button type="submit" class="follow-btn">
-                                            Follow
-                                        </button>
-                                    </form>
-                                }
-                                <br />
                             }
-                        }
 
-                        @cheep.Text
-                        <small>&mdash; @cheep.TimeStamp</small>
-                    </p>
-                </li>
+                            @cheep.Text
+                            <small>&mdash; @cheep.TimeStamp</small>
+                        </p>
+                    </li>
+                }
             }
         </ul>
     }

@@ -30,7 +30,6 @@ public class UserTimelineModel : PageModel
 
         CurrentPage = page ?? 1;
         Cheeps = _followService.GetCheepsFromFollowing(CurrentPage, author);
-          //  _service.GetCheepsFromAuthor(author, CurrentPage);
         return Page();
     }
 

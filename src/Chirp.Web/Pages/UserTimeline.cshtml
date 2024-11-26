@@ -1,9 +1,18 @@
 ﻿@page "/{author}"
+@using Chirp.Core.DTOs
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.UserTimelineModel
+@inject FollowService FollowService;
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
+    List<AuthorDTO> FollowingList = null;
+
+    if (User.Identity!.IsAuthenticated)
+    {
+        FollowingList = FollowService.GetFollowing(User.Identity.Name);
+    }
 }
 
 <div>
@@ -37,15 +46,19 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in await Model.Cheeps)
             {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                        </strong>
-                        @cheep.Text
-                        <small>&mdash; @cheep.TimeStamp</small>
-                    </p>
-                </li>
+                // Only display cheeps from followed authors
+                if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
+                {
+                    <li>
+                        <p>
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                            </strong>
+                            @cheep.Text
+                            <small>&mdash; @cheep.TimeStamp</small>
+                        </p>
+                    </li>
+                }
             }
         </ul>
     }
