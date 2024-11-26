@@ -1,0 +1,76 @@
+@page "/{author}/about-me"
+@using Chirp.Core
+@model Chirp.Web.Pages.AboutMeModel
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+    var routeName = HttpContext.GetRouteValue("author");
+}
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="user-info">
+        <h2> User information </h2>
+        <br/>
+        <div>
+            <div class="info-box">
+                <div class="box-title">Displayname</div>
+                <div class="box-content">
+                    @((await Model.Author)?.DisplayName ?? "Unknown")
+                </div>
+            </div>
+            <br/>
+            <div class="info-box">
+                <div class="box-title">Email</div>
+                <div class="box-content">
+                    @((await Model.Author)?.UserName ?? "Unknown")
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <div>
+        @if ((await Model.Cheeps).Any())
+        {
+            <ul id="messagelist" class="cheeps">
+                @foreach (var cheep in await Model.Cheeps)
+                {
+                    <li>
+                        <p>
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                            </strong>
+                            @cheep.Text
+                            <small>&mdash; @cheep.TimeStamp</small>
+                        </p>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <em>There are no cheeps so far.</em>
+        }
+
+        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            @{
+                int currentPage = Model.CurrentPage;
+
+                if (currentPage > 1)
+                {
+                    <a href="/@routeName/about-me?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                        <button>Previous</button>
+                    </a>
+                }
+
+                <span class="current-page">@currentPage</span>
+
+                <a href="/@routeName/about-me?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                    <button>Next</button>
+                </a>
+            }
+        </div>
+    </div>
+
+}
+
