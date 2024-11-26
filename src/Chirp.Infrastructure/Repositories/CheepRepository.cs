@@ -101,7 +101,7 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateBio(AuthorDTO authorDTO, string bio)
+    /* public async Task UpdateBio(AuthorDTO authorDTO, string bio)
     {
         var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
         if (author == null)
@@ -113,7 +113,7 @@ public class CheepRepository : ICheepRepository
         authorDTO.Bio = author.Bio;
 
         await _dbContext.SaveChangesAsync();
-    }
+    } */
 
 }
 
