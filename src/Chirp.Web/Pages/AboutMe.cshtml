@@ -30,9 +30,11 @@
             <div class="info-box">
                 <div class="box-title"></div>
                 <form method="post">
-                    <textarea asp-for="BioText" class="bio-input" rows="5" placeholder="Write your bio here...">@((await Model.Bio).Text)</textarea>
+                    <textarea asp-for="BioText" class="bio-input" rows="5" placeholder="Write your bio here..."></textarea>
                     <br/>
-                    <button input type="submit" value="Save" class="bio-submit">Save Bio</button>
+                    <button type="submit" class="bio-submit">
+                        @(string.IsNullOrEmpty(Model.BioText) ? "Save Bio" : "Change Bio")
+                    </button>
                 </form>
             </div>
             </div>

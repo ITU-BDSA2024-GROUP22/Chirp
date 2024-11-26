@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Web.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20241126134541_InitialDBSchema")]
+    [Migration("20241126154610_InitialDBSchema")]
     partial class InitialDBSchema
     {
         /// <inheritdoc />
@@ -86,6 +86,25 @@ namespace Chirp.Web.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Chirp.Core.Bio", b =>
+                {
+                    b.Property<int>("BioId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BioId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Bios");
                 });
 
             modelBuilder.Entity("Chirp.Core.Cheep", b =>
@@ -242,6 +261,15 @@ namespace Chirp.Web.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Chirp.Core.Bio", b =>
+                {
+                    b.HasOne("Chirp.Core.Author", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Chirp.Core.Cheep", b =>

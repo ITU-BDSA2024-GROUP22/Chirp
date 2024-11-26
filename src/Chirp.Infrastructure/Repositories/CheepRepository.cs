@@ -106,29 +106,36 @@ public class CheepRepository : ICheepRepository
         var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
         if (author != null)
         {
-            Bio bio = new (){ Author = author, Text = text };
-            await _dbContext.Bios.AddAsync(bio);
+            var oldBio = _dbContext.Bios.SingleOrDefault(b => b.AuthorId == author.Id);
+            if (oldBio != null)
+            {
+                oldBio.Text = text;
+            }
+            else
+            {
+                Bio bio = new() {
+                    Author = author,
+                    Text = text
+                };
+                await _dbContext.Bios.AddAsync(bio);
+            }
         }
-
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task<Bio> GetBioFromAuthor(string username)
     {
-        var bioQuery = (from bio in _dbContext.Bios
-            where bio.Author.UserName == username // Filter by the author's name
-            orderby bio
-            select bio)
-            .Include(c => c.Author)
+        var bioQuery = _dbContext.Bios
+            .Where(bio => bio.Author.UserName == username)
+            .OrderByDescending(bio => bio.BioId)
+            .Include(bio => bio.Author)
             .Select(bio => new Bio
             {
                 Author = bio.Author,
                 Text = bio.Text
             });
 
-        var bioResult = await bioQuery.FirstOrDefaultAsync();
-        Console.WriteLine("BioText: " + bioResult.Text);
-        return bioResult;
+        return await bioQuery.FirstOrDefaultAsync();
     }
 
 }
