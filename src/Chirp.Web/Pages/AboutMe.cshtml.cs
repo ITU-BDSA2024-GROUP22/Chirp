@@ -1,5 +1,6 @@
 using Chirp.Core;
 using Chirp.Core.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -82,9 +83,31 @@ public class AboutMeModel : PageModel
 
         Author = _service.GetAuthorByName(author);
 
-         await _service.DeleteAuthor((await Author));
 
-         return RedirectToPage("/Public");
+        if (Author == null)
+        {
+            return NotFound($"No author with the name '{author}' was found.");
+        }
+
+
+        var signInManager = HttpContext.RequestServices.GetService(typeof(SignInManager<Author>)) as SignInManager<Author>;
+        if (signInManager != null)
+        {
+            await signInManager.SignOutAsync();
+            Console.WriteLine("User logged out.");
+        }
+        else
+        {
+            return StatusCode(500, "Sign-in manager service not available.");
+        }
+
+
+        // Proceed to delete the author's data
+        await _service.DeleteAuthor(await Author);
+
+        // Redirect to a public or confirmation page
+        return RedirectToPage("/Public");
+
     }
 }
 

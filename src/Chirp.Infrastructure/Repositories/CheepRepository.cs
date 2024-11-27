@@ -78,16 +78,13 @@ public class CheepRepository : ICheepRepository
             .FirstOrDefaultAsync() ?? new List<Author>();
     }
 
-
     public async Task<AuthorDTO?> GetAuthorByName(string name)
     {
-        var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
-
+        var author = await _dbContext.Authors.SingleOrDefaultAsync(a => a.UserName == name);
         if (author == null)
         {
-            throw new KeyNotFoundException($"No author with name {name} was found. DTO");
+            return null; // Avoid throwing exception here
         }
-
         return AuthorDTO.fromAuthor(author);
     }
 
