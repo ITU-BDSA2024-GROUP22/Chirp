@@ -1,70 +1,93 @@
 ﻿@page "/"
 @using Chirp.Core
+@using Chirp.Core.DTOs
+@using Chirp.Infrastructure
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.PublicModel
+@inject FollowService FollowService;
+
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
+    List<AuthorDTO> FollowingList = null;
+
+    if (User.Identity!.IsAuthenticated)
+    {
+        FollowingList = FollowService.GetFollowing(User.Identity.Name);
+    }
 }
 
 <div>
-    <h2> Public Timeline </h2>
+    <h2>Public Timeline</h2>
+
     @if (User.Identity?.IsAuthenticated == true)
     {
-    <div class="cheepbox">
-        <h3>What's on your mind, @((await Model.Author).DisplayName)?</h3>
-        <form method="post">
-            <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" >
-            <input type="submit" value="Share">
-            <span id="charLimitMessage" style="color: red; display: none; flex: 1"> you can write a maximum of 160 characters... </span>
-        </form>
-    </div>
+        <div class="cheepbox">
+            <h3>What's on your mind @((await Model.Author).DisplayName)?</h3>
+            <form method="post">
+                <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" />
+                <input type="submit" value="Share" />
+                <span id="charLimitMessage" style="color: red; display: none; flex: 1"> You can write a maximum of 160 characters...</span>
+            </form>
+        </div>
     }
 
     <script>
-    function checkCharacterLimit() {
-        var cheepInput = document.getElementById("cheepText");
-        var message = document.getElementById("charLimitMessage");
-        if (cheepInput.value.length >= 160) {
-            message.style.display = "inline";  // Show message
-        } else {
-            message.style.display = "none";  // Hide message if under limit
+        function checkCharacterLimit() {
+            var cheepInput = document.getElementById("cheepText");
+            var message = document.getElementById("charLimitMessage");
+            if (cheepInput.value.length >= 160) {
+                message.style.display = "inline";  // Show message
+            } else {
+                message.style.display = "none";  // Hide message if under limit
+            }
         }
-    }
-</script>
-
-
-    <script>
-    function checkCharacterLimit() {
-        var cheepInput = document.getElementById("cheepText");
-        var message = document.getElementById("charLimitMessage");
-
-        if (cheepInput.value.length >= 160) {
-            message.style.display = "inline";  // Show message
-        } else {
-            message.style.display = "none";  // Hide message if under limit
-        }
-    }
-</script>
+    </script>
 
     @if ((await Model.Cheeps).Any())
     {
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in await Model.Cheeps)
             {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                        </strong>
-                        @if (User.Identity?.Name != cheep.Author.UserName)
-                        {
-                            <button class="follow-btn" data-author-username="@cheep.Author.UserName">Follow</button>
-                        }
-                        <br/>
-                        @cheep.Text
-                        <small>&mdash; @cheep.TimeStamp</small>
-                    </p>
-                </li>
+                {
+                    <li>
+                        <p>
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                            </strong>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                @if (User.Identity?.Name != cheep.Author.UserName)
+                                {
+                                    @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
+                                    {
+                                        <!-- Unfollow Button -->
+                                        <form method="post" asp-page-handler="Unfollow">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <button type="submit" class="follow-btn">
+                                                Unfollow
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <!-- Follow Button -->
+                                        <form method="post" asp-page-handler="Follow">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <button type="submit" class="follow-btn">
+                                                Follow
+                                            </button>
+                                        </form>
+                                    }
+                                    <br />
+                                }
+                            }
+
+                            @cheep.Text
+                            <small>&mdash; @cheep.TimeStamp</small>
+                        </p>
+                    </li>
+                }
             }
         </ul>
     }
@@ -91,30 +114,4 @@
             </a>
         }
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const followButtons = document.querySelectorAll('.follow-btn');
-
-        followButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const authorUsername = this.dataset.authorUsername;
-
-                // Find all buttons with the same authorUsername
-                const relatedButtons = document.querySelectorAll(`.follow-btn[data-author-username="${authorUsername}"]`);
-
-                // Toggle state for all buttons associated with this author
-                relatedButtons.forEach(btn => {
-                    if (btn.innerText === 'Follow') {
-                        btn.innerText = 'Unfollow';
-                    } else {
-                        btn.innerText = 'Follow';
-                    }
-                });
-            });
-        });
-    });
-</script>
-
 </div>
-

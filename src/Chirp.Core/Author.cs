@@ -12,4 +12,6 @@ public class Author : IdentityUser
     //[Required]
     [StringLength(160)] public string? DisplayName { get; set; }
 
+    [Required]
+    public required List<Author> FollowingList { get; set; }  = new List<Author>();
 }

@@ -2,6 +2,7 @@ using Chirp.Core;
 using Chirp.Core.Interfaces;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
+using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,9 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<CheepRepository>();
         builder.Services.AddScoped<CheepService>();
+        builder.Services.AddScoped<FollowService>();
+
+
 
         // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=Database/Chirp.db";

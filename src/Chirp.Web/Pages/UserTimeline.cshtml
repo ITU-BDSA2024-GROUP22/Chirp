@@ -1,9 +1,18 @@
 ﻿@page "/{author}"
+@using Chirp.Core.DTOs
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.UserTimelineModel
+@inject FollowService FollowService;
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
+    List<AuthorDTO> FollowingList = null;
+
+    if (User.Identity!.IsAuthenticated)
+    {
+        FollowingList = FollowService.GetFollowing(User.Identity.Name);
+    }
 }
 
 <div>
@@ -28,9 +37,9 @@
                 <span id="charLimitMessage" style="color: red; display: none; flex: 1"> you can write a maximum of 160 characters... </span>
             </form>
         </div>
-        }
+    }
 
-        <script>
+    <script>
             function checkCharacterLimit() {
                 var cheepInput = document.getElementById("cheepText");
                 var message = document.getElementById("charLimitMessage");
@@ -40,12 +49,16 @@
                     message.style.display = "none";  // Hide message if under limit
                 }
             }
-        </script>
+    </script>
 
-        @if ((await Model.Cheeps).Any())
-        {
-            <ul id="messagelist" class="cheeps">
-                @foreach (var cheep in await Model.Cheeps)
+
+    @if ((await Model.Cheeps).Any())
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in await Model.Cheeps)
+            {
+                // Only display cheeps from followed authors
+                if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                 {
                     <li>
                         <p>
@@ -57,29 +70,30 @@
                         </p>
                     </li>
                 }
-            </ul>
-        }
-        else
-        {
-            <em>There are no cheeps so far.</em>
-        }
+            }
+        </ul>
+    }
+    else
+    {
+        <em>There are no cheeps so far.</em>
+    }
 
-        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
-            @{
-                int currentPage = Model.CurrentPage;
+    <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+        @{
+            int currentPage = Model.CurrentPage;
 
-                if (currentPage > 1)
-                {
-                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                        <button>Previous</button>
-                    </a>
-                }
-
-                <span class="current-page">@currentPage</span>
-
-                <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
-                    <button>Next</button>
+            if (currentPage > 1)
+            {
+                <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                    <button>Previous</button>
                 </a>
             }
-        </div>
+
+            <span class="current-page">@currentPage</span>
+
+            <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                <button>Next</button>
+            </a>
+        }
+    </div>
 </div>

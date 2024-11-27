@@ -8,18 +8,18 @@ public static class DbInitializer
     {
         if (!(dbContext.Authors.Any() && dbContext.Cheeps.Any()))
         {
-            var a1 = new Author() { DisplayName = "Roger Histand", Id = "1", UserName = "Roger Histand", Email = "Roger+Histand@hotmail.com", Cheeps = new List<Cheep>() };
-            var a2 = new Author() { DisplayName = "Luanna Muro", Id = "2", UserName = "Luanna Muro", Email = "Luanna-Muro@ku.dk", Cheeps = new List<Cheep>() };
-            var a3 = new Author() { DisplayName = "Wendell Ballan", Id = "3", UserName = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com", Cheeps = new List<Cheep>() };
-            var a4 = new Author() { DisplayName = "Nathan Sirmon", Id = "4", UserName = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk", Cheeps = new List<Cheep>() };
-            var a5 = new Author() { DisplayName = "Quintin Sitts", Id = "5", UserName = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk", Cheeps = new List<Cheep>() };
-            var a6 = new Author() { DisplayName = "Mellie Yost", Id = "6", UserName = "Mellie Yost", Email = "Mellie+Yost@ku.dk", Cheeps = new List<Cheep>() };
-            var a7 = new Author() { DisplayName = "Malcolm Janski", Id = "7", UserName = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com", Cheeps = new List<Cheep>() };
-            var a8 = new Author() { DisplayName = "Octavio Wagganer", Id = "8", UserName = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk", Cheeps = new List<Cheep>() };
-            var a9 = new Author() { DisplayName = "Johnnie Calixto", Id = "9", UserName = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk", Cheeps = new List<Cheep>() };
-            var a10 = new Author() { DisplayName = "Jacqualine Gilcoine", Id = "10", UserName = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com", Cheeps = new List<Cheep>() };
-            var a11 = new Author() { DisplayName = "Helge", Id = "11", UserName = "Helge", Email = "ropf@itu.dk", Cheeps = new List<Cheep>() };
-            var a12 = new Author() { DisplayName = "Adrian", Id = "12", UserName = "Adrian", Email = "adho@itu.dk", Cheeps = new List<Cheep>() };
+            var a1 = new Author() { DisplayName = "Roger Histand", Id = "1", UserName = "Roger Histand", Email = "Roger+Histand@hotmail.com", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a2 = new Author() { DisplayName = "Luanna Muro", Id = "2", UserName = "Luanna Muro", Email = "Luanna-Muro@ku.dk", Cheeps = new List<Cheep>(),  FollowingList = new List<Author>() };
+            var a3 = new Author() { DisplayName = "Wendell Ballan", Id = "3", UserName = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a4 = new Author() { DisplayName = "Nathan Sirmon", Id = "4", UserName = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a5 = new Author() { DisplayName = "Quintin Sitts", Id = "5", UserName = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a6 = new Author() { DisplayName = "Mellie Yost", Id = "6", UserName = "Mellie Yost", Email = "Mellie+Yost@ku.dk", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a7 = new Author() { DisplayName = "Malcolm Janski", Id = "7", UserName = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com", Cheeps = new List<Cheep>(), FollowingList= new List<Author>() };
+            var a8 = new Author() { DisplayName = "Octavio Wagganer", Id = "8", UserName = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a9 = new Author() { DisplayName = "Johnnie Calixto", Id = "9", UserName = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk", Cheeps = new List<Cheep>(), FollowingList = new List<Author>() };
+            var a10 = new Author() { DisplayName = "Jacqualine Gilcoine", Id = "10", UserName = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com", Cheeps = new List<Cheep>(), FollowingList= new List<Author>() };
+            var a11 = new Author() { DisplayName = "Helge", Id = "11", UserName = "Helge", Email = "ropf@itu.dk", Cheeps = new List<Cheep>(), FollowingList= new List<Author>() };
+            var a12 = new Author() { DisplayName = "Adrian", Id = "12", UserName = "Adrian", Email = "adho@itu.dk", Cheeps = new List<Cheep>(), FollowingList= new List<Author>() };
 
             var authors = new List<Author>() { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12 };
 

@@ -1,6 +1,7 @@
 ﻿using Chirp.Core;
 using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Repositories;
+using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -10,10 +11,13 @@ public class PublicModel : PageModel
 {
     private const int PageSize = 32;
     private readonly CheepService _service;
+    private readonly FollowService _followService;
+    public AuthorDTO authorDTO { get; set; }
 
-    public PublicModel(CheepService service)
+    public PublicModel(CheepService service, FollowService followService)
     {
         _service = service;
+        _followService = followService;
     }
 
     public required Task<List<CheepDTO>> Cheeps { get; set; }
@@ -54,5 +58,29 @@ public class PublicModel : PageModel
         }
 
         return RedirectToPage("/Public", new { page = 1 });
+    }
+
+    public async Task<IActionResult> OnPostFollow(string userToFollow)
+    {
+        if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
+        {
+            var author = User.Identity.Name;
+            Console.WriteLine("Fra OnPostFollow method + " + userToFollow);
+            await _followService.FollowAuthor(author, userToFollow);
+
+
+        }
+        return Redirect($"/?page={CurrentPage}");
+    }
+
+    public async Task<IActionResult> OnPostUnfollow(string userToFollow)
+    {
+        if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
+        {
+            var author = User.Identity.Name;
+            await _followService.UnfollowAuthor(author, userToFollow);
+
+        }
+        return Redirect($"/?page={CurrentPage}");
     }
 }

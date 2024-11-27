@@ -16,6 +16,12 @@ public class DBContext : IdentityDbContext<Author>
 
     public DbSet<Bio> Bios { get; set; }
 
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+    }
     public override void Dispose()
     {
         base.Dispose();

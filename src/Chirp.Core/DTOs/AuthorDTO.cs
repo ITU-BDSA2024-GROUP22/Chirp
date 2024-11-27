@@ -13,7 +13,8 @@ public class AuthorDTO
         };
     }
 
-    public required string? DisplayName {get; set;}
+    public required string? DisplayName { get; set; }
     public required string? UserName {get; set;}
-    //public string? Bio {get; set;}
+
+    public List<Author> FollowingList { get; set; }
 }
