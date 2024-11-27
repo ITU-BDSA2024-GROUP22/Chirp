@@ -59,6 +59,10 @@ public class CheepService : ICheepService
         return await cheepRepository.GetBioFromAuthor(username);
     }
 
+    public async Task DeleteAuthor(AuthorDTO authorDTO)
+    {
+        await cheepRepository.DeleteAuthor(authorDTO);
+    }
 }
 
 

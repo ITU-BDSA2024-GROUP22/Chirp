@@ -2,7 +2,7 @@
 @using Chirp.Core
 @model Chirp.Web.Pages.AboutMeModel
 @{
-    ViewData["Title"] = "Chirp!"; //dav
+    ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
 }
@@ -39,7 +39,7 @@
             </div>
             <br/>
             <div class="button">
-                <form method="post">
+                <form method="post" asp-page-handler="Forget">
                     <button type="submit" class="forget-me-submit" style="background-color: red">Forget me!</button>
                 </form>
             </div>

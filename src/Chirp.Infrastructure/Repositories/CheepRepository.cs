@@ -235,6 +235,24 @@ public class CheepRepository : ICheepRepository
         var result = await pageQuery.ToListAsync();
         return result;
     }
+
+    public async Task DeleteAuthor(AuthorDTO authorDTO)
+    {
+        var authorQuery = await _dbContext.Authors
+            .Include(a => a.Cheeps)
+            .SingleOrDefaultAsync(a => a.UserName == authorDTO.UserName);
+
+        if (authorQuery == null)
+        {
+            throw new KeyNotFoundException($"Author with username '{authorDTO.UserName}' not found.");
+        }
+
+        _dbContext.Cheeps.RemoveRange(authorQuery.Cheeps); //removes associated cheeps
+
+        _dbContext.Authors.Remove(authorQuery); //Removes the author
+
+        await _dbContext.SaveChangesAsync(); //saves the changes to the db
+    }
 }
 
 

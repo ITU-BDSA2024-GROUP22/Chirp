@@ -66,8 +66,26 @@ public class AboutMeModel : PageModel
         return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
     }
 
+    public async Task<IActionResult> OnPostForget()
+    {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return NotFound("User is not authenticated");
+        }
 
+        var author = User.Identity.Name;
 
+        if (author == null)
+        {
+            return NotFound("author parameter is null");
+        }
+
+        Author = _service.GetAuthorByName(author);
+
+         await _service.DeleteAuthor((await Author));
+
+         return RedirectToPage("/Public");
+    }
 }
 
 
