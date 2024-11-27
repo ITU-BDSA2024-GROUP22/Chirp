@@ -49,4 +49,18 @@ public class UserTimelineModel : PageModel
 
         return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
     }
+
+    public async Task<IActionResult> OnPostUnfollow(string userToFollow)
+    {
+        var authorName = User.Identity.Name;
+        var author = await _service.GetAuthorByName(authorName!);
+
+        if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
+        {
+            await _followService.UnfollowAuthor(authorName, userToFollow);
+
+        }
+
+        return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
+    }
 }
