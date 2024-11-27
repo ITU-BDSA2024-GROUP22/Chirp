@@ -66,6 +66,8 @@ public class AboutMeModel : PageModel
         return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
     }
 
+
+
 }
 
 
