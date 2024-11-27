@@ -14,7 +14,7 @@
             @((await Model.Author).DisplayName)'s bio
         </h3>
         <p style="margin: 0; font-size: 1em; color: #555; line-height: 1.6;">
-            @((await Model.Bio).Text ?? "This user has not added a bio yet.")
+            @((await Model.Bio)?.Text ?? "This user has not added a bio yet.")
         </p>
     </div>
 
