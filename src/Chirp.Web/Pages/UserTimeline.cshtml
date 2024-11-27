@@ -67,7 +67,7 @@
                             </strong>
                             @cheep.Text
                             <small>&mdash; @cheep.TimeStamp</small>
-                            {
+
                             <!-- Unfollow Button -->
                             <form method="post" asp-page-handler="Unfollow">
                                 <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
@@ -75,7 +75,7 @@
                                     Unfollow
                                 </button>
                             </form>
-                            }
+
                         </p>
                     </li>
                 }
