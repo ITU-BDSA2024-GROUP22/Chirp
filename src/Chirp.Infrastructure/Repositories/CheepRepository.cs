@@ -218,7 +218,7 @@ public class CheepRepository : ICheepRepository
             return new List<CheepDTO>();
         }
         var pageQuery = (from cheep in _dbContext.Cheeps
-                where followingUsernames.Contains(cheep.Author.UserName)
+                where followingUsernames.Contains(cheep.Author.UserName) || cheep.Author.UserName == username
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
