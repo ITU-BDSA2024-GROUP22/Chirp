@@ -81,6 +81,6 @@ public class PublicModel : PageModel
             await _followService.UnfollowAuthor(author, userToFollow);
 
         }
-        return RedirectToPage("/Public", new { page = 1 });P
+        return RedirectToPage("/Public", new { page = 1 });
     }
 }
