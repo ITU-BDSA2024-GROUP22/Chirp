@@ -26,13 +26,21 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
         this.Author = _service.GetAuthorByName(author);
-
         Bio = _service.GetBioFromAuthor(author);
-
         CurrentPage = page ?? 1;
-        Cheeps = _followService.GetCheepsFromFollowing(CurrentPage, author);
+
+
+        if (User.Identity?.IsAuthenticated == true && User.Identity.Name == author)
+        {
+            Cheeps = _followService.GetCheepsFromFollowing(CurrentPage, author);
+        }
+        else
+        {
+            Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
+        }
         return Page();
     }
+
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -63,4 +71,6 @@ public class UserTimelineModel : PageModel
 
         return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
     }
+
+
 }

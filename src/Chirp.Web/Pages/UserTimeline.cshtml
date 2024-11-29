@@ -58,7 +58,7 @@
             @foreach (var cheep in await Model.Cheeps)
             {
                 // Only display cheeps from followed authors
-                if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
+                if (FollowingList.Any(f => f.UserName == cheep.Author.UserName) )
                 {
                     <li>
                         <p>
