@@ -54,4 +54,23 @@ public class FollowService : IFollowService
         var cheeps = await _cheepRepository.GetCheepsFromFollowing(pageNumber, username);
         return cheeps;
     }
+
+    public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber)
+    {
+        var result = await _cheepRepository.GetCheepsFromAuthor(pageNumber, author);
+
+        // Debugging linje til logning
+        Console.WriteLine($"Fetched {result.Count} cheeps for {author}");
+
+        return result;
+    }
+
+    public async Task<AuthorDTO> GetAuthorByName(string name)
+    {
+        return await _cheepRepository.GetAuthorByName(name);
+    }
+
+
+
+
 }
