@@ -70,7 +70,7 @@ public class PublicModel : PageModel
 
 
         }
-        return Redirect($"/?page={CurrentPage}");
+        return RedirectToPage("/Public", new { page = 1 });
     }
 
     public async Task<IActionResult> OnPostUnfollow(string userToFollow)
@@ -81,6 +81,6 @@ public class PublicModel : PageModel
             await _followService.UnfollowAuthor(author, userToFollow);
 
         }
-        return Redirect($"/?page={CurrentPage}");
+        return RedirectToPage("/Public", new { page = 1 });
     }
 }
