@@ -57,28 +57,27 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in await Model.Cheeps)
             {
-                // Only display cheeps from followed authors
-                if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
-                {
-                    <li>
-                        <p>
-                            <strong>
-                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                            </strong>
-                            @cheep.Text
-                            <small>&mdash; @cheep.TimeStamp</small>
+                <li>
+                    <p>
+                        <strong>
+                            <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                        </strong>
+                        @cheep.Text
+                        <small>&mdash; @cheep.TimeStamp</small>
 
+                        @if (@cheep.Author.UserName != (await Model.Author).UserName)
+                        {
                             <!-- Unfollow Button -->
                             <form method="post" asp-page-handler="Unfollow">
-                                <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
                                 <button type="submit" class="follow-btn">
                                     Unfollow
                                 </button>
                             </form>
+                        }
+                    </p>
+                </li>
 
-                        </p>
-                    </li>
-                }
             }
         </ul>
     }
