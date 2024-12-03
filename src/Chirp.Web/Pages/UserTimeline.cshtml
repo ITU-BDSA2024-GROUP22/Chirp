@@ -142,7 +142,7 @@
             </div>
         }
     }
-    else
+    else if (!(await Model.Cheeps).Any() && Model.CurrentPage == 1)
         {
             <em>There are no cheeps so far.</em>
             <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
@@ -152,6 +152,24 @@
                 }
             </div>
         }
+    else
+    {
+        <em>There are no more cheeps to view.</em>
+        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            @{
+                int currentPage = Model.CurrentPage;
+
+                if (currentPage > 1)
+                {
+                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                        <button>Previous</button>
+                    </a>
+                }
+
+                <span class="current-page">@currentPage</span>
+            }
+        </div>
+    }
 </div>
 
 
