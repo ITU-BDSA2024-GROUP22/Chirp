@@ -210,13 +210,15 @@ public class CheepRepository : ICheepRepository
         var followingUsernames = (await GetFollowingList(username))
             ?.Select(a => a.UserName)
             .ToList();
-
+        //Skal ikke bruges længere, da der stadig skal returneres sine egne cheeps, selvom "jeg" ikke følger nogle
+        /*
         if (followingUsernames == null || !followingUsernames.Any())
         {
             return new List<CheepDTO>();
         }
+        */
         var pageQuery = (from cheep in _dbContext.Cheeps
-                where followingUsernames.Contains(cheep.Author.UserName)
+                where followingUsernames.Contains(cheep.Author.UserName) || cheep.Author.UserName == username
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)

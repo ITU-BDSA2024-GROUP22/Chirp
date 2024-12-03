@@ -26,13 +26,21 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
         this.Author = _service.GetAuthorByName(author);
-
         Bio = _service.GetBioFromAuthor(author);
-
         CurrentPage = page ?? 1;
-        Cheeps = _followService.GetCheepsFromFollowing(CurrentPage, author);
+
+
+        if (User.Identity?.IsAuthenticated == true && User.Identity.Name == author)
+        {
+            Cheeps = _followService.GetCheepsFromFollowing(CurrentPage, author);
+        }
+        else
+        {
+            Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
+        }
         return Page();
     }
+
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -49,4 +57,20 @@ public class UserTimelineModel : PageModel
 
         return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
     }
+
+    public async Task<IActionResult> OnPostUnfollow(string userToFollow)
+    {
+        var authorName = User.Identity.Name;
+        var author = await _service.GetAuthorByName(authorName!);
+
+        if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
+        {
+            await _followService.UnfollowAuthor(authorName, userToFollow);
+
+        }
+
+        return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
+    }
+
+
 }
