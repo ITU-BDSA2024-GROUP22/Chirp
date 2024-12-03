@@ -23,7 +23,7 @@
     @if (User.Identity?.IsAuthenticated == true)
     {
         <div class="cheepbox">
-            <h3>What's on your mind, @((await Model.Author).DisplayName)?</h3>
+            <h3>What's on your mind, @((await Model.Author).UserName)?</h3>
             <form method="post">
                 <div style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
                     <input
@@ -80,14 +80,13 @@
             @foreach (var cheep in await Model.Cheeps)
             {
                 {
-                    <li>
-                        <p>
-                            <strong>
-                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                            </strong>
-                            @if (User.Identity?.IsAuthenticated == true)
-                            {
-                                @if (User.Identity?.Name != cheep.Author.UserName)
+                    {
+                        <li>
+                            <p>
+                                <strong>
+                                    <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
+                                </strong>
+                                @if (User.Identity?.IsAuthenticated == true)
                                 {
                                     @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                                     {

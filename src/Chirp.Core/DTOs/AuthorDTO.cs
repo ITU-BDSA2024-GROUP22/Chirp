@@ -6,15 +6,12 @@ public class AuthorDTO
     {
         return new AuthorDTO()
         {
-            DisplayName = string.IsNullOrWhiteSpace(author.DisplayName)
-                ? author.UserName ?? "Anonymous"
-                : author.DisplayName,
-            UserName = author.UserName
+            UserName = author.UserName,
+            Email = author.Email
         };
     }
-
-    public required string? DisplayName { get; set; }
     public required string? UserName {get; set;}
+    public required string? Email { get; set; }
 
     public List<Author> FollowingList { get; set; }
 }
