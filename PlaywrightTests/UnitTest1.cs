@@ -96,4 +96,13 @@ public class UiTests
         await page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
     }
 
+    public void forgetMe()
+    {
+        await page.GetByRole(AriaRole.Link, new() { Name = "about me" }).ClickAsync();
+        await page.GetByPlaceholder("Write your bio here...").ClickAsync();
+        await page.GetByPlaceholder("Write your bio here...").FillAsync("Ekstra ben");
+        await page.GetByRole(AriaRole.Button, new() { Name = "Save Bio" }).ClickAsync();
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget me!" }).ClickAsync();
+    }
+
 }
