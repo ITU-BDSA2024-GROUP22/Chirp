@@ -26,7 +26,6 @@
             <h3>What's on your mind, @((await Model.Author).DisplayName)?</h3>
             <form method="post">
                 <div style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
-                    <!-- Input box -->
                     <input
                         style="width: 100%;"
                         type="text"
@@ -38,7 +37,7 @@
                     />
                 </div>
 
-                <!-- Counter displayed below the text box -->
+                <!-- Character counter below the cheep box -->
                 <span
                     id="charCount"
                     style="display: block; margin-top: 5px; font-size: 0.9em; color: gray;">
@@ -55,7 +54,7 @@
         var charCount = document.getElementById("charCount");
         var maxLength = 160;
 
-        // Update remaining characters
+        // Update used characters
         var used = cheepInput.value.length;
         charCount.textContent = used + "/" + maxLength;
 
