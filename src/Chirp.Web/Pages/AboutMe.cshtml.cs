@@ -22,6 +22,7 @@ public class AboutMeModel : PageModel
     public int CurrentPage { get; set; }
     [BindProperty]
     public string BioText { get; set; }
+    public int CheepsCount { get; private set; }
 
     public async Task<IActionResult> OnGet([FromQuery] int? page, string author)
     {
@@ -39,6 +40,9 @@ public class AboutMeModel : PageModel
 
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
+
+        CheepsCount = (Cheeps?.Result?.Count ?? 0);
+
         return Page();
     }
 
