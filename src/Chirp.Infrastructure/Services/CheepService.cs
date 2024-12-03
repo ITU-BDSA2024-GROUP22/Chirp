@@ -68,6 +68,11 @@ public class CheepService : ICheepService
     {
         await cheepRepository.DeleteAuthor(authorDTO);
     }
+
+    public async Task SetAuthorPictureAsync(string username, string picturePath)
+    {
+        await cheepRepository.SetAuthorPictureAsync(username, picturePath);
+    }
 }
 
 

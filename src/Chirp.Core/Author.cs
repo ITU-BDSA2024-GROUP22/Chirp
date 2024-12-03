@@ -16,4 +16,5 @@ public class Author : IdentityUser
     public required List<Author> FollowingList { get; set; }  = new List<Author>();
 
     public Bio? Bio { get; set; }
+    public string? Picture { get; set; }
 }

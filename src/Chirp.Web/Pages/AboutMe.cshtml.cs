@@ -110,6 +110,40 @@ public class AboutMeModel : PageModel
         // Redirect to a public or confirmation page
         return RedirectToPage("/Public");
     }
+
+    public async Task<IActionResult> OnPostPictureAsync(IFormFile profilePicture)
+    {
+        if (!User.Identity.IsAuthenticated || User.Identity.Name == null)
+        {
+            return NotFound("User is not authenticated");
+        }
+
+        if (profilePicture == null || profilePicture.Length == 0)
+        {
+            ModelState.AddModelError("ProfilePicture", "Please upload a valid picture.");
+            return Page();
+        }
+
+        // Save the uploaded file to "wwwroot/uploads"
+        var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        Directory.CreateDirectory(uploadFolder);
+
+        var fileName = $"{Guid.NewGuid()}_{profilePicture.FileName}";
+        var filePath = Path.Combine(uploadFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await profilePicture.CopyToAsync(stream);
+        }
+
+        // Generate the relative URL for the uploaded file
+        var pictureUrl = $"/uploads/{fileName}";
+
+        // Update the author's profile picture in the database
+        await _service.SetAuthorPictureAsync(User.Identity.Name, pictureUrl);
+
+        return RedirectToPage("/AboutMe", new { author = User.Identity.Name });
+    }
 }
 
 
