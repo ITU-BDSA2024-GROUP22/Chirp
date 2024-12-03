@@ -237,12 +237,26 @@ public class CheepRepository : ICheepRepository
     public async Task DeleteAuthor(AuthorDTO authorDTO)
     {
         //query getting the author
-        var authorQuery = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
+        var authorQuery = _dbContext.Authors
+            .Include(a => a.FollowingList)
+            .SingleOrDefault(a => a.UserName == authorDTO.UserName);
 
         if (authorQuery == null)
         {
             throw new KeyNotFoundException($"Author with username '{authorDTO.UserName}' not found.");
         }
+
+        var otherAuthors = await _dbContext.Authors
+            .Where(a => a.FollowingList.Contains(authorQuery)) // Find authors following this author
+            .ToListAsync();
+
+        foreach (var otherAuthor in otherAuthors)
+        {
+            otherAuthor.FollowingList.Remove(authorQuery);
+        }
+
+        // Clear the author's FollowingList
+        authorQuery.FollowingList.Clear();
 
         //query getting the author's cheeps
         var cheepsQuery = _dbContext.Cheeps
