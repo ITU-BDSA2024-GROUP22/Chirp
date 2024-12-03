@@ -22,10 +22,11 @@ public class UserTimelineModel : PageModel
     public int CurrentPage { get; set; }
     [BindProperty]
     public string Text { get; set; }
+    public int CheepsCount { get; private set; }
 
     public ActionResult OnGet([FromQuery] int? page, string author)
     {
-        this.Author = _service.GetAuthorByName(author);
+        Author = _service.GetAuthorByName(author);
         Bio = _service.GetBioFromAuthor(author);
         CurrentPage = page ?? 1;
 
@@ -38,6 +39,9 @@ public class UserTimelineModel : PageModel
         {
             Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
         }
+
+        CheepsCount = (Cheeps?.Result?.Count ?? 0);
+
         return Page();
     }
 
