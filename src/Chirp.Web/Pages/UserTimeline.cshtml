@@ -101,29 +101,43 @@
                 </li>
             }
         </ul>
+        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            @{
+                int currentPage = Model.CurrentPage;
+
+                if (currentPage > 1)
+                {
+                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                        <button>Previous</button>
+                    </a>
+                }
+
+                <span class="current-page">@currentPage</span>
+
+                <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                    <button>Next</button>
+                </a>
+            }
+        </div>
     }
     else
     {
         <em>There are no cheeps so far.</em>
-    }
+        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            @{
+                int currentPage = Model.CurrentPage;
 
-    <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
-        @{
-            int currentPage = Model.CurrentPage;
+                if (currentPage > 1)
+                {
+                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                        <button>Previous</button>
+                    </a>
+                }
 
-            if (currentPage > 1)
-            {
-                <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                    <button>Previous</button>
-                </a>
+                <span class="current-page">@currentPage</span>
             }
-
-            <span class="current-page">@currentPage</span>
-
-            <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
-                <button>Next</button>
-            </a>
-        }
-    </div>
+        </div>
+    }
 </div>
+
 
