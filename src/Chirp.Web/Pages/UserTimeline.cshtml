@@ -32,25 +32,47 @@
         <div class="cheepbox">
             <h3>What's on your mind, @((await Model.Author).DisplayName)?</h3>
             <form method="post">
-                <input style="float: left" type="text" asp-for="Text" maxlength="160" id="cheepText" oninput="checkCharacterLimit()" >
-                <input type="submit" value="Share">
-                <span id="charLimitMessage" style="color: red; display: none; flex: 1"> you can write a maximum of 160 characters... </span>
+                <div style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
+                    <input
+                        style="width: 100%;"
+                        type="text"
+                        asp-for="Text"
+                        maxlength="160"
+                        id="cheepText"
+                        oninput="updateCharacterCount()"
+                        placeholder="Write your cheep here..."/>
+                </div>
+
+                <!-- Character counter below the cheep box -->
+                <span
+                    id="charCount"
+                    style="display: block; margin-top: 5px; font-size: 0.9em; color: gray;">
+                    0/160
+                </span>
+
+                <input type="submit" value="Share" style="margin-top: 10px;"/>
             </form>
         </div>
-    }
 
-    <script>
-            function checkCharacterLimit() {
-                var cheepInput = document.getElementById("cheepText");
-                var message = document.getElementById("charLimitMessage");
-                if (cheepInput.value.length >= 160) {
-                    message.style.display = "inline";  // Show message
-                } else {
-                    message.style.display = "none";  // Hide message if under limit
-                }
+        <script>
+        function updateCharacterCount() {
+            var cheepInput = document.getElementById("cheepText");
+            var charCount = document.getElementById("charCount");
+            var maxLength = 160;
+
+            // Update used characters
+            var used = cheepInput.value.length;
+            charCount.textContent = used + "/" + maxLength;
+
+            // Change the color if the limit is almost reached
+            if (used >= 150) {
+                charCount.style.color = "red";
+            } else {
+                charCount.style.color = "gray";
             }
+        }
     </script>
-
+    }
 
     @if ((await Model.Cheeps).Any())
     {
@@ -104,3 +126,4 @@
         }
     </div>
 </div>
+
