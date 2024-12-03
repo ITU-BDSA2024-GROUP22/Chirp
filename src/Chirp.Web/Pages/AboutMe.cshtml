@@ -1,5 +1,6 @@
 @page "/{author}/about-me"
 @using Chirp.Core
+@using Microsoft.IdentityModel.Tokens
 @model Chirp.Web.Pages.AboutMeModel
 @{
     ViewData["Title"] = "Chirp!";
@@ -14,8 +15,8 @@
         <br/>
         <div>
             <div>
-                <img src="@((await Model.Author).Picture ?? "/default-picture.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
-                @if ((await Model.Author).Picture.Any())
+                <img src="@((await Model.Author).Picture ?? "/images/WhiteBlackChirp.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
+                @if (!(await Model.Author).Picture.IsNullOrEmpty())
                 {
                     <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
                         <label for="profilePicture">Change Profile Picture:</label>

@@ -79,14 +79,19 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in await Model.Cheeps)
             {
+                var profilePicture = string.IsNullOrWhiteSpace(cheep.Author.Picture)
+                    ? "/uploads/WhiteBlackChirp.png"
+                    : cheep.Author.Picture;
                 {
                     <li>
-                        <p>
-                            <img src="@(cheep.Author.Picture ?? "/default-avatar.png")" alt="Profile Picture"
-                                 style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;" />
-                            <strong>
-                                <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
-                            </strong>
+
+                        <img src="@profilePicture"
+                             alt="Profile Picture"
+                             style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;" />
+                    <strong>
+                        <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
+                    </strong>
+
                             @if (User.Identity?.IsAuthenticated == true)
                             {
                                 @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
@@ -109,13 +114,12 @@
                                         </button>
                                     </form>
                                 }
-
-                                <br/>
                             }
-
+                        <p>
                             @cheep.Text
-                            <small>&mdash; @cheep.TimeStamp</small>
                         </p>
+                        <small>&mdash;@cheep.TimeStamp</small>
+
                     </li>
                 }
             }
