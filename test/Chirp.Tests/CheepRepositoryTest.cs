@@ -11,7 +11,7 @@ namespace Chirp.Tests;
 public class CheepRepositoryTest
 {
 
-    public async Task<ICheepRepository> SetUpRepositoryAsync()
+    private static async Task<ICheepRepository> SetUpRepositoryAsync()
     {
         // Arrange
         var connection = new SqliteConnection("Filename=:memory:");
@@ -47,7 +47,8 @@ public class CheepRepositoryTest
     public async void GetAuthorByNameNotFoundTest()
     {
         var repository = await SetUpRepositoryAsync();
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => repository.GetAuthorByName("Anna"));
+        var result = await repository.GetAuthorByName("Anna");
+        Assert.Null(result);
     }
 
 

@@ -83,7 +83,7 @@ public class CheepRepository : ICheepRepository
         var author = await _dbContext.Authors.SingleOrDefaultAsync(a => a.UserName == name);
         if (author == null)
         {
-            return null; // Avoid throwing exception here
+            return null;
         }
         return AuthorDTO.fromAuthor(author);
     }
