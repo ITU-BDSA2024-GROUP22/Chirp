@@ -4,12 +4,13 @@ public class AuthorDTO
 {
     public static AuthorDTO fromAuthor(Author author)
     {
-        return new AuthorDTO()
+        return new AuthorDTO
         {
             DisplayName = string.IsNullOrWhiteSpace(author.DisplayName)
                 ? author.UserName ?? "Anonymous"
                 : author.DisplayName,
-            UserName = author.UserName
+            UserName = author.UserName,
+            Email = author.Email
         };
     }
 
@@ -17,4 +18,6 @@ public class AuthorDTO
     public required string? UserName {get; set;}
 
     public List<Author> FollowingList { get; set; }
+
+    public required string? Email { get; set; }
 }

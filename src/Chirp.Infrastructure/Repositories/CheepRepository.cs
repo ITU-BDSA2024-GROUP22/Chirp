@@ -66,8 +66,11 @@ public class CheepRepository : ICheepRepository
         return followingList.Select(author => new AuthorDTO
         {
             UserName = author.UserName,
-            DisplayName = string.IsNullOrWhiteSpace(author.DisplayName) ? author.UserName : author.DisplayName,
-            FollowingList = new List<Author>() // Optional: Populate this if needed
+            DisplayName = string.IsNullOrWhiteSpace(author.DisplayName)
+                ? author.UserName
+                : author.DisplayName,
+            FollowingList = new List<Author>(),
+            Email = author.Email // Optional: Populate this if needed
         }).ToList();
     }
 

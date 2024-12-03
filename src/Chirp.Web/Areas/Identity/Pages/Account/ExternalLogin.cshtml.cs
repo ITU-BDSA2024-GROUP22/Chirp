@@ -3,6 +3,7 @@
 #nullable disable
 
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
@@ -85,7 +86,10 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
-            public string Name { get; set; }
+
+            [DisplayName]
+            [Display(Name = "Username")]
+            public string DisplayName { get; set; }
 
         }
 
@@ -138,7 +142,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 }
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
                 {
-                    Input.Name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                    Input.DisplayName = info.Principal.FindFirstValue(ClaimTypes.Name);
 
                 }
                 return Page();
@@ -160,16 +164,22 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 var displayName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "Anonymous";
-                //Her får den det rigtige username (Karokamp)
-                Console.WriteLine($"User {displayName} logged in with {info.Principal.Identity.Name}.");
 
-                var userName = info.Principal.FindFirstValue(ClaimTypes.Email);
-                Console.WriteLine($"User {userName} logged in with {info.Principal.Identity.Name}.");
-                user.DisplayName = displayName;
+                //var userName = info.Principal.FindFirstValue(ClaimTypes.Email);
 
-                await _userStore.SetUserNameAsync(user, displayName, CancellationToken.None);
+                //user.DisplayName = displayName;
+
+                user.DisplayName = Input.DisplayName ?? throw new MissingFieldException("DisplayName");
+                Console.WriteLine(user.DisplayName);
+
+                user.Email = Input.Email ?? throw new MissingFieldException("Email");
+                Console.WriteLine(user.Email);
+
+                await _userStore.SetUserNameAsync(user, Input.DisplayName, CancellationToken.None);
 
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+
 
                 var result = await _userManager.CreateAsync(user);
 

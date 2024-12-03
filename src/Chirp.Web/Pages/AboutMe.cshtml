@@ -16,14 +16,14 @@
             <div class="info-box">
                 <div class="box-title">Displayname</div>
                 <div class="box-content">
-                    @((await Model.Author)?.DisplayName ?? "Unknown")
+                    @((await Model.Author)?.UserName ?? "Unknown")
                 </div>
             </div>
             <br/>
             <div class="info-box">
                 <div class="box-title">Email</div>
                 <div class="box-content">
-                    @((await Model.Author)?.UserName ?? "Unknown")
+                    @((await Model.Author)?.Email ?? "Unknown")
                 </div>
             </div>
             <br/>
