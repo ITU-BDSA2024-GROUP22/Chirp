@@ -39,9 +39,14 @@ public class CheepService : ICheepService
         return result;
     }
 
-    public async Task<AuthorDTO> GetAuthorByName(string name)
+    public async Task<AuthorDTO?> GetAuthorByName(string name)
     {
-        return await cheepRepository.GetAuthorByName(name);
+        var authorDTO = await cheepRepository.GetAuthorByName(name);
+        if (authorDTO == null)
+        {
+            throw new KeyNotFoundException($"No author with name {name} was found.");
+        }
+        return authorDTO;
     }
 
     public async Task CreateCheep(AuthorDTO author, string text, DateTime timeStamp)
@@ -59,8 +64,10 @@ public class CheepService : ICheepService
         return await cheepRepository.GetBioFromAuthor(username);
     }
 
-
-
+    public async Task DeleteAuthor(AuthorDTO authorDTO)
+    {
+        await cheepRepository.DeleteAuthor(authorDTO);
+    }
 }
 
 

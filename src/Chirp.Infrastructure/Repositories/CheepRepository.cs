@@ -78,16 +78,13 @@ public class CheepRepository : ICheepRepository
             .FirstOrDefaultAsync() ?? new List<Author>();
     }
 
-
     public async Task<AuthorDTO?> GetAuthorByName(string name)
     {
-        var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
-
+        var author = await _dbContext.Authors.SingleOrDefaultAsync(a => a.UserName == name);
         if (author == null)
         {
-            throw new KeyNotFoundException($"No author with name {name} was found. DTO");
+            return null; // Avoid throwing exception here
         }
-
         return AuthorDTO.fromAuthor(author);
     }
 
@@ -205,6 +202,7 @@ public class CheepRepository : ICheepRepository
 
             await _dbContext.SaveChangesAsync();
         }
+
     public async Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
@@ -236,6 +234,53 @@ public class CheepRepository : ICheepRepository
         // Hent og returner resultatet
         var result = await pageQuery.ToListAsync();
         return result;
+    }
+
+    public async Task DeleteAuthor(AuthorDTO authorDTO)
+    {
+        //query getting the author
+        var authorQuery = _dbContext.Authors
+            .Include(a => a.FollowingList)
+            .SingleOrDefault(a => a.UserName == authorDTO.UserName);
+
+        if (authorQuery == null)
+        {
+            throw new KeyNotFoundException($"Author with username '{authorDTO.UserName}' not found.");
+        }
+
+        var otherAuthors = await _dbContext.Authors
+            .Where(a => a.FollowingList.Contains(authorQuery)) // Find authors following this author
+            .ToListAsync();
+
+        foreach (var otherAuthor in otherAuthors)
+        {
+            otherAuthor.FollowingList.Remove(authorQuery);
+        }
+
+        // Clear the author's FollowingList
+        authorQuery.FollowingList.Clear();
+
+        //query getting the author's cheeps
+        var cheepsQuery = _dbContext.Cheeps
+            .Where(cheep => cheep.Author.UserName == authorQuery.UserName);
+
+        if (cheepsQuery.Any())
+        {
+            Console.WriteLine(cheepsQuery);
+            _dbContext.Cheeps.RemoveRange(cheepsQuery); //removes associated cheeps
+        }
+
+        //query getting the author's bio
+        var bioQuery = _dbContext.Bios.SingleOrDefault(bio => bio.Author.UserName == authorQuery.UserName);
+
+        if (bioQuery != null)
+        {
+            _dbContext.Bios.Remove(bioQuery); //removes related bio
+        }
+
+        _dbContext.Authors.Remove(authorQuery); //Removes the author
+
+        await _dbContext.SaveChangesAsync(); //saves the changes to the db
     }
 }
 
