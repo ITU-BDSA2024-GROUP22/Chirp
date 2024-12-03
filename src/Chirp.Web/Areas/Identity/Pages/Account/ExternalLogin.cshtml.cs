@@ -86,8 +86,6 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
-
-            public string Name { get; set; }
         }
 
         public IActionResult OnGet() => RedirectToPage("./Login");
@@ -146,7 +144,6 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 return Page();
             }
         }
-
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
