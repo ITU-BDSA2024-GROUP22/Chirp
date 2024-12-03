@@ -26,6 +26,7 @@ public class PublicModel : PageModel
     [BindProperty]
     public required string Text { get; set; }
     public int CurrentPage { get; set; }
+    public int CheepsCount { get; private set; }
 
     public ActionResult OnGet([FromQuery] int? page)
     {
@@ -36,6 +37,9 @@ public class PublicModel : PageModel
 
         CurrentPage = page ?? 1; // Default to page 1 if no page parameter
         Cheeps = _service.GetCheeps(CurrentPage);
+
+        CheepsCount = (Cheeps?.Result?.Count ?? 0);
+
         return Page();
     }
 

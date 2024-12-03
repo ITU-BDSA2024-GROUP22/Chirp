@@ -69,52 +69,54 @@
 
     }
     @if ((await Model.Cheeps).Any())
-        {
-            <ul id="messagelist" class="cheeps">
-                @foreach (var cheep in await Model.Cheeps)
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in await Model.Cheeps)
+            {
                 {
-                    {
-                        <li>
-                            <p>
-                                <strong>
-                                    <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                                </strong>
-                                @if (User.Identity?.IsAuthenticated == true)
+                    <li>
+                        <p>
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                            </strong>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                @if (User.Identity?.Name != cheep.Author.UserName)
                                 {
-                                    @if (User.Identity?.Name != cheep.Author.UserName)
+                                    @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                                     {
-                                        @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
-                                        {
-                                            <!-- Unfollow Button -->
-                                            <form method="post" asp-page-handler="Unfollow">
-                                                <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                                <button type="submit" class="follow-btn">
-                                                    Unfollow
-                                                </button>
-                                            </form>
-                                        }
-                                        else
-                                        {
-                                            <!-- Follow Button -->
-                                            <form method="post" asp-page-handler="Follow">
-                                                <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                                <button type="submit" class="follow-btn">
-                                                    Follow
-                                                </button>
-                                            </form>
-                                        }
-
-                                        <br/>
+                                        <!-- Unfollow Button -->
+                                        <form method="post" asp-page-handler="Unfollow">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
+                                            <button type="submit" class="follow-btn">
+                                                Unfollow
+                                            </button>
+                                        </form>
                                     }
-                                }
+                                    else
+                                    {
+                                        <!-- Follow Button -->
+                                        <form method="post" asp-page-handler="Follow">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
+                                            <button type="submit" class="follow-btn">
+                                                Follow
+                                            </button>
+                                        </form>
+                                    }
 
-                                @cheep.Text
-                                <small>&mdash; @cheep.TimeStamp</small>
-                            </p>
-                        </li>
-                    }
+                                    <br/>
+                                }
+                            }
+
+                            @cheep.Text
+                            <small>&mdash; @cheep.TimeStamp</small>
+                        </p>
+                    </li>
                 }
-            </ul>
+            }
+        </ul>
+        if (Model.CheepsCount == 32)
+        {
             <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
                 @{
                     int currentPage = Model.CurrentPage;
@@ -134,9 +136,38 @@
                 }
             </div>
         }
-    else
+
+        else if (Model.CheepsCount < 32 && Model.CheepsCount >= 1)
+        {
+            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                @{
+                    int currentPage = Model.CurrentPage;
+
+                    if (currentPage > 1)
+                    {
+                        <a href="/?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                            <button>Previous</button>
+                        </a>
+                    }
+
+                    <span class="current-page">@currentPage</span>
+                }
+            </div>
+        }
+    }
+    else if (!(await Model.Cheeps).Any() && Model.CurrentPage == 1)
     {
         <em>There are no cheeps so far.</em>
+        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            @{
+                int currentPage = Model.CurrentPage;
+                <span class="current-page">@currentPage</span>
+            }
+        </div>
+    }
+    else
+    {
+        <em>There are no more cheeps to view.</em>
         <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
             @{
                 int currentPage = Model.CurrentPage;
@@ -151,5 +182,5 @@
                 <span class="current-page">@currentPage</span>
             }
         </div>
-        }
+    }
 </div>
