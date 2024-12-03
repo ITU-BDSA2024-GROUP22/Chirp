@@ -50,7 +50,7 @@
                     0/160
                 </span>
 
-                <input type="submit" value="Share" style="margin-top: 10px;"/>
+                <input type="submit" value="Share" id="shareButton" style="margin-top: 10px;" disabled />
             </form>
         </div>
 
@@ -58,6 +58,7 @@
         function updateCharacterCount() {
             var cheepInput = document.getElementById("cheepText");
             var charCount = document.getElementById("charCount");
+            var shareButton = document.getElementById("shareButton");
             var maxLength = 160;
 
             // Update used characters
@@ -69,6 +70,12 @@
                 charCount.style.color = "red";
             } else {
                 charCount.style.color = "gray";
+            }
+
+            if (used > 0) {
+                shareButton.disabled = false;
+            } else {
+                shareButton.disabled = true;
             }
         }
     </script>
