@@ -94,7 +94,6 @@ public class AboutMeModel : PageModel
         if (signInManager != null)
         {
             await signInManager.SignOutAsync();
-            Console.WriteLine("User logged out.");
         }
         else
         {
@@ -106,7 +105,6 @@ public class AboutMeModel : PageModel
 
         // Redirect to a public or confirmation page
         return RedirectToPage("/Public");
-
     }
 }
 
