@@ -16,6 +16,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<CheepRepository>();
+        builder.Services.AddScoped<FollowRepository>();
         builder.Services.AddScoped<CheepService>();
         builder.Services.AddScoped<FollowService>();
 
