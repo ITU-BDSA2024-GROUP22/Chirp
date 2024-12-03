@@ -60,7 +60,7 @@ public class Program
         {
             var _dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
 
-            //_dbContext.Database.EnsureDeleted();
+            _dbContext.Database.EnsureDeleted();
 
             _dbContext.Database.EnsureCreated();
 
