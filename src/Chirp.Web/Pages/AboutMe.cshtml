@@ -15,13 +15,24 @@
         <div>
             <div>
                 <img src="@((await Model.Author).Picture ?? "/default-picture.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
-
-                <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
-                    <label for="profilePicture">Upload Profile Picture:</label>
-                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*" />
-                    <button type="submit">Upload</button>
-                </form>
+                @if ((await Model.Author).Picture.Any())
+                {
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
+                        <label for="profilePicture">Change Profile Picture:</label>
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
+                        <button type="submit" id="uploadButton" disabled>Upload</button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
+                        <label for="profilePicture">Upload Profile Picture:</label>
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
+                        <button type="submit" id="uploadButton" disabled>Upload</button>
+                    </form>
+                }
             </div>
+
             <div class="info-box">
                 <div class="box-title">Displayname</div>
                 <div class="box-content">
