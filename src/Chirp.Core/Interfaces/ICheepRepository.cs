@@ -10,4 +10,5 @@ public interface ICheepRepository
     public Author GetAuthorByEmail(String name);
     public Task CreateAuthor(string name, string email);
     public Task CreateCheep(AuthorDTO authorDTO, string text, DateTime timeStamp);
+    public Task DeleteAuthor(AuthorDTO authorDTO);
 }

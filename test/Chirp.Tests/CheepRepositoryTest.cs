@@ -126,4 +126,20 @@ public class CheepRepositoryTest
         Assert.Equal("Første Cheep", result[2].Text);
     }
 
+    [Fact]
+
+    public async void DeleteAuthorTests()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+
+        var author = await repository.GetAuthorByName("Anders And");
+        Assert.NotNull(author);
+        await repository.DeleteAuthor(author);
+
+        var deletedAuthor = await repository.GetAuthorByName("Anders And");
+        Assert.Null(deletedAuthor);
+    }
+
 }
