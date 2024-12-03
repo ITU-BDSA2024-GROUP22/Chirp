@@ -9,7 +9,7 @@ namespace Chirp.Tests;
 
 public class FollowRepositoryTest
 {
-    private static async Task<FollowRepository> CreateFollowRepository()
+    private static async Task<IFollowRepository> CreateFollowRepository()
     {
         // Arrange
         var connection = new SqliteConnection("Filename=:memory:");
@@ -44,7 +44,7 @@ public class FollowRepositoryTest
         await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
         await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
 
-        await followRepository.AddFollow("Sten Ben", "Peter Plys");
+        await followRepository.AddFollow("sten@ben.dk", "peter@plys.com");
 
         var followingList = await followRepository.GetFollowingList("Sten Ben");
 
