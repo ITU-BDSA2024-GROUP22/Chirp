@@ -135,18 +135,14 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
-                Input = new InputModel();
-
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    Input.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    Input = new InputModel
+                    {
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                    };
+                    return await OnPostConfirmationAsync(returnUrl);
                 }
-
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
-                {
-                    Input.Name = info.Principal.FindFirstValue(ClaimTypes.Name);
-                }
-
                 return Page();
             }
         }
@@ -170,11 +166,9 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
 
                 // Set the username and email
 
+                var username = info.Principal.FindFirstValue(ClaimTypes.Name);
 
-                Input.Name = info.Principal.FindFirstValue(ClaimTypes.Name);
-                Input.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
-
-                await _userStore.SetUserNameAsync(user, Input.Name, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 var result = await _userManager.CreateAsync(user);
