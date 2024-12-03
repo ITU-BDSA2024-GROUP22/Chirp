@@ -248,8 +248,9 @@ public class CheepRepository : ICheepRepository
         var cheepsQuery = _dbContext.Cheeps
             .Where(cheep => cheep.Author.UserName == authorQuery.UserName);
 
-        if (cheepsQuery != null)
+        if (cheepsQuery.Any())
         {
+            Console.WriteLine(cheepsQuery);
             _dbContext.Cheeps.RemoveRange(cheepsQuery); //removes associated cheeps
         }
 

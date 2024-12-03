@@ -21,7 +21,19 @@ public class DBContext : IdentityDbContext<Author>
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Cheep>()
+            .HasOne(c => c.Author)
+            .WithMany(a => a.Cheeps)
+            .HasForeignKey(c => c.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Bio>()
+            .HasOne(b => b.Author)
+            .WithOne(a => a.Bio)
+            .HasForeignKey<Bio>(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
+
     public override void Dispose()
     {
         base.Dispose();
