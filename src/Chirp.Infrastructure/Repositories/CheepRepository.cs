@@ -235,16 +235,39 @@ public class CheepRepository : ICheepRepository
 
     public async Task DeleteAuthor(AuthorDTO authorDTO)
     {
-        var authorQuery = await _dbContext.Authors
-            .Include(a => a.Cheeps)
-            .SingleOrDefaultAsync(a => a.UserName == authorDTO.UserName);
+        //query getting the author
+        var authorQuery = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
 
         if (authorQuery == null)
         {
             throw new KeyNotFoundException($"Author with username '{authorDTO.UserName}' not found.");
         }
 
-        _dbContext.Cheeps.RemoveRange(authorQuery.Cheeps); //removes associated cheeps
+        //query getting the author's cheeps
+        var cheepsQuery = (from cheep in _dbContext.Cheeps
+                where cheep.Author.UserName == authorQuery.UserName // Filter by the author's name
+                orderby cheep.TimeStamp descending
+                select cheep)
+            .Include(c => c.Author)
+            .Select(cheep => new Cheep
+            {
+                Author = cheep.Author,
+                Text = cheep.Text,
+                TimeStamp = cheep.TimeStamp
+            });
+
+        if (cheepsQuery != null)
+        {
+            _dbContext.Cheeps.RemoveRange(cheepsQuery); //removes associated cheeps
+        }
+
+        //query getting the author's bio
+        var bioQuery = _dbContext.Bios.SingleOrDefault(bio => bio.Author.UserName == authorQuery.UserName);
+
+        if (bioQuery != null)
+        {
+            _dbContext.Bios.Remove(bioQuery); //removes related bio
+        }
 
         _dbContext.Authors.Remove(authorQuery); //Removes the author
 
