@@ -202,6 +202,7 @@ public class CheepRepository : ICheepRepository
 
             await _dbContext.SaveChangesAsync();
         }
+
     public async Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
@@ -244,17 +245,8 @@ public class CheepRepository : ICheepRepository
         }
 
         //query getting the author's cheeps
-        var cheepsQuery = (from cheep in _dbContext.Cheeps
-                where cheep.Author.UserName == authorQuery.UserName // Filter by the author's name
-                orderby cheep.TimeStamp descending
-                select cheep)
-            .Include(c => c.Author)
-            .Select(cheep => new Cheep
-            {
-                Author = cheep.Author,
-                Text = cheep.Text,
-                TimeStamp = cheep.TimeStamp
-            });
+        var cheepsQuery = _dbContext.Cheeps
+            .Where(cheep => cheep.Author.UserName == authorQuery.UserName);
 
         if (cheepsQuery != null)
         {
