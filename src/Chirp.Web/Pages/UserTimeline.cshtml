@@ -101,43 +101,57 @@
                 </li>
             }
         </ul>
-        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
-            @{
-                int currentPage = Model.CurrentPage;
 
-                if (currentPage > 1)
-                {
-                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                        <button>Previous</button>
+        if (Model.CheepsCount == 32)
+        {
+            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                @{
+                    int currentPage = Model.CurrentPage;
+
+                    if (currentPage > 1)
+                    {
+                        <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                            <button>Previous</button>
+                        </a>
+                    }
+
+                    <span class="current-page">@currentPage</span>
+
+                    <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                        <button>Next</button>
                     </a>
                 }
+            </div>
+        }
 
-                <span class="current-page">@currentPage</span>
+        else if (Model.CheepsCount < 32 && Model.CheepsCount >= 1)
+        {
+            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                @{
+                    int currentPage = Model.CurrentPage;
 
-                <a href="/@routeName?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
-                    <button>Next</button>
-                </a>
-            }
-        </div>
+                    if (currentPage > 1)
+                    {
+                        <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                            <button>Previous</button>
+                        </a>
+                    }
+
+                    <span class="current-page">@currentPage</span>
+                }
+            </div>
+        }
     }
     else
-    {
-        <em>There are no cheeps so far.</em>
-        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
-            @{
+        {
+            <em>There are no cheeps so far.</em>
+            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                @{
                 int currentPage = Model.CurrentPage;
-
-                if (currentPage > 1)
-                {
-                    <a href="/@routeName?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                        <button>Previous</button>
-                    </a>
-                }
-
                 <span class="current-page">@currentPage</span>
-            }
-        </div>
-    }
+                }
+            </div>
+        }
 </div>
 
 
