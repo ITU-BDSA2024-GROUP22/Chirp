@@ -80,37 +80,35 @@
             @foreach (var cheep in await Model.Cheeps)
             {
                 {
-                    {
-                        <li>
-                            <p>
-                                <strong>
-                                    <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
-                                </strong>
-                                @if (User.Identity?.IsAuthenticated == true)
+                    <li>
+                        <p>
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
+                            </strong>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                                 {
-                                    @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
-                                    {
-                                        <!-- Unfollow Button -->
-                                        <form method="post" asp-page-handler="Unfollow">
-                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                            <button type="submit" class="follow-btn">
-                                                Unfollow
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <!-- Follow Button -->
-                                        <form method="post" asp-page-handler="Follow">
-                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                            <button type="submit" class="follow-btn">
-                                                Follow
-                                            </button>
-                                        </form>
-                                    }
-
-                                    <br/>
+                                    <!-- Unfollow Button -->
+                                    <form method="post" asp-page-handler="Unfollow">
+                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
+                                        <button type="submit" class="follow-btn">
+                                            Unfollow
+                                        </button>
+                                    </form>
                                 }
+                                else
+                                {
+                                    <!-- Follow Button -->
+                                    <form method="post" asp-page-handler="Follow">
+                                        <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
+                                        <button type="submit" class="follow-btn">
+                                            Follow
+                                        </button>
+                                    </form>
+                                }
+
+                                <br/>
                             }
 
                             @cheep.Text
