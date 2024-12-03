@@ -89,7 +89,7 @@ public class AboutMeModel : PageModel
             return NotFound($"No author with the name '{author}' was found.");
         }
 
-        /*
+
         var signInManager = HttpContext.RequestServices.GetService(typeof(SignInManager<Author>)) as SignInManager<Author>;
         if (signInManager != null)
         {
@@ -100,8 +100,6 @@ public class AboutMeModel : PageModel
         {
             return StatusCode(500, "Sign-in manager service not available.");
         }
-        */
-
 
         // Proceed to delete the author's data
         await _service.DeleteAuthor(await Author);
