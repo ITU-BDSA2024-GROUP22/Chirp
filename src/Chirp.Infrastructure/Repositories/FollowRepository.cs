@@ -67,7 +67,7 @@ public class FollowRepository
         return followingList.Select(author => new AuthorDTO
         {
             UserName = author.UserName,
-            DisplayName = string.IsNullOrWhiteSpace(author.DisplayName) ? author.UserName : author.DisplayName,
+            Email = author.Email,
             FollowingList = new List<Author>() // Optional: Populate this if needed
         }).ToList();
     }

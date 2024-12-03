@@ -16,14 +16,14 @@
             <div class="info-box">
                 <div class="box-title">Displayname</div>
                 <div class="box-content">
-                    @((await Model.Author)?.DisplayName ?? "Unknown")
+                    @((await Model.Author)?.UserName ?? "Unknown")
                 </div>
             </div>
             <br/>
             <div class="info-box">
                 <div class="box-title">Email</div>
                 <div class="box-content">
-                    @((await Model.Author)?.UserName ?? "Unknown")
+                    @((await Model.Author)?.Email ?? "Unknown")
                 </div>
             </div>
             <br/>
@@ -55,7 +55,7 @@
                     <li>
                         <p>
                             <strong>
-                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
                             </strong>
                             @cheep.Text
                             <small>&mdash; @cheep.TimeStamp</small>
