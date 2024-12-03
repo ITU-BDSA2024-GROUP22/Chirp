@@ -9,9 +9,9 @@ namespace Chirp.Tests;
 
 public class FollowRepositoryTest
 {
-    private static async Task<IFollowRepository> CreateFollowRepository()
+    public Task<DBContext> context;
+    private static async Task<DBContext> CreateContext()
     {
-        // Arrange
         var connection = new SqliteConnection("Filename=:memory:");
         await connection.OpenAsync();
         var builder = new DbContextOptionsBuilder<DBContext>().UseSqlite(connection);
@@ -19,32 +19,19 @@ public class FollowRepositoryTest
         var context = new DBContext(builder.Options);
         await context.Database.EnsureCreatedAsync(); // Applies the schema to the database
 
-        return new FollowRepository(context);
-    }
-
-    private static async Task<ICheepRepository> CreateCheepRepository()
-    {
-        // Arrange
-        var connection = new SqliteConnection("Filename=:memory:");
-        await connection.OpenAsync();
-        var builder = new DbContextOptionsBuilder<DBContext>().UseSqlite(connection);
-
-        var context = new DBContext(builder.Options);
-        await context.Database.EnsureCreatedAsync(); // Applies the schema to the database
-
-        return new CheepRepository(context);
+        return context;
     }
 
     [Fact]
     public async Task AddFollowTest()
     {
-        var followRepository = await CreateFollowRepository();
-        var cheepRepository = await CreateCheepRepository();
+        var followRepository = new FollowRepository(context);
+        var cheepRepository = new CheepRepository(await CreateContext());
 
         await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
         await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
 
-        await followRepository.AddFollow("sten@ben.dk", "peter@plys.com");
+        await followRepository.AddFollow("sten@ben.dk", "Peter Plys");
 
         var followingList = await followRepository.GetFollowingList("Sten Ben");
 
@@ -56,8 +43,8 @@ public class FollowRepositoryTest
     [Fact]
     public async Task RemoveFollowTest()
     {
-        var followRepository = await CreateFollowRepository();
-        var cheepRepository = await CreateCheepRepository();
+        var followRepository = new FollowRepository(await CreateContext());
+        var cheepRepository = new CheepRepository(await CreateContext());
 
         await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
         await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
@@ -74,8 +61,8 @@ public class FollowRepositoryTest
     [Fact]
     public async Task GetCheepsFromFollowingTest()
     {
-        var followRepository = await CreateFollowRepository();
-        var cheepRepository = await CreateCheepRepository();
+        var followRepository = new FollowRepository(await CreateContext());
+        var cheepRepository = new CheepRepository(await CreateContext());
 
         await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
         await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
