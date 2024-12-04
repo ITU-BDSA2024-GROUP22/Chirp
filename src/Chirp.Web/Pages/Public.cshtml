@@ -86,14 +86,13 @@
                     <li>
                         <!-- Timestamp on the first line -->
                         <p>
-                            <small>@cheep.TimeStamp</small>
+                            <small class="timestamp">@cheep.TimeStamp</small>
                         </p>
                         <!-- Author name and Follow/Unfollow button on the same line -->
                         <div class="author-row">
 
-                            <img src="@profilePicture"
-                                 alt="Profile Picture"
-                                 style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                            <img src="@(cheep.Author.Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" class="small-profile-pic" />
+
                             <strong>
                                 <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
                             </strong>

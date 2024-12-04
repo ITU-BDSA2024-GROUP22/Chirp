@@ -17,6 +17,7 @@ input[type="text"],
 input[type="tel"],
 input[type="password"] {
     background: white;
+    margin-bottom: 10px;
     border: 1px solid #E97AA8;
     padding: 5px;
     font-family: Arial;
@@ -25,6 +26,7 @@ input[type="password"] {
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     color: #deb0c2;
+    align-content: center;
 }
 
 input[type="submit"] {
@@ -188,6 +190,21 @@ div.page ul.cheeps li {
     margin-left: 20px;
 }
 
+.small-profile-pic {
+    width: 30px; /* Adjust to your desired size */
+    height: 30px; /* Adjust to your desired size */
+    border-radius: 50%; /* Ensures a circular shape */
+    margin-right: -4px; /* Optional, for spacing */
+}
+
+.author-row .pro{
+    display: flex;
+    align-items: center; /* Align items (name and button) vertically */
+    gap: 20px; /* Space between the author name and button */
+    margin-bottom: 2px; /* Optional: Add spacing between this row and the text below */
+    margin-left: 20px;
+}
+
 /* Make sure the follow button and form align inline */
 .follow-form {
     display: inline; /* Keep the form inline */
@@ -203,9 +220,13 @@ div.page ul.cheeps p {
         padding: 0 10px 0 0;
     }
 
-    div.page ul.cheeps li small {
-        font-size: 0.9em;
-        color: #888;
+    .timestamp {
+        font-size: 8px;
+        color: #777; /* Adjust the color to make it subtle */
+        font-weight: normal; /* Optional: adjust weight */
+        font-family: 'Arial', sans-serif; /* Ensure a consistent font */
+        margin-left: 7px;
+        margin-bottom: 4px;
     }
 
     div.page div.cheepbox {
@@ -375,4 +396,12 @@ div.page ul.cheeps p {
         font-size: 14px;
         color: #555;
     }
+
+    .ui-icon-image {
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+        margin-right: 5px !important;
+    }
+
 }
