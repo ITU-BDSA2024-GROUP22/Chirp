@@ -1,5 +1,6 @@
 @page "/{author}/about-me"
 @using Chirp.Core
+@using Microsoft.IdentityModel.Tokens
 @model Chirp.Web.Pages.AboutMeModel
 @{
     ViewData["Title"] = "Chirp!";
@@ -13,6 +14,26 @@
         <h2> User information </h2>
         <br/>
         <div>
+            <div>
+                <img src="@((await Model.Author).Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
+                @if (!(await Model.Author).Picture.IsNullOrEmpty())
+                {
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
+                        <label for="profilePicture">Change Profile Picture:</label>
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
+                        <button type="submit" id="uploadButton">Upload</button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
+                        <label for="profilePicture">Upload Profile Picture:</label>
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
+                        <button type="submit" id="uploadButton">Upload</button>
+                    </form>
+                }
+            </div>
+
             <div class="info-box">
                 <div class="box-title">Displayname</div>
                 <div class="box-content">
@@ -52,6 +73,11 @@
             <ul id="messagelist" class="cheeps">
                 @foreach (var cheep in await Model.Cheeps)
                 {
+                    <div>
+                        <img src="@(cheep.Author.Picture ?? "/default-avatar.png")" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;" />
+                        <span>@cheep.Author.UserName</span>
+                        <p>@cheep.Text</p>
+                    </div>
                     <li>
                         <p>
                             <strong>
