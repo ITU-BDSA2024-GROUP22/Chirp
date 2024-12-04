@@ -15,24 +15,31 @@
         <br/>
         <div>
             <div>
-                <img src="@((await Model.Author).Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
-                @if (!(await Model.Author).Picture.IsNullOrEmpty())
-                {
-                    <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
-                        <label for="profilePicture">Change Profile Picture:</label>
-                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
-                        <button type="submit" id="uploadButton">Upload</button>
-                    </form>
-                }
-                else
-                {
-                    <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
-                        <label for="profilePicture">Upload Profile Picture:</label>
-                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
-                        <button type="submit" id="uploadButton">Upload</button>
-                    </form>
-                }
+                <img src="@((await Model.Author).Picture ?? "/images/chirp_silhouette.png")"
+                     alt="Profile Picture"
+                     style="width: 150px; height: 150px; border-radius: 50%;" />
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
+                    @if (!(await Model.Author).Picture.IsNullOrEmpty())
+                    {
+                    <label for="profilePicture">Change Profile Picture:</label>
+                    }
+                    else
+                    {
+                    <label for="profilePicture">Upload Profile Picture:</label>
+                    }
+                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*"
+                           onchange="toggleUploadButton()"/>
+                    <button type="submit" id="uploadButton" disabled>Upload</button>
+                </form>
             </div>
+
+            <script>
+                function toggleUploadButton() {
+                    const fileInput = document.getElementById('profilePicture');
+                    const uploadButton = document.getElementById('uploadButton');
+                    uploadButton.disabled = !fileInput.files.length; // Disable if no file is chosen
+                }
+            </script>
 
             <div class="info-box">
                 <div class="box-title">Displayname</div>
