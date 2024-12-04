@@ -86,6 +86,9 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+
+            public string UserName { get; set; }
         }
 
         public IActionResult OnGet() => RedirectToPage("./Login");
@@ -116,108 +119,100 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
-                isPersistent: false, bypassTwoFactor: true);
-            if (result.Succeeded)
+            // Check if the user exists with this external login
+            var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (existingUser != null)
             {
+                await _signInManager.SignInAsync(existingUser, isPersistent: false);
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.",
-                    info.Principal.Identity.Name, info.LoginProvider);
+                    existingUser.UserName, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
 
-            if (result.IsLockedOut)
-            {
-                return RedirectToPage("./Lockout");
-            }
-
-            ReturnUrl = returnUrl;
-            ProviderDisplayName = info.ProviderDisplayName;
-
-            // Hent email og username fra GitHub
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var username = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
-            {
-                _logger.LogWarning("Missing email or username from external provider. Email: {Email}, Username: {Username}",
-                    email, username);
-                ErrorMessage = "Could not retrieve email or username from external provider.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-            }
-
-            // Sæt Input til at vise hentet email
-            Input = new InputModel
-            {
-                Email = email
-            };
-
+            // If no external login exists, proceed with user creation
             return await OnPostConfirmationAsync(returnUrl);
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
+{
+    returnUrl = returnUrl ?? Url.Content("~/");
+
+    var info = await _signInManager.GetExternalLoginInfoAsync();
+    if (info == null)
+    {
+        ErrorMessage = "Error loading external login information during confirmation.";
+        _logger.LogError("External login info is null during confirmation.");
+        return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+    }
+
+    try
+    {
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        var username = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            _logger.LogWarning("Missing email or username during confirmation. Email: {Email}, Username: {Username}",
+                email, username);
+            ErrorMessage = "Could not retrieve required user information.";
+            return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+        }
 
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+        // Check if a user with this email already exists
+        var existingUser = await _userManager.FindByEmailAsync(email);
+        if (existingUser != null)
+        {
+            // Attach external login to the existing user
+            var loginResult = await _userManager.AddLoginAsync(existingUser, info);
+            if (loginResult.Succeeded)
             {
-                ErrorMessage = "Error loading external login information during confirmation.";
-                _logger.LogError("External login info is null during confirmation.");
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                _logger.LogInformation("Attached external login to existing user: {Email}", email);
+                return LocalRedirect(returnUrl);
             }
 
-            if (ModelState.IsValid)
+            foreach (var error in loginResult.Errors)
             {
-                try
-                {
-                    var user = CreateUser();
-
-                    // Hent username og email fra GitHub
-                    var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                    var username = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-
-                    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
-                    {
-                        _logger.LogWarning("Missing email or username during confirmation. Email: {Email}, Username: {Username}",
-                            email, username);
-                        ModelState.AddModelError(string.Empty, "Could not retrieve required user information from external provider.");
-                        return Page();
-                    }
-
-                    await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
-                    await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
-
-                    var result = await _userManager.CreateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        result = await _userManager.AddLoginAsync(user, info);
-                        if (result.Succeeded)
-                        {
-                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-                            await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                            return LocalRedirect(returnUrl);
-                        }
-                    }
-
-                    foreach (var error in result.Errors)
-                    {
-                        _logger.LogError("Error during user creation: {Error}", error.Description);
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error occurred while confirming external login.");
-                    ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
-                }
+                _logger.LogError("Error attaching external login: {Error}", error.Description);
+                ModelState.AddModelError(string.Empty, error.Description);
             }
-
-            ProviderDisplayName = info.ProviderDisplayName;
-            ReturnUrl = returnUrl;
             return Page();
         }
+
+        // Create a new user
+        var user = CreateUser();
+        username = await GenerateUniqueUsername(username);
+        await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
+        await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
+
+        var result = await _userManager.CreateAsync(user);
+        if (result.Succeeded)
+        {
+            result = await _userManager.AddLoginAsync(user, info);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return LocalRedirect(returnUrl);
+            }
+        }
+
+        foreach (var error in result.Errors)
+        {
+            _logger.LogError("Error during user creation: {Error}", error.Description);
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "An error occurred while confirming external login.");
+        ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+    }
+
+    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+}
+
 
 
         private Author CreateUser()
@@ -233,6 +228,21 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                                                     $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
+
+        private async Task<string> GenerateUniqueUsername(string baseUsername)
+        {
+            string uniqueUsername = baseUsername;
+            int counter = 1;
+
+            while (await _userManager.FindByNameAsync(uniqueUsername) != null)
+            {
+                uniqueUsername = $"{baseUsername}{counter}";
+                counter++;
+            }
+
+            return uniqueUsername;
+        }
+
 
         private IUserEmailStore<Author> GetEmailStore()
         {
