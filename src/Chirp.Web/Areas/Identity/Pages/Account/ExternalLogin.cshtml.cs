@@ -134,84 +134,85 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
-{
-    returnUrl = returnUrl ?? Url.Content("~/");
-
-    var info = await _signInManager.GetExternalLoginInfoAsync();
-    if (info == null)
-    {
-        ErrorMessage = "Error loading external login information during confirmation.";
-        _logger.LogError("External login info is null during confirmation.");
-        return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-    }
-
-    try
-    {
-        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-        var username = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
         {
-            _logger.LogWarning("Missing email or username during confirmation. Email: {Email}, Username: {Username}",
-                email, username);
-            ErrorMessage = "Could not retrieve required user information.";
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ErrorMessage = "Error loading external login information during confirmation.";
+                _logger.LogError("External login info is null during confirmation.");
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            try
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var username = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
+                {
+                    _logger.LogWarning("Missing email or username during confirmation. Email: {Email}, Username: {Username}",
+                        email, username);
+                    ErrorMessage = "Could not retrieve required user information.";
+                    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                }
+
+                // Check if a user with this email already exists
+                var existingUser = await _userManager.FindByNameAsync(username);
+                if (existingUser != null)
+                {
+                    // Attach external login to the existing user
+                    var loginResult = await _userManager.AddLoginAsync(existingUser, info);
+                    if (loginResult.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                        _logger.LogInformation("Attached external login to existing user: {Email}", email);
+                        return LocalRedirect(returnUrl);
+                    }
+
+                    foreach (var error in loginResult.Errors)
+                    {
+                        _logger.LogError("Error attaching external login: {Error}", error.Description);
+                        ModelState.AddModelError(string.Empty, error.Description);
+
+                    }
+                    return Page();
+                }
+
+                // Create a new user
+                var user = CreateUser();
+                username = await GenerateUniqueUsername(username);
+                await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
+
+                var result = await _userManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    result = await _userManager.AddLoginAsync(user, info);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    _logger.LogError("Error during user creation: {Error}", error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while confirming external login.");
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+            }
+
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
-
-        // Check if a user with this email already exists
-        var existingUser = await _userManager.FindByNameAsync(username);
-        if (existingUser != null)
-        {
-            // Attach external login to the existing user
-            var loginResult = await _userManager.AddLoginAsync(existingUser, info);
-            if (loginResult.Succeeded)
-            {
-                await _signInManager.SignInAsync(existingUser, isPersistent: false);
-                _logger.LogInformation("Attached external login to existing user: {Email}", email);
-                return LocalRedirect(returnUrl);
-            }
-
-            foreach (var error in loginResult.Errors)
-            {
-                _logger.LogError("Error attaching external login: {Error}", error.Description);
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-            return Page();
-        }
-
-        // Create a new user
-        var user = CreateUser();
-        username = await GenerateUniqueUsername(username);
-        await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
-        await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
-
-        var result = await _userManager.CreateAsync(user);
-        if (result.Succeeded)
-        {
-            result = await _userManager.AddLoginAsync(user, info);
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return LocalRedirect(returnUrl);
-            }
-        }
-
-        foreach (var error in result.Errors)
-        {
-            _logger.LogError("Error during user creation: {Error}", error.Description);
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "An error occurred while confirming external login.");
-        ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
-    }
-
-    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-}
 
 
 
