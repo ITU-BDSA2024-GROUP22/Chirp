@@ -10,10 +10,13 @@ public class Author : IdentityUser
     //Author now uses the build-in IdentityUser's Id property
 
     //[Required]
-    [StringLength(160)] public string? DisplayName { get; set; }
+    //[StringLength(160)] public string? DisplayName { get; set; }
 
     [Required]
     public required List<Author> FollowingList { get; set; }  = new List<Author>();
 
     public Bio? Bio { get; set; }
+    public string? Picture { get; set; }
+
+
 }

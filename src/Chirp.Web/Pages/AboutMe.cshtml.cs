@@ -22,6 +22,7 @@ public class AboutMeModel : PageModel
     public int CurrentPage { get; set; }
     [BindProperty]
     public string BioText { get; set; }
+    public int CheepsCount { get; private set; }
 
     public async Task<IActionResult> OnGet([FromQuery] int? page, string author)
     {
@@ -35,10 +36,11 @@ public class AboutMeModel : PageModel
         Bio = _service.GetBioFromAuthor((await Author).UserName);
         BioText = (await Bio)?.Text ?? string.Empty;
 
-        Console.WriteLine("bio in cshtml.cs: " + (await Bio)?.Text);
-
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
+
+        CheepsCount = (Cheeps?.Result?.Count ?? 0);
+
         return Page();
     }
 
@@ -56,11 +58,6 @@ public class AboutMeModel : PageModel
         }
 
         Author = _service.GetAuthorByName(author);
-
-        if (string.IsNullOrEmpty(BioText))
-        {
-            return NotFound("Bio parameter is missing");
-        }
 
         await _service.UpdateBio((await Author), BioText);
 
@@ -105,6 +102,40 @@ public class AboutMeModel : PageModel
 
         // Redirect to a public or confirmation page
         return RedirectToPage("/Public");
+    }
+
+    public async Task<IActionResult> OnPostPictureAsync(IFormFile profilePicture)
+    {
+        if (!User.Identity.IsAuthenticated || User.Identity.Name == null)
+        {
+            return NotFound("User is not authenticated");
+        }
+
+        if (profilePicture == null || profilePicture.Length == 0)
+        {
+            ModelState.AddModelError("ProfilePicture", "Please upload a valid picture.");
+            return Page();
+        }
+
+        // Save the uploaded file to "wwwroot/uploads"
+        var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        Directory.CreateDirectory(uploadFolder);
+
+        var fileName = $"{Guid.NewGuid()}_{profilePicture.FileName}";
+        var filePath = Path.Combine(uploadFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await profilePicture.CopyToAsync(stream);
+        }
+
+        // Generate the relative URL for the uploaded file
+        var pictureUrl = $"/uploads/{fileName}";
+
+        // Update the author's profile picture in the database
+        await _service.SetAuthorPictureAsync(User.Identity.Name, pictureUrl);
+
+        return RedirectToPage("/AboutMe", new { author = User.Identity.Name });
     }
 }
 

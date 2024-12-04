@@ -23,7 +23,7 @@
     @if (User.Identity?.IsAuthenticated == true)
     {
         <div class="cheepbox">
-            <h3>What's on your mind, @((await Model.Author).DisplayName)?</h3>
+            <h3>What's on your mind, @((await Model.Author).UserName)?</h3>
             <form method="post">
                 <div style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
                     <input
@@ -33,8 +33,7 @@
                         maxlength="160"
                         id="cheepText"
                         oninput="updateCharacterCount()"
-                        placeholder="Write your cheep here..."
-                    />
+                        placeholder="Write your cheep here..."/>
                 </div>
 
                 <!-- Character counter below the cheep box -->
@@ -44,7 +43,7 @@
                     0/160
                 </span>
 
-                <input type="submit" value="Share" style="margin-top: 10px;" />
+                <input type="submit" value="Share" id="shareButton" style="margin-top: 10px;" disabled />
             </form>
         </div>
 
@@ -52,6 +51,7 @@
     function updateCharacterCount() {
         var cheepInput = document.getElementById("cheepText");
         var charCount = document.getElementById("charCount");
+        var shareButton = document.getElementById("shareButton");
         var maxLength = 160;
 
         // Update used characters
@@ -64,14 +64,24 @@
         } else {
             charCount.style.color = "gray";
         }
+
+        if (used > 0) {
+            shareButton.disabled = false;
+        } else {
+            shareButton.disabled = true;
+        }
     }
 </script>
 
     }
     @if ((await Model.Cheeps).Any())
-        {
-            <ul id="messagelist" class="cheeps">
-                @foreach (var cheep in await Model.Cheeps)
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in await Model.Cheeps)
+            {
+                var profilePicture = string.IsNullOrWhiteSpace(cheep.Author.Picture)
+                    ? "/images/chirp_silhouette.png"
+                    : cheep.Author.Picture;
                 {
                     <li>
                         <!-- Timestamp on the first line -->
@@ -80,8 +90,12 @@
                         </p>
                         <!-- Author name and Follow/Unfollow button on the same line -->
                         <div class="author-row">
+
+                            <img src="@profilePicture"
+                                 alt="Profile Picture"
+                                 style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
                             <strong>
-                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
                             </strong>
                             @if (User.Identity?.IsAuthenticated == true)
                             {
@@ -91,7 +105,7 @@
                                     {
                                         <!-- Unfollow Button -->
                                         <form method="post" asp-page-handler="Unfollow" class="follow-form">
-                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName">
                                             <button type="submit" class="follow-btn">Unfollow</button>
                                         </form>
                                     }
@@ -99,41 +113,89 @@
                                     {
                                         <!-- Follow Button -->
                                         <form method="post" asp-page-handler="Follow" class="follow-form">
-                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName">
                                             <button type="submit" class="follow-btn">Follow</button>
                                         </form>
                                     }
+
+                                    <br/>
                                 }
                             }
+
                         </div>
                         <!-- Cheep text on a separate line -->
                         <p>@cheep.Text</p>
                     </li>
                 }
-            </ul>
-
-        }
-        else
+            }
+        </ul>
+        if (Model.CheepsCount == 32)
         {
-            <em>There are no cheeps so far.</em>
+            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                @{
+                    int currentPage = Model.CurrentPage;
+
+                    if (currentPage > 1)
+                    {
+                        <a href="/?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                            <button>Previous</button>
+                        </a>
+                    }
+
+                    <span class="current-page">@currentPage</span>
+
+                    <a href="/?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
+                        <button>Next</button>
+                    </a>
+                }
+            </div>
         }
 
+        else if (Model.CheepsCount < 32 && Model.CheepsCount >= 1)
+        {
+            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                @{
+                    int currentPage = Model.CurrentPage;
+
+                    if (currentPage > 1)
+                    {
+                        <a href="/?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                            <button>Previous</button>
+                        </a>
+                    }
+
+                    <span class="current-page">@currentPage</span>
+                }
+            </div>
+        }
+    }
+    else if (!(await Model.Cheeps).Any() && Model.CurrentPage == 1)
+    {
+        <em>There are no cheeps so far.</em>
+        <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            @{
+                int currentPage = Model.CurrentPage;
+                <span class="current-page">@currentPage</span>
+            }
+        </div>
+    }
+    else
+    {
+        <em>There are no more cheeps to view.</em>
         <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
             @{
                 int currentPage = Model.CurrentPage;
 
                 if (currentPage > 1)
                 {
-                    <a href="?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
+                    <a href="/?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
                         <button>Previous</button>
                     </a>
                 }
 
                 <span class="current-page">@currentPage</span>
-
-                <a href="?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
-                    <button>Next</button>
-                </a>
             }
         </div>
+    }
 </div>
+

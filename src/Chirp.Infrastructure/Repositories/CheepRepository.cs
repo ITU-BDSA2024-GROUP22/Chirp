@@ -182,6 +182,19 @@ public class CheepRepository : ICheepRepository
 
         await _dbContext.SaveChangesAsync(); //saves the changes to the db
     }
+
+    public async Task SetAuthorPictureAsync(string username, string picturePath)
+    {
+        var author = await _dbContext.Authors.SingleOrDefaultAsync(a => a.UserName == username);
+        if (author == null)
+        {
+            throw new KeyNotFoundException($"No author with username '{username}' found.");
+        }
+
+        author.Picture = picturePath;
+        _dbContext.Authors.Update(author);
+        await _dbContext.SaveChangesAsync();
+    }
 }
 
 
