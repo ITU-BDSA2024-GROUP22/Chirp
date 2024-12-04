@@ -59,12 +59,6 @@ public class AboutMeModel : PageModel
 
         Author = _service.GetAuthorByName(author);
 
-        if (string.IsNullOrEmpty(BioText))
-        {
-            ModelState.AddModelError("BioText", "Your bio cannot be empty, please write something before saving :)");
-            return Page();
-        }
-
         await _service.UpdateBio((await Author), BioText);
 
         return RedirectToPage("/AboutMe", new { author = (await Author).UserName, page = 1 });
