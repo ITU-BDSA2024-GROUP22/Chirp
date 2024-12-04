@@ -1,15 +1,15 @@
 body {
-  background: #deb0c2;
-  font-family: 'Trebuchet MS', sans-serif;
-  font-size: 14px;
+    background: #deb0c2;
+    font-family: Arial;
+    font-size: 14px;
 }
 
 a {
-  color: #26776F;
+    color: #8e7a7a;
 }
 
 a:hover {
-  color: #333;
+    color: #333;
 }
 
 input[type="email"],
@@ -17,14 +17,14 @@ input[type="text"],
 input[type="tel"],
 input[type="password"] {
     background: white;
-    border: 1px solid #e6c0bf;
-    padding: 2px;
-    font-family: 'Trebuchet MS', sans-serif;
+    border: 1px solid #E97AA8;
+    padding: 5px;
+    font-family: Arial;
     font-size: 14px;
-    border-radius: 2px;
+    border-radius: 1px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
-    color: #571010;
+    color: #deb0c2;
 }
 
 input[type="submit"] {
@@ -35,6 +35,10 @@ input[type="submit"] {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+}
+
+input[type="submit"]{
+
 }
 
 div.page {
@@ -53,36 +57,37 @@ div.page {
     gap: 20px; /* Add space between child elements */
 }
 
-
 div.page > h1 {
-  background: #ECCFDE;
-  margin: 0;
-  padding: 10px 14px;
-  color: #E97AA8;
-  letter-spacing: 1px;
-  font-family: Malayalam MN;
-  font-weight: bolder;
-  font-size: 80px;
+    background: #ECCFDE;
+    padding: 10px 14px;
+    color: #E97AA8;
+    letter-spacing: 1px;
+    font-family: Malayalam MN;
+    font-weight: bolder;
+    font-size: 100px;
+    margin-bottom: 0px;
 }
 
 div.page h1 img {
-  height: 1em;
+    height: 1em;
+    width: auto;
+    margin-right: 10px;
 }
 
 div.page div.navigation {
-  background: #ECCFDE;
-  padding: 4px 10px;
-  color: #000000;
-  font-size: 12px;
-  font-family: Krungthep;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  margin-bottom: 20px;
+    background: #ECCFDE;
+    padding: 4px 10px;
+    color: #000000;
+    font-size: 12px;
+    font-family: Krungthep;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
 }
 
 div.page div.navigation a {
-  color: #444;
-  font-weight: bold;
+    color: #444;
+    font-weight: bold;
 }
 
 div.page div.navigation form {
@@ -101,69 +106,97 @@ div.page div.navigation form button {
     font-size: unset;
     cursor: pointer;
     text-decoration: underline;
-    font-family: unset;
+    font-family: Arial;
     letter-spacing: unset;
 }
 
 div.page h2 {
-  margin: 0 0 15px 0;
-  color: #000000;
-  text-shadow: 0 1px 2px #ccc;
+    margin: 0 0 15px 0;
+    color: #000000;
+    text-shadow: 0 1px 2px #ccc;
+    font-family: Arial;
 }
 
 div.page div.body {
-  padding: 10px;
-
+    padding: 10px;
 }
 
 div.page div.footer {
-  background: #eee;
-  color: #888;
-  padding: 5px 10px;
-  font-size: 12px;
+    background: #eee;
+    color: #888;
+    padding: 5px 10px;
+    font-size: 12px;
 }
 
 div.page div.followstatus {
-  border: 1px solid #ccc;
-  background: #E3EBEA;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  padding: 3px;
-  font-size: 13px;
+    border: 1px solid #ccc;
+    background: #E3EBEA;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    padding: 3px;
+    font-size: 13px;
 }
 
+input#cheepText {
+    width: 100%;
+    max-width: 400px;
+    height: 20px;
+    border: 2px solid #deb0c2;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input#cheepText:focus {
+    border-color: #e896c0;
+    box-shadow: 0 0 8px rgba(232, 150, 192, 0.5);
+}
+
+
 div.page ul.cheeps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 30px;
 }
 
 div.page ul.cheeps li {
-  margin: 10px 0;
-  padding: 5px;
-  background: #F0FAF9;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 70px;
-  min-height: 57px;
-  width: 600px;
-  text-align: left;
-  font-family: Arial;
-  margin-bottom: 20px;
+    margin: 10px 0;
+    padding: 10px;
+    background: #F0FAF9;
+    border-radius: 2px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 70px;
+    min-height: 57px;
+    width: 600px;
+    text-align: left;
+    font-family: Arial;
+    margin-bottom: 20px;
+}
+.author-row {
+    display: flex;
+    align-items: center; /* Align items (name and button) vertically */
+    gap: 10px; /* Space between the author name and button */
+    margin-bottom: 2px; /* Optional: Add spacing between this row and the text below */
+    margin-left: 20px;
 }
 
-div.page ul.cheeps li a {
-    color: #caa9b0; /* Change this to your desired color */
-    font-weight: bold; /* Optional: Keep it bold for emphasis */
-}
-
-div.page ul.cheeps li a:hover {
-    color: #8e7a7a; /* Optional: Change the hover color */
+/* Make sure the follow button and form align inline */
+.follow-form {
+    display: inline; /* Keep the form inline */
+    margin: 0; /* Remove any default margin */
 }
 
 div.page ul.cheeps p {
-    margin: 10px;
+    margin: 5px 0;
+    margin-left: 20px;
 
     div.page ul.cheeps li img {
         float: left;
@@ -187,6 +220,8 @@ div.page ul.cheeps p {
     div.page div.cheepbox h3 {
         margin: 0;
         font-size: 1em;
+        font-family: arial;
+        font-weight: normal;
         color: #000000;
         margin-bottom: 10px;
         margin-top: 15px;
@@ -205,6 +240,8 @@ div.page ul.cheeps p {
 
     div.page div.cheepbox input[type="submit"] {
         width: 70px;
+
+
     }
 
     div.message {
@@ -219,7 +256,7 @@ div.page ul.cheeps p {
 
     ul.message li {
         background: #f3b9b9;
-        border: 1px solid #ce8181;
+        border: 1px solid #deb0c2;
         border-radius: 2px;
         -moz-border-radius: 2px;
         -webkit-border-radius: 2px;
@@ -230,7 +267,7 @@ div.page ul.cheeps p {
     div.error {
         margin: 10px 0;
         background: #FAE4E4;
-        border: 1px solid #DD6F6F;
+        border: 1px solid #deb0c2;
         border-radius: 2px;
         -moz-border-radius: 2px;
         -webkit-border-radius: 2px;

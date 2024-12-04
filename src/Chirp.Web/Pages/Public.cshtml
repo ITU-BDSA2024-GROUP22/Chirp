@@ -73,48 +73,45 @@
             <ul id="messagelist" class="cheeps">
                 @foreach (var cheep in await Model.Cheeps)
                 {
-                    {
-                        <li>
-                            <p>
-                                <strong>
-                                    <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
-                                </strong>
-                                @if (User.Identity?.IsAuthenticated == true)
+                    <li>
+                        <!-- Timestamp on the first line -->
+                        <p>
+                            <small>@cheep.TimeStamp</small>
+                        </p>
+                        <!-- Author name and Follow/Unfollow button on the same line -->
+                        <div class="author-row">
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
+                            </strong>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                @if (User.Identity?.Name != cheep.Author.UserName)
                                 {
-                                    @if (User.Identity?.Name != cheep.Author.UserName)
+                                    @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                                     {
-                                        @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
-                                        {
-                                            <!-- Unfollow Button -->
-                                            <form method="post" asp-page-handler="Unfollow">
-                                                <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                                <button type="submit" class="follow-btn">
-                                                    Unfollow
-                                                </button>
-                                            </form>
-                                        }
-                                        else
-                                        {
-                                            <!-- Follow Button -->
-                                            <form method="post" asp-page-handler="Follow">
-                                                <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                                <button type="submit" class="follow-btn">
-                                                    Follow
-                                                </button>
-                                            </form>
-                                        }
-
-                                        <br/>
+                                        <!-- Unfollow Button -->
+                                        <form method="post" asp-page-handler="Unfollow" class="follow-form">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <button type="submit" class="follow-btn">Unfollow</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <!-- Follow Button -->
+                                        <form method="post" asp-page-handler="Follow" class="follow-form">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName" />
+                                            <button type="submit" class="follow-btn">Follow</button>
+                                        </form>
                                     }
                                 }
-
-                                @cheep.Text
-                                <small>&mdash; @cheep.TimeStamp</small>
-                            </p>
-                        </li>
-                    }
+                            }
+                        </div>
+                        <!-- Cheep text on a separate line -->
+                        <p>@cheep.Text</p>
+                    </li>
                 }
             </ul>
+
         }
         else
         {

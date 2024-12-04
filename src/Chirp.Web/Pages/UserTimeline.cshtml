@@ -18,14 +18,12 @@
 <div>
     <h2> @((await Model.Author).DisplayName)'s Timeline </h2>
 
-    <div style="border: 2px solid #A54242; padding: 15px; margin: 15px 0; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);">
-        <h3 style="margin: 0; margin-bottom: 10px; font-size: 1.2em; color: #333;">
-            @((await Model.Author).DisplayName)'s bio
-        </h3>
-        <p style="margin: 0; font-size: 1em; color: #555; line-height: 1.6;">
+    <div class="bio" style="background-color: #ffe4f2; border-radius: 10px; padding: 20px; margin: 20px 0;);">
+        <p style="font-size: 1.2em; font-family: Arial, sans-serif; color: #555; margin: 0; line-height: 1.6;">
             @((await Model.Bio)?.Text ?? "This user has not added a bio yet.")
         </p>
     </div>
+
 
     @if ((User.Identity?.IsAuthenticated == true) && (User.Identity?.Name == (await Model.Author).UserName))
     {
@@ -81,12 +79,12 @@
             {
                 <li>
                     <p>
+                        <small>@cheep.TimeStamp</small>
+                    </p>
+                    <div class="author-row">
                         <strong>
                             <a href="/@cheep.Author.UserName">@cheep.Author.DisplayName</a>
                         </strong>
-                        @cheep.Text
-                        <small>&mdash; @cheep.TimeStamp</small>
-
                         @if (@cheep.Author.UserName != (await Model.Author).UserName)
                         {
                             <!-- Unfollow Button -->
@@ -97,7 +95,8 @@
                                 </button>
                             </form>
                         }
-                    </p>
+                    </div>
+                    <p>@cheep.Text</p>
                 </li>
             }
         </ul>
@@ -126,4 +125,3 @@
         }
     </div>
 </div>
-
