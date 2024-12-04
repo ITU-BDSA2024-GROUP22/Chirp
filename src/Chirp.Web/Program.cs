@@ -43,6 +43,7 @@ public class Program
                 o.ClientId = builder.Configuration["authentication_github_clientId"];
                 o.ClientSecret = builder.Configuration["authentication_github_clientSecret"];
                 o.CallbackPath = "/signin-github";
+                o.Scope.Add("user:email");
             });
 
         var app = builder.Build();
