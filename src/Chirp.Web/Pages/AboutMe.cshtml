@@ -80,13 +80,11 @@
             <ul id="messagelist" class="cheeps">
                 @foreach (var cheep in await Model.Cheeps)
                 {
-                    <div>
-                        <img src="@(cheep.Author.Picture ?? "/default-avatar.png")" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;" />
-                        <span>@cheep.Author.UserName</span>
-                        <p>@cheep.Text</p>
-                    </div>
                     <li>
                         <p>
+                            <img src="@(cheep.Author.Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture"
+                                 style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;" />
+                            <br/>
                             <strong>
                                 <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
                             </strong>
