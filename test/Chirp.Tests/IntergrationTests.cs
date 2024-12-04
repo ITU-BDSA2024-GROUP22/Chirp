@@ -277,5 +277,4 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         var response = await _client.GetAsync("/Earl/about-me");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
-
 }
