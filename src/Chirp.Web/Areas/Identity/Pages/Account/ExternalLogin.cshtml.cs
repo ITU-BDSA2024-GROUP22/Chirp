@@ -159,7 +159,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
         }
 
         // Check if a user with this email already exists
-        var existingUser = await _userManager.FindByEmailAsync(email);
+        var existingUser = await _userManager.FindByNameAsync(username);
         if (existingUser != null)
         {
             // Attach external login to the existing user
