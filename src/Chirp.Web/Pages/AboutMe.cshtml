@@ -15,13 +15,13 @@
         <br/>
         <div>
             <div>
-                <img src="@((await Model.Author).Picture ?? "/images/WhiteBlackChirp.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
+                <img src="@((await Model.Author).Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
                 @if (!(await Model.Author).Picture.IsNullOrEmpty())
                 {
                     <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
                         <label for="profilePicture">Change Profile Picture:</label>
                         <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
-                        <button type="submit" id="uploadButton" disabled>Upload</button>
+                        <button type="submit" id="uploadButton">Upload</button>
                     </form>
                 }
                 else
@@ -29,7 +29,7 @@
                     <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
                         <label for="profilePicture">Upload Profile Picture:</label>
                         <input type="file" id="profilePicture" name="profilePicture" accept="image/*"/>
-                        <button type="submit" id="uploadButton" disabled>Upload</button>
+                        <button type="submit" id="uploadButton">Upload</button>
                     </form>
                 }
             </div>

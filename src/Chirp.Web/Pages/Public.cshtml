@@ -80,7 +80,7 @@
             @foreach (var cheep in await Model.Cheeps)
             {
                 var profilePicture = string.IsNullOrWhiteSpace(cheep.Author.Picture)
-                    ? "/uploads/WhiteBlackChirp.png"
+                    ? "/images/chirp_silhouette.png"
                     : cheep.Author.Picture;
                 {
                     <li>
