@@ -44,7 +44,7 @@ public class FollowRepositoryTest
     }
 
     [Fact]
-    public async Task RemoveFollowTest()
+    public async Task GetFollowingListTest()
     {
         var sharedContext = await CreateContext();
         var followRepository = new FollowRepository(sharedContext);
@@ -104,19 +104,20 @@ public class FollowRepositoryTest
     }
 
     [Fact]
-    public async Task GetFollowingListTest()
+    public async Task UnFollowTest()
     {
-            var sharedContext = await CreateContext();
-            var followRepository = new FollowRepository(sharedContext);
-            var cheepRepository = new CheepRepository(sharedContext);
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
 
 
-            await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
-            await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+        await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
 
-            await followRepository.AddFollow("Sten Ben", "Peter Plys");
+        await followRepository.AddFollow("Sten Ben", "Peter Plys");
 
-            var followingList = await followRepository.GetFollowingList("Sten Ben");
+        var followingList = await followRepository.GetFollowingList("Sten Ben");
+
 
     }
 }
