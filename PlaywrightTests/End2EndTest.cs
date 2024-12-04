@@ -55,7 +55,7 @@ namespace PlaywrightTests
         private async Task RegisterUser()
         {
             await _page.GetByRole(AriaRole.Link, new() { Name = "register" }).ClickAsync();
-            await _page.GetByPlaceholder("Name", new() { Exact = true }).FillAsync("OleBropp");
+            await _page.GetByPlaceholder("Name", new() { Exact = true }).FillAsync("OleBropp3");
             await _page.GetByPlaceholder("name@example.com").FillAsync("bole");
             await _page.GetByPlaceholder("name@example.com").PressAsync("Alt+@");
             await _page.GetByPlaceholder("name@example.com").FillAsync(_randomEmail);
