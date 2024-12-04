@@ -36,8 +36,6 @@ public class AboutMeModel : PageModel
         Bio = _service.GetBioFromAuthor((await Author).UserName);
         BioText = (await Bio)?.Text ?? string.Empty;
 
-        Console.WriteLine("bio in cshtml.cs: " + (await Bio)?.Text);
-
         CurrentPage = page ?? 1;
         Cheeps = _service.GetCheepsFromAuthor(author, CurrentPage);
 
@@ -63,7 +61,8 @@ public class AboutMeModel : PageModel
 
         if (string.IsNullOrEmpty(BioText))
         {
-            return NotFound("Bio parameter is missing");
+            ModelState.AddModelError("BioText", "Your bio cannot be empty, please write something before saving :)");
+            return Page();
         }
 
         await _service.UpdateBio((await Author), BioText);
