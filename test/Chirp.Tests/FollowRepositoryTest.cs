@@ -44,7 +44,7 @@ public class FollowRepositoryTest
     }
 
     [Fact]
-    public async Task GetFollowingListTest()
+    public async Task UnfollowTest()
     {
         var sharedContext = await CreateContext();
         var followRepository = new FollowRepository(sharedContext);
@@ -104,7 +104,7 @@ public class FollowRepositoryTest
     }
 
     [Fact]
-    public async Task UnFollowTest()
+    public async Task GetFollowingListTest()
     {
         var sharedContext = await CreateContext();
         var followRepository = new FollowRepository(sharedContext);
@@ -117,6 +117,9 @@ public class FollowRepositoryTest
         await followRepository.AddFollow("Sten Ben", "Peter Plys");
 
         var followingList = await followRepository.GetFollowingList("Sten Ben");
+
+        Assert.NotNull(followingList);
+
 
 
     }
