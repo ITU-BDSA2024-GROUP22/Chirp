@@ -7,125 +7,120 @@
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
 }
-
 @if (User.Identity?.IsAuthenticated == true)
 {
     <div class="user-info">
-        <h2> User information </h2>
+        <h2 class="user-info-title">User Information</h2>
         <br/>
-        <div>
-            <div>
-                <img src="@((await Model.Author).Picture ?? "/images/chirp_silhouette.png")"
-                     alt="Profile Picture"
-                     style="width: 150px; height: 150px; border-radius: 50%;" />
-                <form method="post" enctype="multipart/form-data" asp-page-handler="Picture">
+        <div class="profile-picture-section">
+            <div class="profile-picture-upload">
+                <img src="@((await Model.Author).Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" class="profile-picture"/>
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Picture" class="profile-picture-form">
                     @if (!(await Model.Author).Picture.IsNullOrEmpty())
                     {
-                    <label for="profilePicture">Change Profile Picture:</label>
+                        <label for="profilePicture">Change Profile Picture:</label>
                     }
                     else
                     {
-                    <label for="profilePicture">Upload Profile Picture:</label>
+                        <label for="profilePicture">Upload Profile Picture:</label>
                     }
-                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*"
-                           onchange="toggleUploadButton()"/>
-                    <button type="submit" id="uploadButton" disabled>Upload</button>
+                    <br/>
+                    <input type="file" id="profilePicture" name="profilePicture" class="profile-picture-input" accept="image/*" onchange="toggleUploadButton()"/>
+                    <br/>
+                    <button type="submit" id="uploadButton" class="profile-picture-upload-btn" disabled>Upload</button>
                 </form>
             </div>
+        </div>
 
-            <script>
-                function toggleUploadButton() {
-                    const fileInput = document.getElementById('profilePicture');
-                    const uploadButton = document.getElementById('uploadButton');
-                    uploadButton.disabled = !fileInput.files.length; // Disable if no file is chosen
-                }
-            </script>
+        <script>
+            function toggleUploadButton() {
+                const fileInput = document.getElementById('profilePicture');
+                const uploadButton = document.getElementById('uploadButton');
+                uploadButton.disabled = !fileInput.files.length; // Disable if no file is chosen
+            }
+        </script>
 
-            <div class="info-box">
-                <div class="box-title">Username</div>
-                <div class="box-content">
-                    @((await Model.Author)?.UserName ?? "Unknown")
-                </div>
+        <div class="info-box">
+            <div class="box-title">Username</div>
+            <div class="box-content">
+                @((await Model.Author)?.UserName ?? "Unknown")
             </div>
-            <br/>
-            <div class="info-box">
-                <div class="box-title">Email</div>
-                <div class="box-content">
-                    @((await Model.Author)?.Email ?? "Unknown")
-                </div>
+        </div>
+        <br/>
+        <div class="info-box">
+            <div class="box-title">Email</div>
+            <div class="box-content">
+                @((await Model.Author)?.Email ?? "Unknown")
             </div>
-            <br/>
-            <div class="info-box">
-                <div class="box-title"></div>
-                <form method="post">
+        </div>
+        <br/>
+        <div class="bio-section">
+            <div class="bio-box">
+                <form method="post" class="bio-form">
                     <textarea asp-for="BioText" class="bio-input" rows="5" placeholder="Write your bio here..."></textarea>
                     <br/>
-                    <button type="submit" class="bio-submit">
+                    <button type="submit" class="bio-submit-btn">
                         @(string.IsNullOrEmpty(Model.BioText) ? "Save Bio" : "Change Bio")
                     </button>
                 </form>
             </div>
-            <br/>
-            <div class="button">
-                <form method="post" asp-page-handler="Forget">
-                    <button type="submit" class="forget-me-submit" style="background-color: red">Forget me!</button>
-                </form>
-            </div>
+        </div>
+        <div class="forget-me-section">
+            <form method="post" asp-page-handler="Forget" class="forget-me-form">
+                <button type="submit" class="forget-me-btn">Forget me!</button>
+            </form>
         </div>
     </div>
 
-    <div>
+    <div class="user-cheeps">
         @if ((await Model.Cheeps).Any())
         {
-            <ul id="messagelist" class="cheeps">
+            <ul class="cheeps">
                 @foreach (var cheep in await Model.Cheeps)
                 {
                     <li>
-                        <p>
-                            <img src="@(cheep.Author.Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture"
-                                 style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;" />
-                            <br/>
-                            <strong>
-                                <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
-                            </strong>
-                            @cheep.Text
-                            <small>&mdash; @cheep.TimeStamp</small>
-                        </p>
+                        <span class="timestamp">@cheep.TimeStamp</span>
+                        <div class="author-row">
+                            <img src="@(cheep.Author.Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" class="small-profile-pic"/>
+                            <strong><a href="/@cheep.Author.UserName">@cheep.Author.UserName</a></strong>
+                        </div>
+                        <p>@cheep.Text</p>
                     </li>
                 }
             </ul>
-            if (Model.CheepsCount == 32)
+
+
+            @if (Model.CheepsCount == 32)
             {
-                <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                <div class="pagination">
                     @{
                         int currentPage = Model.CurrentPage;
 
                         if (currentPage > 1)
                         {
-                            <a href="/@routeName/about-me?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                                <button>Previous</button>
+                            <a href="/@routeName/about-me?page=@(currentPage - 1)" class="pagination-prev">
+                                <button class="pagination-btn">Previous</button>
                             </a>
                         }
 
                         <span class="current-page">@currentPage</span>
 
-                        <a href="/@routeName/about-me?page=@(currentPage + 1)" class="next" style="margin-left: 10px;">
-                            <button>Next</button>
+                        <a href="/@routeName/about-me?page=@(currentPage + 1)" class="pagination-next">
+                            <button class="pagination-btn">Next</button>
                         </a>
                     }
                 </div>
             }
-
             else if (Model.CheepsCount < 32 && Model.CheepsCount >= 1)
             {
-                <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                <div class="pagination">
                     @{
                         int currentPage = Model.CurrentPage;
 
                         if (currentPage > 1)
                         {
-                            <a href="/@routeName/about-me?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                                <button>Previous</button>
+                            <a href="/@routeName/about-me?page=@(currentPage - 1)" class="pagination-prev">
+                                <button class="pagination-btn">Previous</button>
                             </a>
                         }
 
@@ -136,8 +131,8 @@
         }
         else if (!(await Model.Cheeps).Any() && Model.CurrentPage == 1)
         {
-            <em>There are no cheeps so far.</em>
-            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            <em class="no-cheeps-msg">There are no cheeps so far.</em>
+            <div class="pagination">
                 @{
                     int currentPage = Model.CurrentPage;
                     <span class="current-page">@currentPage</span>
@@ -146,15 +141,15 @@
         }
         else
         {
-            <em>There are no more cheeps to view.</em>
-            <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            <em class="no-more-cheeps-msg">There are no more cheeps to view.</em>
+            <div class="pagination">
                 @{
                     int currentPage = Model.CurrentPage;
 
                     if (currentPage > 1)
                     {
-                        <a href="/@routeName/about-me?page=@(currentPage - 1)" class="prev" style="margin-right: 10px;">
-                            <button>Previous</button>
+                        <a href="/@routeName/about-me?page=@(currentPage - 1)" class="pagination-prev">
+                            <button class="pagination-btn">Previous</button>
                         </a>
                     }
 
@@ -164,3 +159,111 @@
         }
     </div>
 }
+
+<style>
+    body {
+        background: #deb0c2;
+        font-family: 'Arial', sans-serif;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+    }
+
+    .user-info {
+        width: 600px;
+        margin: 25px auto;
+        padding: 20px;
+        background: #fceef4;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .user-info-title {
+        font-size: 2em;
+        color: #e97aa8;
+        margin-bottom: 20px;
+        font-family: 'Verdana', sans-serif;
+    }
+
+    .profile-picture-section {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 10px;
+    }
+
+    .profile-picture-input {
+        margin-top: 10px;
+        margin-left: 80px;
+        margin-bottom: 10px;
+        padding: 5px;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+
+    .info-box {
+        width: 100px;
+        margin-left: 235px;
+        margin-right: 250px;
+        padding: 15px;
+        background-color: #ffffff;
+        border: 2px solid #deb0c2;
+        border-radius: 30px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .box-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .box-content {
+        font-size: 1em;
+        color: #555;
+    }
+
+    .bio-section {
+        margin-top: 0px;
+        padding: 15px;
+    }
+
+    .bio-input {
+        width: 300px;
+        margin-left:100px;
+        margin-right:100px;
+        margin-top:-10px;
+        margin-bottom:10px;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 14px;
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        resize: none;
+        border: 2px solid #deb0c2;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .forget-me-section {
+        margin-top: 0px;
+    }
+
+    .forget-me-btn:hover {
+        background-color: #fac5c5;
+        border-color: #fac5c5;
+    }
+
+    .timestamp {
+        margin-left: 480px;
+    }
+</style>
+
+
