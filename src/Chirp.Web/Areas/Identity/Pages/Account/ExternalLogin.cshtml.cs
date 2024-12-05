@@ -95,7 +95,6 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
@@ -118,8 +117,6 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 _logger.LogError("External login info is null.");
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-
-            // Check if the user exists with this external login
             var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (existingUser != null)
             {
@@ -128,8 +125,6 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                     existingUser.UserName, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
-
-            // If no external login exists, proceed with user creation
             return await OnPostConfirmationAsync(returnUrl);
         }
 
@@ -145,75 +140,65 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            try
+            if (ModelState.IsValid)
             {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                var username = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
+                try
                 {
-                    _logger.LogWarning("Missing email or username during confirmation. Email: {Email}, Username: {Username}",
-                        email, username);
-                    ErrorMessage = "Could not retrieve required user information.";
-                    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-                }
+                    var user = CreateUser();
 
-                // Check if a user with this email already exists
-                var existingUser = await _userManager.FindByNameAsync(username);
-                if (existingUser != null)
-                {
-                    // Attach external login to the existing user
-                    var loginResult = await _userManager.AddLoginAsync(existingUser, info);
-                    if (loginResult.Succeeded)
+                    var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    var username = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+                    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
                     {
-                        await _signInManager.SignInAsync(existingUser, isPersistent: false);
-                        _logger.LogInformation("Attached external login to existing user: {Email}", email);
-                        return LocalRedirect(returnUrl);
+                        _logger.LogWarning(
+                            "Missing email or username during confirmation. Email: {Email}, Username: {Username}",
+                            email, username);
+                        ModelState.AddModelError(string.Empty,
+                            "Could not retrieve required user information from external provider.");
+                        return Page();
                     }
 
-                    foreach (var error in loginResult.Errors)
+                    var existingUser = await _userManager.FindByNameAsync(username);
+                    if (existingUser != null)
                     {
-                        _logger.LogError("Error attaching external login: {Error}", error.Description);
-                        ModelState.AddModelError(string.Empty, error.Description);
-
+                        username = await GenerateUniqueUsername(username);
                     }
-                    return Page();
-                }
 
-                // Create a new user
-                var user = CreateUser();
-                username = await GenerateUniqueUsername(username);
-                await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
+                    await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
+                    await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
 
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await _userManager.AddLoginAsync(user, info);
+                    var result = await _userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        result = await _userManager.AddLoginAsync(user, info);
+                        if (result.Succeeded)
+                        {
+                            _logger.LogInformation("User created an account using {Name} provider.",
+                                info.LoginProvider);
 
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                            await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        _logger.LogError("Error during user creation: {Error}", error.Description);
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-
-                foreach (var error in result.Errors)
+                catch (Exception ex)
                 {
-                    _logger.LogError("Error during user creation: {Error}", error.Description);
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    _logger.LogError(ex, "An error occurred while confirming external login.");
+                    ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while confirming external login.");
-                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
-            }
 
-            return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            ProviderDisplayName = info.ProviderDisplayName;
+            ReturnUrl = returnUrl;
+            return Page();
         }
-
 
 
         private Author CreateUser()
@@ -232,8 +217,8 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
 
         private async Task<string> GenerateUniqueUsername(string baseUsername)
         {
-            string uniqueUsername = baseUsername;
-            int counter = 1;
+            var uniqueUsername = baseUsername;
+            var counter = 1;
 
             while (await _userManager.FindByNameAsync(uniqueUsername) != null)
             {
