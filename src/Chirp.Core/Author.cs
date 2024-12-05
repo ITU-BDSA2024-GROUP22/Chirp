@@ -17,6 +17,4 @@ public class Author : IdentityUser
 
     public Bio? Bio { get; set; }
     public string? Picture { get; set; }
-
-
 }

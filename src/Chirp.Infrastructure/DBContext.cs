@@ -21,6 +21,14 @@ public class DBContext : IdentityDbContext<Author>
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Author>()
+            .HasIndex(u => u.UserName)
+            .IsUnique();
+
+        builder.Entity<Author>()
+            .HasIndex(e => e.Email)
+            .IsUnique();
+
         builder.Entity<Cheep>()
             .HasOne(c => c.Author)
             .WithMany(a => a.Cheeps)
@@ -32,6 +40,7 @@ public class DBContext : IdentityDbContext<Author>
             .WithOne(a => a.Bio)
             .HasForeignKey<Bio>(b => b.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
+
     }
 
     public override void Dispose()
