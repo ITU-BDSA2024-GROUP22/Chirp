@@ -97,6 +97,7 @@ public class RegisterModel : PageModel
                 await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                //Må være her at der skal ændres??
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
 
