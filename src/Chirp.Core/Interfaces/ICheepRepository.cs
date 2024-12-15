@@ -12,7 +12,7 @@ public interface ICheepRepository
 
     public Task CreateAuthor(string name, string email);
 
-    public Task CreateCheep(AuthorDTO authorDTO, string text, DateTime timeStamp);
+    public Task CreateCheep(AuthorDTO? authorDTO, string text, DateTime timeStamp);
 
     public Task UpdateBio(AuthorDTO authorDTO, string text);
 

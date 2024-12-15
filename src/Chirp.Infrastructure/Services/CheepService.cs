@@ -49,7 +49,7 @@ public class CheepService : ICheepService
         return authorDTO;
     }
 
-    public async Task CreateCheep(AuthorDTO author, string text, DateTime timeStamp)
+    public async Task CreateCheep(AuthorDTO? author, string text, DateTime timeStamp)
     {
         await cheepRepository.CreateCheep(author, text, timeStamp);
     }
