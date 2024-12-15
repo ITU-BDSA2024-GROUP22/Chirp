@@ -22,4 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
+      env:
+          authentication_github_clientId: ${{ secrets.AUTHENTICATION_GITHUB_CLIENTID }}
+          authentication_github_clientSecret: ${{ secrets.AUTHENTICATION_GITHUB_CLIENTSECRET }}
       run: dotnet test --no-build --verbosity normal
