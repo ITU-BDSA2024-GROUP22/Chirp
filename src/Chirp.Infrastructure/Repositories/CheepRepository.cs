@@ -89,7 +89,7 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task CreateCheep(AuthorDTO authorDTO, string text, DateTime timeStamp) //returns task instead of void to make the method awaitable
+    public async Task CreateCheep(AuthorDTO? authorDTO, string text, DateTime timeStamp) //returns task instead of void to make the method awaitable
     {
         var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
         if (author != null)

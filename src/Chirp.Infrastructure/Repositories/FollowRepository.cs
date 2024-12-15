@@ -135,7 +135,6 @@ public class FollowRepository : IFollowRepository
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
 
-        // Hent og returner resultatet
         var result = await pageQuery.ToListAsync();
         return result;
     }

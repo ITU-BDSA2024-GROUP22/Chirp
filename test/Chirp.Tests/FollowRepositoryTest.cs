@@ -1,5 +1,3 @@
-using Chirp.Core;
-using Chirp.Core.Interfaces;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
@@ -9,7 +7,6 @@ namespace Chirp.Tests;
 
 public class FollowRepositoryTest
 {
-    public Task<DBContext> context;
 
     private static async Task<DBContext> CreateContext()
     {
@@ -119,8 +116,5 @@ public class FollowRepositoryTest
         var followingList = await followRepository.GetFollowingList("Sten Ben");
 
         Assert.NotNull(followingList);
-
-
-
     }
 }
