@@ -116,8 +116,5 @@ public class FollowRepositoryTest
         var followingList = await followRepository.GetFollowingList("Sten Ben");
 
         Assert.NotNull(followingList);
-
-
-
     }
 }
