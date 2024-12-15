@@ -54,5 +54,6 @@ Figure## illustrates the flow of actions for an authorised user, starting with v
 # Ethics
 
 ## License
+This software is licensed under the MIT license. The MIT license is an open source and permissive license that allows other users to modify, use and distribute the software, just needing the original license to be included. The license has been chosen to make the code freely accessible to other users and therefore encourages collaborations across developers and companies while maintaining minimal restrictions.
 
 ## LLMs, ChatGPT, CoPilot, and others
