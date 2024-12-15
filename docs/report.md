@@ -44,6 +44,7 @@ Figure## illustrates the flow of actions for an authorised user, starting with v
 # Process
 
 ## Build, test, release, and deployment
+![fig##](./images/Build_and_test.svg)
 
 ## Team work
 
