@@ -40,6 +40,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
                     var scopedServices = scope.ServiceProvider;
                     var db = scopedServices.GetRequiredService<DBContext>();
 
+                    db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
 
                     SeedTestData(db);
