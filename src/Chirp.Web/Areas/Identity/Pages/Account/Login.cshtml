@@ -67,6 +67,7 @@
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
                                     <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <h5>If your GitHub username is already taken, a random number will be added to the end of your username in Chirp.</h5>
                                 }
                             </p>
                         </div>
