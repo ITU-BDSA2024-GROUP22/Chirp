@@ -68,6 +68,7 @@ public class CheepRepository : ICheepRepository
         return AuthorDTO.fromAuthor(author);
     }
 
+    /*
     public Author GetAuthorByEmail(string name)
     {
         var author = _dbContext.Authors.SingleOrDefault(a => a.Email == name);
@@ -79,6 +80,7 @@ public class CheepRepository : ICheepRepository
 
         return author;
     }
+    */
 
     public async Task CreateAuthor(string name, string email) //Add id when in use, and returns task instead of void to make the method awaitable
     {
