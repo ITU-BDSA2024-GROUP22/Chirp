@@ -17,7 +17,7 @@ numbersections: true
 Here comes a description of our domain model.
 
 <How to indsætte billede:>
-![](docs/images/opdelt.png)Figure ##: An overview of the domain model
+![](./images/opdelt.png)_Figure ##: An overview of the domain model_
 
 An illustration of the domain model is seen in the UML-diagram above. It depicts the relations and cardinalities between classes and interfaces. It’s only a part of the program shown in the diagram. This is to show how the program is built while functioning as a representation of how the remaining classes and interfaces are related. For example, the repository FollowRepository inherits from an interface called IFollowRepository while also having a relation to FollowService. CheepService simultaneously has a relation to a UserTimelineModel and an AboutMeModel.
 
@@ -26,6 +26,16 @@ An illustration of the domain model is seen in the UML-diagram above. It depicts
 ## Architecture of deployed application
 
 ## User activities
+Chirp is a relatively simple program to navigate through. To illustrate the primary functions of a typical user journey, we have created activity diagrams for authorised/unauthorised users.
+
+Figure## illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub for registration. Both paths require validation. If the user already has an account, they can click login via username or GitHub login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
+
+![fig##](./images/Activity_diagram_unAuth.jpg "Activity diagram for unauthorised users")_Figure##: activity diagram for unauthorised users_
+
+Figure## illustrates the flow of actions for an authorised user, starting with viewing cheeps on the public timeline. Users can follow or unfollow authors, navigate to other pages, or view user timelines and bios, depending on their preferences. By accessing "my timeline", users can see their bio, their authored cheeps, and followed authors’ cheeps. Authorised users can update their profiles by choosing a file to upload a profile picture, writing a bio, or clicking "Forget me" to delete their account. Users have the option to write new cheeps, interact with personalised or general public content, and log out, completing the interaction cycle.
+
+![fig##](./images/Activity_diagram_auth.jpg "Activity diagram for authorised users")_Figure##: activity diagram for authorised users_
+
 
 ## Sequence of functionality/calls trough _Chirp!_
 
