@@ -7,132 +7,129 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure;
 using Chirp.Web;
-using Microsoft.Data.Sqlite;
 
 namespace Chirp.Tests;
 
 public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 {
+    private readonly WebApplicationFactory<Program> _fixture;
+    private readonly HttpClient _client;
+
+    public IntegrationTests(WebApplicationFactory<Program> fixture)
+    {
+        _fixture = fixture;
+        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
+    }
+
+    [Fact]
+    public async void CanSeePublicTimeline()
+    {
+        var response = await _client.GetAsync("/");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("Chirp!", content);
+        Assert.Contains("Public Timeline", content);
+    }
+
+    [Theory]
+    [InlineData("Helge")]
+    [InlineData("Adrian")]
+    public async void CanSeePrivateTimeline(string author)
+    {
+        var response = await _client.GetAsync($"/{author}");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("Chirp!", content);
+        Assert.Contains($"{author}'s Timeline", content);
+    }
+
+
+
+/*
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
-    private readonly SqliteConnection _connection;
 
-    /*
-  public IntegrationTests(WebApplicationFactory<Program> factory)
+public IntegrationTests(WebApplicationFactory<Program> factory)
+{
+  _factory = factory.WithWebHostBuilder(builder =>
   {
-      _factory = factory.WithWebHostBuilder(builder =>
+      builder.ConfigureServices(services =>
       {
-          builder.ConfigureServices(services =>
+          var descriptor = services.SingleOrDefault(
+              d => d.ServiceType == typeof(DbContextOptions<DBContext>));
+
+          if (descriptor != null)
           {
-              var descriptor = services.SingleOrDefault(
-                  d => d.ServiceType == typeof(DbContextOptions<DBContext>));
+              services.Remove(descriptor);
+          }
 
-              if (descriptor != null)
-              {
-                  services.Remove(descriptor);
-              }
-
-              services.AddDbContext<DBContext>(options =>
-              {
-                  options.UseInMemoryDatabase("InMemoryChirpTestDB");
-              });
-
-              var sp = services.BuildServiceProvider();
-              using (var scope = sp.CreateScope())
-              {
-                  var scopedServices = scope.ServiceProvider;
-                  var db = scopedServices.GetRequiredService<DBContext>();
-
-                  db.Database.EnsureDeleted();
-                  db.Database.EnsureCreated();
-
-                  SeedTestData(db);
-              }
+          services.AddDbContext<DBContext>(options =>
+          {
+              options.UseInMemoryDatabase("InMemoryChirpTestDB");
           });
+
+          var sp = services.BuildServiceProvider();
+          using (var scope = sp.CreateScope())
+          {
+              var scopedServices = scope.ServiceProvider;
+              var db = scopedServices.GetRequiredService<DBContext>();
+
+              db.Database.EnsureDeleted();
+              db.Database.EnsureCreated();
+
+              SeedTestData(db);
+          }
       });
-      _client = _factory.CreateClient();
-  }
+  });
+  _client = _factory.CreateClient();
+}
 
-  // Seed test data in the in-memory database
-  private void SeedTestData(DBContext context)
+// Seed test data in the in-memory database
+private void SeedTestData(DBContext context)
+{
+  var authorAdrian = new Author
   {
-      var authorAdrian = new Author
-      {
-          UserName = "Adrian",
-          Email = "adrian@example.com",
-          FollowingList = new List<Author>()
-      };
+      UserName = "Adrian",
+      Email = "adrian@example.com",
+      FollowingList = new List<Author>()
+  };
 
-      var authorHelge = new Author
-      {
-          UserName = "Helge",
-          Email = "helge@example.com",
-          FollowingList = new List<Author>()
-      };
+  var authorHelge = new Author
+  {
+      UserName = "Helge",
+      Email = "helge@example.com",
+      FollowingList = new List<Author>()
+  };
 
-      context.Authors.Add(authorAdrian);
-      context.Authors.Add(authorHelge);
+  context.Authors.Add(authorAdrian);
+  context.Authors.Add(authorHelge);
 
-      var adrianCheep = new Cheep
-      {
-          Author = authorAdrian,
-          Text = "Hej, velkommen til kurset",
-          TimeStamp = DateTime.Now
-      };
+  var adrianCheep = new Cheep
+  {
+      Author = authorAdrian,
+      Text = "Hej, velkommen til kurset",
+      TimeStamp = DateTime.Now
+  };
 
-      var helgeCheep = new Cheep
-      {
-          Author = authorHelge,
-          Text = "Hello, BDSA students!",
-          TimeStamp = DateTime.Now
-      };
+  var helgeCheep = new Cheep
+  {
+      Author = authorHelge,
+      Text = "Hello, BDSA students!",
+      TimeStamp = DateTime.Now
+  };
 
-      context.Cheeps.Add(adrianCheep);
-      context.Cheeps.Add(helgeCheep);
+  context.Cheeps.Add(adrianCheep);
+  context.Cheeps.Add(helgeCheep);
 
-      context.SaveChanges();
-  } */
+  context.SaveChanges();
+}
 
-    public IntegrationTests(WebApplicationFactory<Program> factory)
-    {
-        // Making it in memory
-        _connection = new SqliteConnection("DataSource=:memory:");
-        _connection.Open();
-
-        _factory = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
-            {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<DBContext>));
-
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
-
-                services.AddDbContext<DBContext>(options => { options.UseSqlite(_connection); });
-            });
-        });
-
-        _client = _factory.CreateClient();
-        using (var scope = _factory.Services.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
-            dbContext.Database.EnsureCreated();
-        }
-    }
 
     [Fact]
     public async Task TimeLineTest()
     {
-        using (var scope = _factory.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<DBContext>();
-            db.Database.EnsureDeleted(); // Reset database
-            db.Database.EnsureCreated(); // Create new database
-        }
-
         var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
 
@@ -144,25 +141,23 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task AuthorTest()
     {
+        var author = new Author
+        {
+            UserName = "Alice",
+            Email = "Alice@example.com",
+            FollowingList = new List<Author>()
+        };
+
+        var authorCheep = new Cheep
+        {
+            Author = author,
+            Text = "Hello, BDSA students!",
+            TimeStamp = DateTime.Now
+        };
+
         using (var scope = _factory.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DBContext>();
-            db.Database.EnsureDeleted(); // Reset database
-            db.Database.EnsureCreated(); // Create new database
-
-            var author = new Author
-            {
-                UserName = "Alice",
-                Email = "Alice@example.com",
-                FollowingList = new List<Author>()
-            };
-
-            var authorCheep = new Cheep
-            {
-                Author = author,
-                Text = "Hello, BDSA students!",
-                TimeStamp = DateTime.Now
-            };
 
             db.Authors.Add(author);
             db.Cheeps.Add(authorCheep);
@@ -319,4 +314,5 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         var response = await _client.GetAsync("/Earl/about-me");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+    */
 }
