@@ -27,6 +27,14 @@
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
             }
+            if (string.IsNullOrEmpty(Model.Input.UserName))
+            {
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.UserName" class="form-control" autocomplete="email" placeholder="Please enter a new Username."/>
+                    <label asp-for="Input.UserName" class="form-label"></label>
+                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                </div>
+            }
         }
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>

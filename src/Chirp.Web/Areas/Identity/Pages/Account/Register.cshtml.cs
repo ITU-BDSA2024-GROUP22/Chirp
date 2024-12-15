@@ -74,7 +74,8 @@ public class RegisterModel : PageModel
         {
             var user = CreateUser();
 
-            user.UserName = Input.DisplayName;
+            //user.UserName = Input.DisplayName;
+            //user.Email = Input.Email;
 
             await _userStore.SetUserNameAsync(user, Input.DisplayName, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -96,8 +97,9 @@ public class RegisterModel : PageModel
                 await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                //Må være her at der skal ændres??
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
+                    return RedirectToPage("RegisterConfirmation", new { username = Input.DisplayName, email = Input.Email, returnUrl });
 
                 await _signInManager.SignInAsync(user, false);
                 return LocalRedirect(returnUrl);
