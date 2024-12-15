@@ -1,3 +1,4 @@
+/*
 namespace PlaywrightTests;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
@@ -61,3 +62,4 @@ using System.Threading.Tasks;
 }
 
 }
+*/

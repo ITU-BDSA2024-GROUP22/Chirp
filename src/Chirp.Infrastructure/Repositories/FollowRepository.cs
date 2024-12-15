@@ -1,10 +1,11 @@
 using Chirp.Core;
 using Chirp.Core.DTOs;
+using Chirp.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure.Repositories;
 
-public class FollowRepository
+public class FollowRepository : IFollowRepository
 {
     private readonly int _pageSize = 32;
     private readonly DBContext _dbContext;
