@@ -92,7 +92,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 
 
     [Fact]
-    public async void TimeLineTest()
+    public async Task TimeLineTest()
     {
         var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
@@ -103,7 +103,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 
 
     [Fact]
-    public async void AuthorTest()
+    public async Task AuthorTest()
     {
         var author = new Author
         {
@@ -137,7 +137,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void PrivateTimeLineTest()
+    public async Task PrivateTimeLineTest()
     {
         var author = new Author
         {
@@ -172,7 +172,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void AuthorTimelineTest()
+    public async Task AuthorTimelineTest()
     {
         var testAuthor = new Author
         {
@@ -216,7 +216,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void BioUserTimelineTest()
+    public async Task BioUserTimelineTest()
     {
         var author = new Author
         {
@@ -258,7 +258,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void AboutMeTest()
+    public async Task AboutMeTest()
     {
         var author = new Author
         {
