@@ -17,8 +17,7 @@ public class FollowRepository : IFollowRepository
 
     public async Task<Author> GetAuthor(string name)
     {
-        var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
-
+        var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
         if (author == null)
         {
             throw new KeyNotFoundException($"No author with name {name} was found.");
