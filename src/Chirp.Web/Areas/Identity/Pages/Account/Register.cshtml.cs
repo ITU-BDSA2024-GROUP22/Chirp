@@ -99,7 +99,7 @@ public class RegisterModel : PageModel
 
                 //Må være her at der skal ændres??
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
+                    return RedirectToPage("RegisterConfirmation", new { username = Input.DisplayName, email = Input.Email, returnUrl });
 
                 await _signInManager.SignInAsync(user, false);
                 return LocalRedirect(returnUrl);
