@@ -86,6 +86,18 @@ public class AboutMeModel : PageModel
             return NotFound($"No author with the name '{author}' was found.");
         }
 
+        var author_picture = ((await Author).Picture);
+
+        if (!string.IsNullOrEmpty(author_picture))
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", author_picture.TrimStart('/'));
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+        }
+
+
 
         var signInManager = HttpContext.RequestServices.GetService(typeof(SignInManager<Author>)) as SignInManager<Author>;
         if (signInManager != null)
