@@ -12,45 +12,43 @@ namespace Chirp.Tests;
 
 public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 {
-
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
-    public IntegrationTests(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
-            {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<DBContext>));
+public IntegrationTests(WebApplicationFactory<Program> factory)
+{
+  _factory = factory.WithWebHostBuilder(builder =>
+  {
+      builder.ConfigureServices(services =>
+      {
+          var descriptor = services.SingleOrDefault(
+              d => d.ServiceType == typeof(DbContextOptions<DBContext>));
 
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
+          if (descriptor != null)
+          {
+              services.Remove(descriptor);
+          }
 
-                services.AddDbContext<DBContext>(options => { options.UseInMemoryDatabase("InMemoryTestDB"); });
+          services.AddDbContext<DBContext>(options =>
+          {
+              options.UseInMemoryDatabase("InMemoryChirpTestDB");
+          });
 
-                var sp = services.BuildServiceProvider();
-                using (var scope = sp.CreateScope())
-                {
-                    var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<DBContext>();
+          var sp = services.BuildServiceProvider();
+          using (var scope = sp.CreateScope())
+          {
+              var scopedServices = scope.ServiceProvider;
+              var db = scopedServices.GetRequiredService<DBContext>();
 
-                    db.Database.EnsureDeleted();
-                    db.Database.EnsureCreated();
+              db.Database.EnsureDeleted();
+              db.Database.EnsureCreated();
 
-                    SeedTestData(db);
-                }
-            });
-        });
-
-        _client = _factory.CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false // Prevent automatic redirect to HTTPS
-        });
-    }
+              SeedTestData(db);
+          }
+      });
+  });
+  _client = _factory.CreateClient();
+}
 
 // Seed test data in the in-memory database
 private void SeedTestData(DBContext context)

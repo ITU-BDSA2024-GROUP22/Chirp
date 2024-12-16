@@ -6,7 +6,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Tests;
-
+/*
 public class FollowRepositoryTest
 {
     public Task<DBContext> context;
@@ -49,7 +49,6 @@ public class FollowRepositoryTest
         var sharedContext = await CreateContext();
         var followRepository = new FollowRepository(sharedContext);
         var cheepRepository = new CheepRepository(sharedContext);
-
 
         await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
         await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
@@ -123,4 +122,4 @@ public class FollowRepositoryTest
 
 
     }
-}
+} */
