@@ -171,6 +171,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Contains("Bob", responseContent);
     }
 
+
     [Fact]
     public async Task AuthorTimelineTest()
     {
