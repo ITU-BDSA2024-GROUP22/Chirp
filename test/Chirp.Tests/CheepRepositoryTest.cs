@@ -7,7 +7,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Tests;
-/*
+
 public class CheepRepositoryTest
 {
 
@@ -125,5 +125,4 @@ public class CheepRepositoryTest
         Assert.Equal("Andet Cheep", result[1].Text);
         Assert.Equal("Første Cheep", result[2].Text);
     }
-
-} */
+}

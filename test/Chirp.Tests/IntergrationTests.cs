@@ -47,7 +47,7 @@ public IntegrationTests(WebApplicationFactory<Program> factory)
           }
       });
   });
-  _client = _factory.CreateClient();
+  _client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
 }
 
 // Seed test data in the in-memory database

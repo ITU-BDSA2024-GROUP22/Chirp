@@ -6,7 +6,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Tests;
-/*
+
 public class FollowRepositoryTest
 {
     public Task<DBContext> context;
@@ -122,4 +122,4 @@ public class FollowRepositoryTest
 
 
     }
-} */
+}
