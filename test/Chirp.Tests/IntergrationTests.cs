@@ -1,4 +1,4 @@
-/*
+using System.Net;
 using Chirp.Core;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,19 +47,22 @@ namespace Chirp.Tests
             _client = _factory.CreateClient();
         }
 
+
         // Seed test data in the in-memory database
         private void SeedTestData(DBContext context)
         {
             var authorAdrian = new Author
             {
                 UserName = "Adrian",
-                Email = "adrian@example.com"
+                Email = "adrian@example.com",
+                FollowingList = new List<Author>()
             };
 
             var authorHelge = new Author
             {
                 UserName = "Helge",
-                Email = "helge@example.com"
+                Email = "helge@example.com",
+                FollowingList = new List<Author>()
             };
 
             context.Authors.Add(authorAdrian);
@@ -87,7 +90,7 @@ namespace Chirp.Tests
 
 
         [Fact]
-        public async void TimeLineTest()
+        public async Task TimeLineTest()
         {
             var response = await _client.GetAsync("/");
             response.EnsureSuccessStatusCode();
@@ -98,25 +101,181 @@ namespace Chirp.Tests
 
 
         [Fact]
-        public async void AuthorTest()
+        public async Task AuthorTest()
         {
-            var response = await _client.GetAsync("/Helge");
+            var author = new Author
+            {
+                UserName = "Alice",
+                Email = "Alice@example.com",
+                FollowingList = new List<Author>()
+            };
+
+            var authorCheep = new Cheep
+            {
+                Author = author,
+                Text = "Hello, BDSA students!",
+                TimeStamp = DateTime.Now
+            };
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DBContext>();
+
+                db.Authors.Add(author);
+                db.Cheeps.Add(authorCheep);
+                db.SaveChanges();
+            }
+
+            var response = await _client.GetAsync("/Alice");
             response.EnsureSuccessStatusCode();
 
-            var helgeCheep = await response.Content.ReadAsStringAsync();
-            Assert.Contains("Hello, BDSA students!", helgeCheep);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains("Hello, BDSA students!", responseContent);
         }
 
         [Fact]
-        public async void PrivateTimeLineTest()
+        public async Task PrivateTimeLineTest()
         {
-            var response = await _client.GetAsync("/Adrian");
+            var author = new Author
+            {
+                UserName = "Bob",
+                Email = "Bob@example.com",
+                FollowingList = new List<Author>()
+            };
+
+            var authorCheep = new Cheep
+            {
+                Author = author,
+                Text = "Hello, and welcome",
+                TimeStamp = DateTime.Now
+            };
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DBContext>();
+
+                db.Authors.Add(author);
+                db.Cheeps.Add(authorCheep);
+                db.SaveChanges();
+            }
+
+            var response = await _client.GetAsync("/Bob");
             response.EnsureSuccessStatusCode();
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            Assert.Contains("Hej, velkommen til kurset", responseString);
-            Assert.Contains("Adrian", responseString);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains("Hello, and welcome", responseContent);
+            Assert.Contains("Bob", responseContent);
+        }
+
+        [Fact]
+        public async Task AuthorTimelineTest()
+        {
+            var testAuthor = new Author
+            {
+                UserName = "Charlie",
+                Email = "Charlie@example.com",
+                FollowingList = new List<Author>()
+            };
+
+            var authorCheepOne = new Cheep
+            {
+                Author = testAuthor,
+                Text = "First test cheep",
+                TimeStamp = DateTime.UtcNow.AddMinutes(-10)
+            };
+            var authorCheepTwo = new Cheep
+            {
+                Author = testAuthor,
+                Text = "Second test cheep",
+                TimeStamp = DateTime.UtcNow.AddMinutes(-5)
+            };
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DBContext>();
+
+                db.Authors.Add(testAuthor);
+                db.Cheeps.Add(authorCheepOne);
+                db.Cheeps.Add(authorCheepTwo);
+                db.SaveChanges();
+            }
+
+            var response = await _client.GetAsync("/Charlie");
+            response.EnsureSuccessStatusCode(); // Verify a successful response
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Asserting
+            Assert.Contains("Charlie's Timeline", responseContent);
+            Assert.Contains("First test cheep", responseContent);
+            Assert.Contains("Second test cheep", responseContent);
+        }
+
+        [Fact]
+        public async Task BioUserTimelineTest()
+        {
+            var author = new Author
+            {
+                UserName = "Diana",
+                Email = "Diana@example.com",
+                FollowingList = new List<Author>()
+            };
+
+            var authorCheep = new Cheep
+            {
+                Author = author,
+                Text = "What is up",
+                TimeStamp = DateTime.Now
+            };
+
+            var authorBio = new Bio
+            {
+                Author = author,
+                Text = "This is a bio"
+            };
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DBContext>();
+
+                db.Authors.Add(author);
+                db.Cheeps.Add(authorCheep);
+                db.Bios.Add(authorBio);
+                db.SaveChanges();
+            }
+
+            var response = await _client.GetAsync("/Diana");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Asserting
+            Assert.Contains("Diana's Timeline", responseContent);
+            Assert.Contains("What is up", responseContent);
+            Assert.Contains("This is a bio", responseContent);
+        }
+
+        [Fact]
+        public async Task AboutMeTest()
+        {
+            var author = new Author
+            {
+                UserName = "Earl",
+                Email = "Earl@example.com",
+                FollowingList = new List<Author>()
+            };
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DBContext>();
+
+                db.Authors.Add(author);
+                db.SaveChanges();
+            }
+
+            var response = await _client.GetAsync("/Earl/about-me");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }
-*/
+
