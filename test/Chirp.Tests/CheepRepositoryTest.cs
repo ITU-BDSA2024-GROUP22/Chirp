@@ -16,7 +16,7 @@ public class CheepRepositoryTest
         var builder = new DbContextOptionsBuilder<DBContext>().UseSqlite(connection);
 
         var context = new DBContext(builder.Options);
-        await context.Database.EnsureCreatedAsync(); // Applies the schema to the database
+        await context.Database.EnsureCreatedAsync();
 
         return new CheepRepository(context);
     }
@@ -104,8 +104,8 @@ public class CheepRepositoryTest
         var result = await repository.GetCheepsFromAuthor(1, "Anders And");
 
         Assert.NotNull(result);
-        Assert.Equal(3, result.Count); // Der skulle være 3 cheeps for denne forfatter
-        Assert.Equal("Tredje Cheep", result[0].Text); // Den nyeste cheep skulle være først
+        Assert.Equal(3, result.Count);
+        Assert.Equal("Tredje Cheep", result[0].Text);
         Assert.Equal("Andet Cheep", result[1].Text);
         Assert.Equal("Første Cheep", result[2].Text);
     }
@@ -179,5 +179,44 @@ public class CheepRepositoryTest
     }
 
 
+    [Fact]
+    public async Task GetCheepsByAuthor_NonExistentAuthor_ReturnsEmpty()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        var cheeps = await repository.GetCheepsFromAuthor(1, "NonExistentUser");
+
+        Assert.NotNull(cheeps);
+        Assert.Empty(cheeps);
+    }
+
+    [Fact]
+    public async Task UpdateBio_ExistingBio_UpdatesBio()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+        var author = await repository.GetAuthorByName("Anders And");
+
+        await repository.UpdateBio(author, "Dette er min første bio.");
+        await repository.UpdateBio(author, "Opdateret bio.");
+
+        var bio = await repository.GetBioFromAuthor("Anders And");
+
+        Assert.NotNull(bio);
+        Assert.Equal("Opdateret bio.", bio.Text);
+    }
+
+    [Fact]
+    public async Task GetCheepsFromAuthor_NoCheeps_ReturnsEmptyList()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+
+        var cheeps = await repository.GetCheepsFromAuthor(1, "Anders And");
+
+        Assert.Empty(cheeps);
+    }
 
 }

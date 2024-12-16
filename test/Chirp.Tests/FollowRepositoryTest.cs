@@ -167,6 +167,104 @@ public class FollowRepositoryTest
         Assert.Equal("Cheep 33", secondPage.First().Text);
     }
 
+    [Fact]
+    public async Task GetCheepsFromFollowing_NoFollowing_ReturnsEmptyList()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
 
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+
+        var cheeps = await followRepository.GetCheepsFromFollowing(1, "Sten Ben");
+
+        Assert.NotNull(cheeps);
+        Assert.Empty(cheeps);
+    }
+
+    [Fact]
+    public async Task AddFollow_NonExistentUser_ThrowsException()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        {
+            await followRepository.AddFollow("Sten Ben", "NonExistentUser");
+        });
+    }
+
+    [Fact]
+    public async Task Unfollow_NonExistentFollow_DoesNotThrow()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+        await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
+
+        await followRepository.Unfollow("Sten Ben", "Peter Plys");
+
+        var followingList = await followRepository.GetFollowingList("Sten Ben");
+        Assert.Empty(followingList);
+    }
+
+    [Fact]
+    public async Task AddFollow_DuplicateFollow_DoesNotAddTwice()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+        await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
+
+        await followRepository.AddFollow("Sten Ben", "Peter Plys");
+        await followRepository.AddFollow("Sten Ben", "Peter Plys");
+
+        var followingList = await followRepository.GetFollowingList("Sten Ben");
+
+        Assert.Single(followingList);
+        Assert.Equal("Peter Plys", followingList.First().UserName);
+    }
+
+    [Fact]
+    public async Task GetCheepsFromFollowing_NoFollows_ReturnsEmpty()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+
+        var cheeps = await followRepository.GetCheepsFromFollowing(1, "Sten Ben");
+
+        Assert.NotNull(cheeps);
+        Assert.Empty(cheeps);
+    }
+
+    [Fact]
+    public async Task GetCheepsFromFollowing_SelfFollow_ReturnsOwnCheeps()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+        var stenBen = await cheepRepository.GetAuthorByName("Sten Ben");
+        await cheepRepository.CreateCheep(stenBen!, "Min første Cheep!", DateTime.UtcNow);
+
+        await followRepository.AddFollow("Sten Ben", "Sten Ben");
+
+        var cheeps = await followRepository.GetCheepsFromFollowing(1, "Sten Ben");
+
+        Assert.NotNull(cheeps);
+        Assert.Single(cheeps);
+        Assert.Equal("Min første Cheep!", cheeps.First().Text);
+    }
 
 }
