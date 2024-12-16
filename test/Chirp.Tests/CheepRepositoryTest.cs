@@ -118,7 +118,7 @@ public class CheepRepositoryTest
         await repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = await repository.GetAuthorByName("Anders And");
 
-        await repository.UpdateBio(author, "Dette er min nye bio.");
+        if (author != null) await repository.UpdateBio(author, "Dette er min nye bio.");
         var bio = await repository.GetBioFromAuthor("Anders And");
 
         Assert.NotNull(bio);
@@ -135,9 +135,12 @@ public class CheepRepositoryTest
         var author = await repository.GetAuthorByName("Anders And");
 
         await repository.CreateCheep(author, "Farvel verden!", DateTime.Now);
-        await repository.UpdateBio(author, "Dette er en midlertidig bio.");
+        if (author != null)
+        {
+            await repository.UpdateBio(author, "Dette er en midlertidig bio.");
 
-        await repository.DeleteAuthor(author);
+            await repository.DeleteAuthor(author);
+        }
 
         var deletedAuthor = await repository.GetAuthorByName("Anders And");
         var cheeps = await repository.GetCheepsFromAuthor(1, "Anders And");
@@ -170,7 +173,7 @@ public class CheepRepositoryTest
         await repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = await repository.GetAuthorByName("Anders And");
 
-        await repository.UpdateBio(author, "Min første bio.");
+        if (author != null) await repository.UpdateBio(author, "Min første bio.");
 
         var bio = await repository.GetBioFromAuthor("Anders And");
 
@@ -198,8 +201,11 @@ public class CheepRepositoryTest
         await repository.CreateAuthor("Anders And", "anders@and.dk");
         var author = await repository.GetAuthorByName("Anders And");
 
-        await repository.UpdateBio(author, "Dette er min første bio.");
-        await repository.UpdateBio(author, "Opdateret bio.");
+        if (author != null)
+        {
+            await repository.UpdateBio(author, "Dette er min første bio.");
+            await repository.UpdateBio(author, "Opdateret bio.");
+        }
 
         var bio = await repository.GetBioFromAuthor("Anders And");
 
