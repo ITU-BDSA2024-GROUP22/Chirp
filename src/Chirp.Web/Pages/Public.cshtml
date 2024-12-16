@@ -11,9 +11,12 @@
     Layout = "Shared/_Layout";
     List<AuthorDTO> FollowingList = null;
 
-    if (User.Identity!.IsAuthenticated)
+    if (User.Identity!.IsAuthenticated )
     {
-        FollowingList = FollowService.GetFollowing(User.Identity.Name);
+        if (User.Identity.Name != null)
+        {
+            FollowingList = FollowService.GetFollowing(User.Identity.Name);
+        }
     }
 }
 
