@@ -37,7 +37,6 @@ public class CheepRepository : ICheepRepository
             });
 
         var result = await pageQuery.ToListAsync();
-
         return result;
     }
 
@@ -51,7 +50,6 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
-
         var pageQuery = (from cheep in _dbContext.Cheeps
                 where cheep.Author.UserName == username // Filter by the author's name
                 orderby cheep.TimeStamp descending
