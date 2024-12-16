@@ -100,6 +100,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             return new ChallengeResult(provider, properties);
         }
 
+
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");

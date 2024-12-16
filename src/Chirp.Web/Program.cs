@@ -48,7 +48,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // Source: Adapted from Lecture Slides, session 10 by Adrian Hoff
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
