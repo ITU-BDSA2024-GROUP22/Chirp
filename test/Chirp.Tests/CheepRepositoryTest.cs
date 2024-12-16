@@ -110,4 +110,74 @@ public class CheepRepositoryTest
         Assert.Equal("Første Cheep", result[2].Text);
     }
 
+    [Fact]
+    public async Task UpdateBioTest()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+        var author = await repository.GetAuthorByName("Anders And");
+
+        await repository.UpdateBio(author, "Dette er min nye bio.");
+        var bio = await repository.GetBioFromAuthor("Anders And");
+
+        Assert.NotNull(bio);
+        Assert.Equal("Dette er min nye bio.", bio.Text);
+    }
+
+
+    [Fact]
+    public async Task DeleteAuthorTest()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+        var author = await repository.GetAuthorByName("Anders And");
+
+        await repository.CreateCheep(author, "Farvel verden!", DateTime.Now);
+        await repository.UpdateBio(author, "Dette er en midlertidig bio.");
+
+        await repository.DeleteAuthor(author);
+
+        var deletedAuthor = await repository.GetAuthorByName("Anders And");
+        var cheeps = await repository.GetCheepsFromAuthor(1, "Anders And");
+        var bio = await repository.GetBioFromAuthor("Anders And");
+
+        Assert.Null(deletedAuthor);
+        Assert.Empty(cheeps);
+        Assert.Null(bio);
+    }
+
+    [Fact]
+    public async Task SetAuthorPictureAsyncTest()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+        await repository.SetAuthorPictureAsync("Anders And", "/path/to/picture.png");
+
+        var author = await repository.GetAuthorByName("Anders And");
+
+        Assert.NotNull(author);
+        Assert.Equal("/path/to/picture.png", author.Picture);
+    }
+
+    [Fact]
+    public async Task GetBioFromAuthorTest()
+    {
+        var repository = await SetUpRepositoryAsync();
+
+        await repository.CreateAuthor("Anders And", "anders@and.dk");
+        var author = await repository.GetAuthorByName("Anders And");
+
+        await repository.UpdateBio(author, "Min første bio.");
+
+        var bio = await repository.GetBioFromAuthor("Anders And");
+
+        Assert.NotNull(bio);
+        Assert.Equal("Min første bio.", bio.Text);
+    }
+
+
+
 }

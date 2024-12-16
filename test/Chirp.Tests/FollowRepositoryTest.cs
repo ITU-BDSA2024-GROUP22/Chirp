@@ -117,4 +117,56 @@ public class FollowRepositoryTest
 
         Assert.NotNull(followingList);
     }
+
+
+    [Fact]
+    public async Task Unfollow_NonexistentUserInFollowingList_DoesNotFail()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+        await cheepRepository.CreateAuthor("Peter Plys", "peter@plys.com");
+
+        var followingList = await followRepository.GetFollowingList("Sten Ben");
+        Assert.Empty(followingList);
+
+        await followRepository.Unfollow("Sten Ben", "Peter Plys");
+
+        followingList = await followRepository.GetFollowingList("Sten Ben");
+        Assert.Empty(followingList);
+    }
+
+    [Fact]
+    public async Task GetCheepsFromFollowing_Pagination_WorksCorrectly()
+    {
+        var sharedContext = await CreateContext();
+        var followRepository = new FollowRepository(sharedContext);
+        var cheepRepository = new CheepRepository(sharedContext);
+
+        await cheepRepository.CreateAuthor("Sten Ben", "sten@ben.dk");
+        await cheepRepository.CreateAuthor("Author1", "author1@test.com");
+
+        var author1 = await cheepRepository.GetAuthorByName("Author1");
+        for (int i = 1; i <= 50; i++)
+        {
+            await cheepRepository.CreateCheep(author1!, $"Cheep {i}", DateTime.UtcNow.AddSeconds(-i));
+        }
+
+        await followRepository.AddFollow("Sten Ben", "Author1");
+
+        var firstPage = await followRepository.GetCheepsFromFollowing(1, "Sten Ben");
+        Assert.NotNull(firstPage);
+        Assert.Equal(32, firstPage.Count);
+        Assert.Equal("Cheep 1", firstPage.First().Text);
+
+        var secondPage = await followRepository.GetCheepsFromFollowing(2, "Sten Ben");
+        Assert.NotNull(secondPage);
+        Assert.Equal(18, secondPage.Count);
+        Assert.Equal("Cheep 33", secondPage.First().Text);
+    }
+
+
+
 }
