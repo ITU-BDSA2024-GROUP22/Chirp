@@ -1,5 +1,4 @@
 using Chirp.Core;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,15 +31,5 @@ public class DBContext : IdentityDbContext<Author>
             .WithOne(a => a.Bio)
             .HasForeignKey<Bio>(b => b.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
-    }
-
-    public override ValueTask DisposeAsync()
-    {
-        return base.DisposeAsync();
     }
 }

@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Chirp.Core;
 
 public class Bio
