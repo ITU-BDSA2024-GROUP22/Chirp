@@ -48,7 +48,21 @@ Figure## illustrates the flow of actions for an authorised user, starting with v
 # Process
 
 ## Build, test, release, and deployment
-![fig##](./images/Build_and_test.svg)
+
+### Building and testing
+![](./images/testflow.svg)
+
+Figure ##: Illustration of the building and testing workflow
+
+When a pull-request or a push is made to the main branch in GitHub, a workflow building and testing the application runs. The tests running are the tests in Chirp.Tests where both repositories,CheepRepository and FollowRepository, and their functionalities are tested.
+
+### Releasing to GitHub
+![](./images/releaseflow.svg)
+
+### Deploying application
+
+![](./images/deployment.svg)
+
 
 ## Team work
 
@@ -125,7 +139,7 @@ To shut down the application, press Ctrl+C in the local terminal.
 
 
 # Ethics
-![](./images/testflow.svg)
+
 ## License
 This software is licensed under the MIT license. The MIT license is an open source and permissive license that allows other users to modify, use and distribute the software, just needing the original license to be included. The license has been chosen to make the code freely accessible to other users and therefore encourages collaborations across developers and companies while maintaining minimal restrictions.
 
