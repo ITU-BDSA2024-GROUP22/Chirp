@@ -9,6 +9,18 @@ public interface ICheepService
     public Task<List<CheepDTO>> GetCheeps(int pageNumber);
 
     public Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber);
+
+    public Task<AuthorDTO?> GetAuthorByName(string name);
+
+    public Task CreateCheep(AuthorDTO? author, string text, DateTime timeStamp);
+
+    public Task UpdateBio(AuthorDTO authorDTO, string text);
+
+    public Task<Bio> GetBioFromAuthor(string username);
+
+    public Task DeleteAuthor(AuthorDTO authorDTO);
+
+    public Task SetAuthorPictureAsync(string username, string picturePath);
 }
 
 public class CheepService : ICheepService
