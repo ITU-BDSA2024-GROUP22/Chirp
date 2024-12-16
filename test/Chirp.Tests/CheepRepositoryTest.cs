@@ -29,7 +29,7 @@ public class CheepRepositoryTest
     {
         var repository = await SetUpRepositoryAsync();
 
-        // Act
+
         var result = await repository.GetCheeps(1);
         Assert.Empty(result);
     }
