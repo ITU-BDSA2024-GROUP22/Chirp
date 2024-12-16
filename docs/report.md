@@ -41,6 +41,10 @@ Figure## illustrates the flow of actions for an authorised user, starting with v
 
 ## Sequence of functionality/calls trough _Chirp!_
 
+![fig##](./Diagrams/SequenceDiagram.drawio.svg "Sequence diagram for an unauthorized user")_Figure##: Sequence diagram for an unauthorized user_
+
+
+
 # Process
 
 ## Build, test, release, and deployment
