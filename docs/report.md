@@ -39,10 +39,9 @@ Figure## illustrates the flow for unauthorised users interacting with Chirp. Use
 
 Figure## illustrates the flow of actions for an authorised user, starting with viewing cheeps on the public timeline. Users can follow or unfollow authors, navigate to other pages, or view user timelines and bios, depending on their preferences. By accessing "my timeline", users can see their bio, their authored cheeps, and followed authors’ cheeps. Authorised users can update their profiles by choosing a file to upload a profile picture, writing a bio, or clicking "Forget me" to delete their account. Users have the option to write new cheeps, interact with personalised or general public content, and log out, completing the interaction cycle.
 
-## Sequence of functionality/calls trough _Chirp!_
+## Sequence of functionality/calls through _Chirp!_
 
 ![fig##](./Diagrams/SequenceDiagram.drawio.svg "Sequence diagram for an unauthorized user")_Figure##: Sequence diagram for an unauthorized user_
-
 
 
 ![fig##](./Diagrams/SequenceDiagram2.drawio.svg "Sequence diagram for authenticated user posting a cheep")_Figure##: Sequence diagram for authenticated user posting a cheep_
