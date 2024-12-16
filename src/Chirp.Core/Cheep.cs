@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-
 namespace Chirp.Core;
 
+/// <summary>
+/// Represents a Cheep (message) posted by an author in the Chirp application.
+/// </summary>
 public class Cheep
 {
     public required Author Author { get; set; }
@@ -12,6 +14,5 @@ public class Cheep
     public required DateTime TimeStamp { get; set; }
     public string? AuthorId { get; set; }
     public int CheepId { get; set; }
-
 
 }

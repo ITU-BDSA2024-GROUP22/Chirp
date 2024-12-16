@@ -1,7 +1,4 @@
-﻿using Chirp.Core;
-using Chirp.Core.DTOs;
-using Chirp.Infrastructure.Repositories;
-using Chirp.Infrastructure;
+﻿using Chirp.Core.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,10 +6,8 @@ namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
-    private const int PageSize = 32;
     private readonly CheepService _service;
     private readonly FollowService _followService;
-    public AuthorDTO authorDTO { get; set; }
 
     public PublicModel(CheepService service, FollowService followService)
     {
@@ -28,6 +23,12 @@ public class PublicModel : PageModel
     public int CurrentPage { get; set; }
     public int CheepsCount { get; private set; }
 
+    /// <summary>
+    /// Handles the GET request for displaying the public timeline of Cheeps.
+    /// It fetches Cheeps from the service and author details if the user is authenticated.
+    /// </summary>
+    /// <param name="page">The current page for pagination, defaulting to 1 if not provided.</param>
+    /// <returns>The current page of public Cheeps along with author information if the user is authenticated.</returns>
     public ActionResult OnGet([FromQuery] int? page)
     {
         if (User.Identity != null && User.Identity.IsAuthenticated)
@@ -43,6 +44,11 @@ public class PublicModel : PageModel
         return Page();
     }
 
+    // <summary>
+    /// Handles the POST request for creating a new Cheep.
+    /// It ensures the user is authenticated and the Text field is not empty before creating the Cheep.
+    /// </summary>
+    /// <returns>A redirect to the public page after successfully posting the Cheep.</returns>
     public async Task<IActionResult> OnPostAsync()
     {
         if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
@@ -56,7 +62,6 @@ public class PublicModel : PageModel
             if (authorName != null)
             {
                 var author = await _service.GetAuthorByName(authorName);
-
                 await _service.CreateCheep(author, Text, DateTime.UtcNow);
             }
         }
@@ -64,6 +69,12 @@ public class PublicModel : PageModel
         return RedirectToPage("/Public", new { page = 1 });
     }
 
+    /// <summary>
+    /// Handles the POST request for following a user.
+    /// It ensures the user is authenticated before performing the follow action.
+    /// </summary>
+    /// <param name="userToFollow">The username of the user to follow.</param>
+    /// <returns>A redirect to the public page after the follow action is performed.</returns>
     public async Task<IActionResult> OnPostFollow(string userToFollow)
     {
         if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
@@ -71,9 +82,8 @@ public class PublicModel : PageModel
             var author = User.Identity.Name;
             Console.WriteLine("Fra OnPostFollow method + " + userToFollow);
             await _followService.FollowAuthor(author, userToFollow);
-
-
         }
+
         return RedirectToPage("/Public", new { page = 1 });
     }
 
@@ -83,8 +93,8 @@ public class PublicModel : PageModel
         {
             var author = User.Identity.Name;
             await _followService.UnfollowAuthor(author, userToFollow);
-
         }
+
         return RedirectToPage("/Public", new { page = 1 });
     }
 }

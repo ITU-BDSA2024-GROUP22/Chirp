@@ -21,27 +21,11 @@ public class AuthorDTO
         };
     }
 
-    /// <summary>
-    /// Gets or sets the username of the author.
-    /// The <see cref="UserName"/> is required and must be unique for each author.
-    /// </summary>
     public required string? UserName {get; set;}
 
-    /// <summary>
-    /// Gets or sets the email address of the author.
-    /// The <see cref="Email"/> is required and represents the author's contact email.
-    /// </summary>
     public required string? Email { get; set; }
 
-    /// <summary>
-    /// Gets or sets the list of authors that this author is following.
-    /// This list may contain other <see cref="Author"/> objects.
-    /// </summary>
     public List<Author> FollowingList { get; set; }
 
-    /// <summary>
-    /// Gets or sets the profile picture URL of the author.
-    /// This property is optional and may be null if no picture is set.
-    /// </summary>
     public string? Picture { get; set; }
 }

@@ -20,9 +20,6 @@ public class Program
         builder.Services.AddScoped<CheepService>();
         builder.Services.AddScoped<FollowService>();
 
-
-
-        // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=Database/Chirp.db";
         builder.Services.AddDbContext<DBContext>(options =>
             options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
@@ -32,12 +29,9 @@ public class Program
 
         builder.Services.AddAuthentication(options =>
             {
-                //options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                // options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //options.DefaultChallengeScheme = "GitHub";
                 options.RequireAuthenticatedSignIn = true;
             })
-            //.AddCookie()
+
             .AddGitHub(o =>
             {
                 o.ClientId = builder.Configuration["authentication_github_clientId"];
@@ -60,29 +54,16 @@ public class Program
         {
             var _dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
 
-            //_dbContext.Database.EnsureDeleted();
-
             _dbContext.Database.EnsureCreated();
-
-            if (_dbContext.Database.IsRelational())
-            {
-                //_dbContext.Database.Migrate();
-            }
             DbInitializer.SeedDatabase(_dbContext);
         }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
-
-        // Need this for logout to work
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseSession();
-
         app.MapRazorPages();
-
         app.Run();
     }
 }
