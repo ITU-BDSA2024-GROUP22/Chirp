@@ -49,7 +49,8 @@ cd src/Chirp.Web
 Run these two commands to set the user secrets
 
 ```
-dotnet user-secrets set "authentication_github_clientId" "Ov23liZYXvXPxOxqjMap" dotnet user-secrets set "authentication_github_clientSecret" "ab07248b11a19096e2c822b96605679072c02f74"
+dotnet user-secrets set "authentication_github_clientId" "Ov23liZYXvXPxOxqjMap"
+dotnet user-secrets set "authentication_github_clientSecret" "ab07248b11a19096e2c822b96605679072c02f74"
 ```
 
 ### **Step 4: run the program on localhost**
