@@ -48,7 +48,6 @@ namespace Chirp.Tests
         }
 
 
-        // Seed test data in the in-memory database
         private void SeedTestData(DBContext context)
         {
             var authorAdrian = new Author
