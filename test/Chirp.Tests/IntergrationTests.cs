@@ -19,6 +19,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {
+
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(
