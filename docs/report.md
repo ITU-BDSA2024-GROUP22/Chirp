@@ -57,7 +57,8 @@ Figure ##: Illustration of the building and testing workflow
 When a pull-request or a push is made to the main branch in GitHub, a workflow building and testing the application runs. The tests running are the tests in Chirp.Tests where both repositories,CheepRepository and FollowRepository, and their functionalities are tested.
 
 ### Releasing to GitHub
-![](./images/releaseflow.svg)
+
+![](./images/Release.svg)
 
 ### Deploying application
 
