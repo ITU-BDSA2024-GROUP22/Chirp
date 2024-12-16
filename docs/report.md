@@ -45,6 +45,10 @@ Figure## illustrates the flow of actions for an authorised user, starting with v
 
 
 
+![fig##](./Diagrams/SequenceDiagram2.drawio.svg "Sequence diagram for authenticated user posting a cheep")_Figure##: Sequence diagram for authenticated user posting a cheep_
+
+
+
 # Process
 
 ## Build, test, release, and deployment
