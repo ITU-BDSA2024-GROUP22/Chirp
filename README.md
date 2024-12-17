@@ -1,3 +1,4 @@
+![Image](https://github.com/user-attachments/assets/8bb9314b-104c-4f3b-8929-00e593fcf654)
 # Chirp - Group 22
 Welcome to our Chirp, a repository made in connection with the course Analysis, Design and Software Architecture at IT-university of Copenhagen.
 
