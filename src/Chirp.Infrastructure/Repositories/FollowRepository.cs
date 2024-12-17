@@ -5,6 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure.Repositories;
 
+/// <summary>
+/// Repository that handles the management of follow relations and related data.
+/// This includes operations for adding and removing followers, checking if a user follows another,
+/// retrieving authors and their follow lists, and fetching Cheeps from followed users, including the user's own Cheeps
+/// The repository implements the IFollowRepository interface
+/// </summary>
 public class FollowRepository : IFollowRepository
 {
     private readonly int _pageSize = 32;
@@ -16,11 +22,11 @@ public class FollowRepository : IFollowRepository
     }
 
     /// <summary>
-    /// Retrieves an author by their username.
+    /// Retrieves an author by their username
     /// </summary>
-    /// <param name="name"> The username of the author to retrieve. </param>
-    /// <returns>A task representing the asynchronous operation, containing the author if found.</returns>
-    /// <exception cref="KeyNotFoundException"> Thrown if no author with the specified username is found. </exception>
+    /// <param name="name"> The username of the author to retrieve </param>
+    /// <returns>A task representing the asynchronous operation, containing the author if found</returns>
+    /// <exception cref="KeyNotFoundException"> Thrown if no author with the specified username is found</exception>
     public override async Task<Author> GetAuthor(string name)
     {
         var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
@@ -33,11 +39,11 @@ public class FollowRepository : IFollowRepository
     }
 
     /// <summary>
-    /// Retrieves an author by their username and returns an AuthorDTO representation.
+    /// Retrieves an author by their username and returns an AuthorDTO representation
     /// </summary>
-    /// <param name="name"> The username of the author to retrieve. </param>
+    /// <param name="name"> The username of the author to retrieve </param>
     /// <returns> A task representing the asynchronous operation, containing an AuthorDTO if the author is found,
-    /// or null if no author with the specified username exists. </returns>
+    /// or null if no author with the specified username exists </returns>
     public override async Task<AuthorDTO?> GetAuthorByName(string name)
     {
         var author = await _dbContext.Authors.SingleOrDefaultAsync(a => a.UserName == name);
@@ -50,12 +56,12 @@ public class FollowRepository : IFollowRepository
 
 
     /// <summary>
-    /// Retrieves a paginated list of Cheeps from a specific author based on their username.
+    /// Retrieves a paginated list of Cheeps from a specific author based on their username
     /// </summary>
-    /// <param name="pageNumber"> The page number to retrieve. </param>
-    /// <param name="username"> The username of the author whose Cheeps are being retrieved.</param>
+    /// <param name="pageNumber"> The page number to retrieve </param>
+    /// <param name="username"> The username of the author whose Cheeps are being retrieved </param>
     /// <returns> A task representing the asynchronous operation, containing a list of CheepDTO objects
-    /// created by the specified user.</returns>
+    /// created by the specified user </returns>
     public override async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
@@ -79,11 +85,11 @@ public class FollowRepository : IFollowRepository
     }
 
     /// <summary>
-    /// Retrieves a list of AuthorDTO objects representing the authors that a specific user is following.
+    /// Retrieves a list of AuthorDTO objects representing the authors that a specific user is following
     /// </summary>
-    /// <param name="user"> The username of the user whose following list is being retrieved.</param>
+    /// <param name="user"> The username of the user whose following list is being retrieved </param>
     /// <returns> A task representing the asynchronous operation, containing a list of AuthorDTO objects
-    /// representing the authors the user is following.</returns>
+    /// representing the authors the user is following </returns>
     public override async Task<List<AuthorDTO>> GetFollowingDTO(string user)
     {
         var followingList = await GetFollowingList(user);
@@ -96,24 +102,23 @@ public class FollowRepository : IFollowRepository
     }
 
     /// <summary>
-    /// Retrieves the list of authors that a specific user is following.
+    /// Retrieves the list of authors that a specific user is following
     /// </summary>
-    /// <param name="user"> The username of the user whose following list is being retrieved.</param>
+    /// <param name="user"> The username of the user whose following list is being retrieved </param>
     /// <returns> A task representing the asynchronous operation, containing a list of authors that the user is following.
-    /// If the user is not following anyone, an empty list is returned. </returns>
+    /// If the user is not following anyone, an empty list is returned </returns>
     public override async Task<List<Author>> GetFollowingList(string user)
     {
         return await _dbContext.Authors.Where(a => a.UserName == user).Select(a => a.FollowingList)
             .FirstOrDefaultAsync() ?? new List<Author>();
     }
 
-
     /// <summary>
-    /// Adds a user to another user's following list if they are not already following them.
+    /// Adds a user to another user's following list if they are not already following them
     /// </summary>
     /// <param name="user"> The username of the user who wants to follow someone </param>
-    /// <param name="userFollowed"> The username of the user to be followed.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="userFollowed"> The username of the user to be followed </param>
+    /// <returns>A task representing the asynchronous operation</returns>
     public override async Task AddFollow(string user, string userFollowed)
     {
         var author = await GetAuthor(user);
@@ -128,12 +133,12 @@ public class FollowRepository : IFollowRepository
     }
 
     /// <summary>
-    /// Checks if a user is following another user.
+    /// Checks if a user is following another user
     /// </summary>
-    /// <param name="user"> The username of the user who may be following someone. </param>
-    /// <param name="userFollowed"> The username of the user being checked for in the following list.</param>
+    /// <param name="user"> The username of the user who may be following someone </param>
+    /// <param name="userFollowed"> The username of the user being checked for in the following list </param>
     /// <returns> A task representing the asynchronous operation, returning true if the user is following the specified user,
-    /// otherwise false.</returns>
+    /// otherwise false </returns>
     public override async Task<bool> IsFollowing(string user, string userFollowed)
     {
         var list = await _dbContext.Authors.Where(a => a.UserName == user).Select(a => a.FollowingList)
@@ -149,11 +154,11 @@ public class FollowRepository : IFollowRepository
 
 
     /// <summary>
-    /// Removes a user from another user's following list, effectively unfollowing them.
+    /// Removes a user from another user's following list, effectively unfollowing them
     /// </summary>
-    /// <param name="user"> The username of the user who is unfollowing someone. </param>
-    /// <param name="userUnfollowed"> The username of the user to be unfollowed. </param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="user"> The username of the user who is unfollowing someone </param>
+    /// <param name="userUnfollowed"> The username of the user to be unfollowed </param>
+    /// <returns>A task representing the asynchronous operation</returns>
     public override async Task Unfollow(string user, string userUnfollowed)
     {
         var authorUnfollowed = await GetAuthor(userUnfollowed);
@@ -166,10 +171,10 @@ public class FollowRepository : IFollowRepository
     /// <summary>
     /// Retrieves a paginated list of Cheeps from the users that a specific user is following including their own Cheeps
     /// </summary>
-    /// <param name="pageNumber"> The page number to retrieve. </param>
-    /// <param name="username"> The username of the user whose followed users' Cheeps are being retrieved.</param>
-    /// <returns> A task representing the asynchronous operation, containing a list of CheepDTO objects from the followed users including its own Cheeps.
-    /// </returns>
+    /// <param name="pageNumber"> The page number to retrieve </param>
+    /// <param name="username"> The username of the user whose followed users' Cheeps are being retrieved </param>
+    /// <returns> A task representing the asynchronous operation,
+    /// containing a list of CheepDTO objects from the followed users including its own Cheeps </returns>
     public override async Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username)
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
@@ -195,5 +200,4 @@ public class FollowRepository : IFollowRepository
         var result = await pageQuery.ToListAsync();
         return result;
     }
-
 }

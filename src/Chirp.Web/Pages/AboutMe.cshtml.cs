@@ -25,13 +25,13 @@ public class AboutMeModel : PageModel
     public int CheepsCount { get; private set; }
 
     /// <summary>
-    /// Handles GET requests to the page, loading data about an author and their Cheeps.
+    /// Handles GET requests to the page, loading data about an author and their Cheeps
     /// </summary>
-    /// <param name="page">The current page number for Cheeps pagination. Optional.</param>
-    /// <param name="author">The name of the author whose data should be retrieved.</param>
+    /// <param name="page">The current page number for Cheeps pagination. Optional</param>
+    /// <param name="author">The name of the author whose data should be retrieved</param>
     /// <returns>
     /// An IActionResult, which can be a NotFound response if the `author` parameter is missing,
-    /// or a `Page()` view with the loaded data.
+    /// or a `Page()` view with the loaded data
     /// </returns>
     public async Task<IActionResult> OnGet([FromQuery] int? page, string author)
     {
@@ -54,11 +54,11 @@ public class AboutMeModel : PageModel
     }
 
     /// <summary>
-    /// Handles POST requests to update the user's bio.
+    /// Handles POST requests to update the user's bio
     /// </summary>
     /// <returns>
     /// A RedirectToPage action to "AboutMe" after successfully updating the bio,
-    /// or a NotFound response if the user is not authenticated.
+    /// or a NotFound response if the user is not authenticated
     /// </returns>
     public async Task<IActionResult> OnPostAsync()
     {
@@ -83,11 +83,11 @@ public class AboutMeModel : PageModel
     /// <summary>
     /// Handles POST requests to "forget" the user's profile.
     /// Deletes user data, including their profile picture, logs the user out,
-    /// and redirects to a public page.
+    /// and redirects to a public page
     /// </summary>
     /// <returns>
     /// A RedirectToPage action to a public page after successful deletion,
-    /// or a NotFound response if the user is not authenticated.
+    /// or a NotFound response if the user is not authenticated
     /// </returns>
     public async Task<IActionResult> OnPostForget()
     {
@@ -141,12 +141,12 @@ public class AboutMeModel : PageModel
 
     /// <summary>
     /// Handles POST requests to update the user's profile picture.
-    /// Saves the new picture to the "wwwroot/uploads" directory and updates the database with the new URL.
+    /// Saves the new picture to the "wwwroot/uploads" directory and updates the database with the new URL
     /// </summary>
-    /// <param name="profilePicture">The uploaded file for the profile picture.</param>
+    /// <param name="profilePicture">The uploaded file for the profile picture</param>
     /// <returns>
     /// A RedirectToPage action to "AboutMe" with the updated profile picture,
-    /// or a validation error if the file is invalid.
+    /// or a validation error if the file is invalid
     /// </returns>
     public async Task<IActionResult> OnPostPictureAsync(IFormFile profilePicture)
     {

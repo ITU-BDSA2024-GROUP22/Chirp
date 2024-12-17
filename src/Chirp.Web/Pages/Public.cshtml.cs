@@ -25,10 +25,10 @@ public class PublicModel : PageModel
 
     /// <summary>
     /// Handles the GET request for displaying the public timeline of Cheeps.
-    /// It fetches Cheeps from the service and author details if the user is authenticated.
+    /// It fetches Cheeps from the service and author details if the user is authenticated
     /// </summary>
-    /// <param name="page">The current page for pagination, defaulting to 1 if not provided.</param>
-    /// <returns>The current page of public Cheeps along with author information if the user is authenticated.</returns>
+    /// <param name="page">The current page for pagination, defaulting to 1 if not provided</param>
+    /// <returns>The current page of public Cheeps along with author information if the user is authenticated</returns>
     public ActionResult OnGet([FromQuery] int? page)
     {
         if (User.Identity != null && User.Identity.IsAuthenticated)

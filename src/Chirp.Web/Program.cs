@@ -9,6 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Web;
 
+/// <summary>
+/// The main entry point for the Chirp application, responsible for configuring services, middleware, and
+/// the application pipeline. This includes setting up database connections, authentication, and handling
+/// request processing.
+/// </summary>
 public class Program
 {
     public static void Main(string[] args)
