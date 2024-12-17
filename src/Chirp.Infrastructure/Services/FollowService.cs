@@ -6,10 +6,13 @@ using Chirp.Infrastructure.Repositories;
 
 public interface IFollowService
 {
-    Task FollowAuthor(string followerId, string followeeId);
-    Task UnfollowAuthor(string followerId, string followeeId);
-    Task <bool> IsFollowing(string followerId, string followeeId);
+    public Task FollowAuthor(string followerId, string followeeId);
+    public Task UnfollowAuthor(string followerId, string followeeId);
+    public Task <bool> IsFollowing(string followerId, string followeeId);
     public List<AuthorDTO> GetFollowing(string user);
+    public Task<List<CheepDTO>> GetCheepsFromFollowing(int pageNumber, string username);
+    public Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber);
+    public Task<AuthorDTO> GetAuthorByName(string name);
 }
 
 public class FollowService : IFollowService
@@ -69,5 +72,4 @@ public class FollowService : IFollowService
     {
         return await _followRepository.GetAuthorByName(name);
     }
-
 }

@@ -1,10 +1,11 @@
 using Chirp.Core;
 using Chirp.Core.DTOs;
+using Chirp.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure.Repositories;
 
-public class FollowRepository
+public class FollowRepository : IFollowRepository
 {
     private readonly int _pageSize = 32;
     private readonly DBContext _dbContext;
@@ -16,8 +17,7 @@ public class FollowRepository
 
     public async Task<Author> GetAuthor(string name)
     {
-        var author =  _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
-
+        var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == name);
         if (author == null)
         {
             throw new KeyNotFoundException($"No author with name {name} was found.");
@@ -135,7 +135,6 @@ public class FollowRepository
                 TimeStamp = cheep.TimeStamp.ToString("MM/dd/yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
             });
 
-        // Hent og returner resultatet
         var result = await pageQuery.ToListAsync();
         return result;
     }

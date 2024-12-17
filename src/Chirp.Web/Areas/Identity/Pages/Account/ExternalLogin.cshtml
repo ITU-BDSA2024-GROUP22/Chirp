@@ -1,4 +1,5 @@
-﻿@page
+﻿@* Source: Adapted from Andrew Lock ASP.NET Core in Action, Third Edition, Section 17.4.3*@
+@page
 @model ExternalLoginModel
 @{
     ViewData["Title"] = "Register";
@@ -25,6 +26,14 @@
                     <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email."/>
                     <label asp-for="Input.Email" class="form-label"></label>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+            }
+            if (string.IsNullOrEmpty(Model.Input.UserName))
+            {
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.UserName" class="form-control" autocomplete="email" placeholder="Please enter a new Username."/>
+                    <label asp-for="Input.UserName" class="form-label"></label>
+                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
                 </div>
             }
         }

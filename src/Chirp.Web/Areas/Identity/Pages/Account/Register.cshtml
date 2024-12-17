@@ -1,4 +1,5 @@
-﻿@page
+﻿@* Source: Adapted from Andrew Lock ASP.NET Core in Action, Third Edition, Section 17.4.3*@
+@page
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -14,11 +15,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.DisplayName" class="form-control" autocomplete="username" aria-required="true" placeholder="Name"/>
-                <label asp-for="Input.DisplayName">Name</label>
+                <label asp-for="Input.DisplayName">Username</label>
                 <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="name@example.com"/>
                 <label asp-for="Input.Email">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
@@ -39,6 +40,9 @@
         <section>
             <h3>Use another service to register.</h3>
             <hr/>
+
+
+
             @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
@@ -60,6 +64,7 @@
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
                                     <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <h5>If your GitHub username is already taken, a random number will be added to the end of your username in Chirp.</h5>
                                 }
                             </p>
                         </div>

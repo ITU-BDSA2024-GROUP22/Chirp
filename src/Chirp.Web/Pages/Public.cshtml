@@ -84,14 +84,18 @@
                     : cheep.Author.Picture;
                 {
                     <li>
+                        <!-- Timestamp on the first line -->
+                        <p>
+                            <small class="timestamp">@cheep.TimeStamp</small>
+                        </p>
+                        <!-- Author name and Follow/Unfollow button on the same line -->
+                        <div class="author-row">
 
-                        <img src="@profilePicture"
-                             alt="Profile Picture"
-                             style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;" />
-                    <strong>
-                        <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
-                    </strong>
+                            <img src="@(cheep.Author.Picture ?? "/images/chirp_silhouette.png")" alt="Profile Picture" class="small-profile-pic" />
 
+                            <strong>
+                                <a href="/@cheep.Author.UserName">@cheep.Author.UserName</a>
+                            </strong>
                             @if (User.Identity?.IsAuthenticated == true)
                             {
                                 @if (User.Identity?.Name != cheep.Author.UserName)
@@ -99,32 +103,27 @@
                                     @if (FollowingList.Any(f => f.UserName == cheep.Author.UserName))
                                     {
                                         <!-- Unfollow Button -->
-                                        <form method="post" asp-page-handler="Unfollow">
-                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                            <button type="submit" class="follow-btn">
-                                                Unfollow
-                                            </button>
+                                        <form method="post" asp-page-handler="Unfollow" class="follow-form">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName">
+                                            <button type="submit" class="follow-btn">Unfollow</button>
                                         </form>
                                     }
                                     else
                                     {
                                         <!-- Follow Button -->
-                                        <form method="post" asp-page-handler="Follow">
-                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName"/>
-                                            <button type="submit" class="follow-btn">
-                                                Follow
-                                            </button>
+                                        <form method="post" asp-page-handler="Follow" class="follow-form">
+                                            <input type="hidden" name="userToFollow" value="@cheep.Author.UserName">
+                                            <button type="submit" class="follow-btn">Follow</button>
                                         </form>
                                     }
 
                                     <br/>
                                 }
                             }
-                        <p>
-                            @cheep.Text
-                        </p>
-                        <small>&mdash;@cheep.TimeStamp</small>
 
+                        </div>
+                        <!-- Cheep text on a separate line -->
+                        <p>@cheep.Text</p>
                     </li>
                 }
             }
@@ -198,3 +197,4 @@
         </div>
     }
 </div>
+

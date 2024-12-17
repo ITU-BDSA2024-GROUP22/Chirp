@@ -86,17 +86,20 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+
+            public string UserName { get; set; }
         }
 
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
+
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
@@ -115,42 +118,14 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 _logger.LogError("External login info is null.");
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
-                isPersistent: false, bypassTwoFactor: true);
-            if (result.Succeeded)
+            var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (existingUser != null)
             {
+                await _signInManager.SignInAsync(existingUser, isPersistent: false);
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.",
-                    info.Principal.Identity.Name, info.LoginProvider);
+                    existingUser.UserName, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
-
-            if (result.IsLockedOut)
-            {
-                return RedirectToPage("./Lockout");
-            }
-
-            ReturnUrl = returnUrl;
-            ProviderDisplayName = info.ProviderDisplayName;
-
-            // Hent email og username fra GitHub
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var username = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
-            {
-                _logger.LogWarning("Missing email or username from external provider. Email: {Email}, Username: {Username}",
-                    email, username);
-                ErrorMessage = "Could not retrieve email or username from external provider.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-            }
-
-            // Sæt Input til at vise hentet email
-            Input = new InputModel
-            {
-                Email = email
-            };
-
             return await OnPostConfirmationAsync(returnUrl);
         }
 
@@ -172,17 +147,23 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 {
                     var user = CreateUser();
 
-                    // Hent username og email fra GitHub
                     var email = info.Principal.FindFirstValue(ClaimTypes.Email);
                     var username = info.Principal.FindFirstValue(ClaimTypes.Name);
 
-
                     if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
                     {
-                        _logger.LogWarning("Missing email or username during confirmation. Email: {Email}, Username: {Username}",
+                        _logger.LogWarning(
+                            "Missing email or username during confirmation. Email: {Email}, Username: {Username}",
                             email, username);
-                        ModelState.AddModelError(string.Empty, "Could not retrieve required user information from external provider.");
+                        ModelState.AddModelError(string.Empty,
+                            "Could not retrieve required user information from external provider.");
                         return Page();
+                    }
+
+                    var existingUser = await _userManager.FindByNameAsync(username);
+                    if (existingUser != null)
+                    {
+                        username = await GenerateUniqueUsername(username);
                     }
 
                     await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
@@ -194,7 +175,8 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                         result = await _userManager.AddLoginAsync(user, info);
                         if (result.Succeeded)
                         {
-                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                            _logger.LogInformation("User created an account using {Name} provider.",
+                                info.LoginProvider);
 
                             await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
                             return LocalRedirect(returnUrl);
@@ -233,6 +215,21 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                                                     $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
+
+        private async Task<string> GenerateUniqueUsername(string baseUsername)
+        {
+            var uniqueUsername = baseUsername;
+            var counter = 1;
+
+            while (await _userManager.FindByNameAsync(uniqueUsername) != null)
+            {
+                uniqueUsername = $"{baseUsername}{counter}";
+                counter++;
+            }
+
+            return uniqueUsername;
+        }
+
 
         private IUserEmailStore<Author> GetEmailStore()
         {

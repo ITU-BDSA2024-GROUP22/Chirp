@@ -86,6 +86,16 @@ public class AboutMeModel : PageModel
             return NotFound($"No author with the name '{author}' was found.");
         }
 
+        var author_picture = ((await Author).Picture);
+
+        if (!string.IsNullOrEmpty(author_picture))
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", author_picture.TrimStart('/'));
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+        }
 
         var signInManager = HttpContext.RequestServices.GetService(typeof(SignInManager<Author>)) as SignInManager<Author>;
         if (signInManager != null)
@@ -110,6 +120,26 @@ public class AboutMeModel : PageModel
         {
             return NotFound("User is not authenticated");
         }
+        var author = User.Identity.Name;
+        Author = _service.GetAuthorByName(author);
+        var author_picture = ((await Author).Picture);
+
+        if (!string.IsNullOrEmpty(author_picture))
+        {
+            var previousPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", author_picture.TrimStart('/'));
+            if (System.IO.File.Exists(previousPicturePath))
+            {
+                try
+                {
+                    System.IO.File.Delete(previousPicturePath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deleting file: {ex.Message}");
+                }
+            }
+        }
+
 
         if (profilePicture == null || profilePicture.Length == 0)
         {
