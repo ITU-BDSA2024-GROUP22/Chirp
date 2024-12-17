@@ -34,13 +34,4 @@ public class DBContext : IdentityDbContext<Author>
             .OnDelete(DeleteBehavior.Cascade);
     }
 
-    public override void Dispose()
-    {
-        base.Dispose();
-    }
-
-    public override ValueTask DisposeAsync()
-    {
-        return base.DisposeAsync();
-    }
 }

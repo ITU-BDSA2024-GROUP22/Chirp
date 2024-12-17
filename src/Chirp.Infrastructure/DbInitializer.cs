@@ -2,6 +2,9 @@ using System;
 using Chirp.Core;
 using Chirp.Infrastructure;
 
+/// <summary>
+/// Used to seed the database with information, used on creation of the database
+/// </summary>
 public static class DbInitializer
 {
     public static void SeedDatabase(DBContext dbContext)
