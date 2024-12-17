@@ -29,16 +29,21 @@ Figure## demonstrates our use of the Onion Architecture pattern in our implement
 
 ## Architecture of deployed application
 
+Figure## represents a client-server application deployed on Microsoft Azure. Clients send HTTPS requests to the Azure App Service, where Chirp.Web processes user requests and interacts with the database. Data is securely stored and managed in the Azure SQL Database, with optional authentication provided by Azure AD B2C for user sign-up and sign-in.
+
+![fig##](./Diagrams/deployedApplicationDiagram.drawio.svg "Activity diagram for unauthorised users")_Figure##: activity diagram for unauthorised users_
+
+
 ## User activities
 Chirp is a relatively simple program to navigate through. To illustrate the primary functions of a typical user journey, we have created activity diagrams for authorised/unauthorised users.
 
-![fig##](./Diagrams/Activity_diagram_unAuth.jpg "Activity diagram for unauthorised users")_Figure##: activity diagram for unauthorised users_
+![fig##](./Diagrams/Activity_diagram_unAuth.jpg "Component diagram illustrating the deployed application")_Figure##: Component diagram illustrating the deployed application_
 
 Figure## illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub for registration. Both paths require validation. If the user already has an account, they can click login via username or GitHub login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
 
-![fig##](./Diagrams/Activity_diagram_auth.jpg "Activity diagram for authorised users")_Figure##: activity diagram for authorised users_
+![fig##](./Diagrams/activity_diagram_loggedIN.drawio.svg "Activity diagram for authorised users")_Figure##: activity diagram for authorised users_
 
-Figure## illustrates the flow of actions for an authorised user, starting with viewing cheeps on the public timeline. Users can follow or unfollow authors, navigate to other pages, or view user timelines and bios, depending on their preferences. By accessing "my timeline", users can see their bio, their authored cheeps, and followed authors’ cheeps. Authorised users can update their profiles by choosing a file to upload a profile picture, writing a bio, or clicking "Forget me" to delete their account. Users have the option to write new cheeps, interact with personalised or general public content, and log out, completing the interaction cycle.
+Figure## illustrates the flow of actions for an authorised user, starting with viewing cheeps on the public timeline. Users can follow or unfollow authors, navigate to other pages, or view user timelines and bios, depending on their preferences. By accessing "my timeline", users can see their bio, their authored cheeps, and followed authors’ cheeps. Authorised users can update their profiles by choosing a file to upload a profile picture, writing a bio, or clicking "Forget me!" to delete their account. Users have the option to write new cheeps, interact with personalised or general public content, and log out, completing the interaction cycle.
 
 ## Sequence of functionality/calls through _Chirp!_
 
@@ -79,19 +84,15 @@ During the course we tried our best to constantly update our project board and c
 ## How to make _Chirp!_ work locally
 To run the system, follow these steps.
 
-**Step 0: Ensure you have the correct softwares downloaded**
-
 Software needed:
 
 Rider or Visual Studio Code
 
 .NET 8.0
 
-If you don’t have .NET 8.0 installed, run the following command.
-```
-brew install dotnet@8
-```
+If you don’t have .NET 8.0 installed, please use this link to download it:
 
+https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
 ### **Step 1: Cloning the project**
 
@@ -127,7 +128,8 @@ cd src/Chirp.Web
 Run these two commands to set the user secrets
 
 ```
-dotnet user-secrets set "authentication_github_clientId" "Ov23liZYXvXPxOxqjMap" dotnet user-secrets set "authentication_github_clientSecret" "ab07248b11a19096e2c822b96605679072c02f74"
+dotnet user-secrets set "authentication_github_clientId" "Ov23liZYXvXPxOxqjMap"
+dotnet user-secrets set "authentication_github_clientSecret" "ab07248b11a19096e2c822b96605679072c02f74"
 ```
 
 ### **Step 4: run the program on localhost**
@@ -146,8 +148,9 @@ Be aware that when logging in, it needs your username and not e-mail.
 
 To shut down the application, press Ctrl+C in the local terminal.
 ## How to run test suite locally
-To run test cases from the root of the Chirp Application. Run the following commands:
+### Integration and unit tests
 
+To run test cases from the root of the Chirp Application. Run the following commands:
 
 ```
 cd test/Chirp.Tests
@@ -161,6 +164,26 @@ The CheepRepositoryTest class tests various methods of the CheepRepository for m
 The FollowRepositoryTest class tests the functionality of following, unfollowing, and retrieving Cheeps from followed users. It covers scenarios like pagination, handling non-existent users, and preventing duplicate follows.
 
 The tests are set up to verify Chirp application's functionality using an in-memory database, where user profiles, timelines, and Cheeps are created and retrieved. Each test ensures that the relevant data is displayed correctly on the user's profile and timeline. Additionally, tests for bio sections and "About Me" pages are included to ensure correct display of user information.
+
+### Playwright tests
+Playwright is a framework for testing, utilised for end-to-end (E2E) and UI tests in web applications. These tests simulate user interactions, such as navigating through pages, inputting data, logging in/out, and clicking buttons, to validate the application's functionality. These tests help identify UI defects and confirm smooth user experiences across all scenarios. To ensure the playwright tests always work, random usernames are generated during each test run, as the usernames are required to be unique.
+To run the playwright tests, please follow the instructions below. The instructions assume you are in the root directory of the program.
+
+##### Step 0:
+Start by opening a terminal and run the program. Go to the previous guide on how to run the program locally. The program should keep running during the test run.
+
+##### Step 1:
+Navigate to PlaywrightTests from the root of the repository
+```
+cd PlaywrightTests
+```
+
+##### Step 2:
+Now you can run the tests by typing:
+```
+dotnet test
+```
+The UI/E2E tests in this test suite validate the overall functionality of the application, ensuring that the user interface elements work as intended and that navigation between URLs behaves correctly.
 
 
 
