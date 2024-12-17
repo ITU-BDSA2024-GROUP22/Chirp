@@ -72,7 +72,10 @@ When a tag is pushed to GitHub the building and testing workflow will run as des
 
 
 ## Team work
-
+Below is an image of our project board right before hand-in. Here, almost all of our tasks are resolved and live up to their respective acceptance criteria. We have some paused tickets regarding Chirp CLI that we did not have time to resolve before we switched to Razor Pages and they therefore got placed in “Paused tickets” in case we had time to resolve them later. We managed to fulfill the requirements set throughout the course and the ones that we set ourselves. One part of our program that we would have liked to work more on if we had the time, would be adding more tests, although we believe that our tests still cover most of our program.
+![fig##](./images/ProjectBoard.png "Project board")_Figure##: Our project board_
+During the course we tried our best to constantly update our project board and continuously write new tickets after each lecture. We then delegated the tickets among the group members and started working on the issue and during the last stretch of the course, we started assigning specific group members to tickets. We worked in many different constellations throughout the project, both doing pair, mob and individual programming depending on the extent of the issue. Figure## shows the workflow for each issue starting with creating a new branch and ending with deleting it, to keep the number of active branches at a minimum.
+![fig##](./Diagrams/TeamworkDiagram.drawio.svg "Activity diagram showing work progress for an issue")_Figure##: Activity diagram showing work progress for an issue_
 ## How to make _Chirp!_ work locally
 To run the system, follow these steps.
 
