@@ -51,6 +51,10 @@ public class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
+            
+            app.UseHttpsRedirection();
+            
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
@@ -61,8 +65,6 @@ public class Program
             _dbContext.Database.EnsureCreated();
             DbInitializer.SeedDatabase(_dbContext);
         }
-
-        app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();
