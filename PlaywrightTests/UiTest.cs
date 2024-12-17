@@ -1,3 +1,4 @@
+
 namespace PlaywrightTests;
 using Microsoft.Playwright;
 using System;
@@ -106,3 +107,4 @@ public class UiTests
     }
 
 }
+
