@@ -12,6 +12,7 @@ namespace PlaywrightTests
         private IBrowser _browser;
         private IPage _page;
 		private string _randomEmail;
+        private string _randomUser;
 
         [SetUp]
         public async Task Init()
@@ -24,6 +25,7 @@ namespace PlaywrightTests
             var context = await _browser.NewContextAsync();
             _page = await context.NewPageAsync();
 			_randomEmail = GenerateRandomEmail();
+            _randomUser = GenerateRandomUsername();
         }
 
         [TearDown]
@@ -36,7 +38,7 @@ namespace PlaywrightTests
         [Test]
         public async Task UserJourney()
         {
-            await _page.GotoAsync("http://localhost:5273/");
+            await _page.GotoAsync("http://localhost:5273/", new PageGotoOptions { Timeout = 60000 });
             await RegisterUser();
             await ConfirmRegistration();
             await LoginUser();
@@ -52,10 +54,17 @@ namespace PlaywrightTests
     	return $"testuser{randomNumber}@example.com";
 		}
 
+        private string GenerateRandomUsername()
+        {
+            var random = new Random();
+            var randomNumber = random.Next(1000, 9999); // Generates a random number between 1000 and 9999
+            return $"testuser{randomNumber}";
+        }
+
         private async Task RegisterUser()
         {
             await _page.GetByRole(AriaRole.Link, new() { Name = "register" }).ClickAsync();
-            await _page.GetByPlaceholder("Name", new() { Exact = true }).FillAsync("OleBropp3");
+            await _page.GetByPlaceholder("Name", new() { Exact = true }).FillAsync(_randomUser);
             await _page.GetByPlaceholder("name@example.com").FillAsync("bole");
             await _page.GetByPlaceholder("name@example.com").PressAsync("Alt+@");
             await _page.GetByPlaceholder("name@example.com").FillAsync(_randomEmail);
@@ -72,7 +81,7 @@ namespace PlaywrightTests
         private async Task LoginUser()
         {
             await _page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-            await _page.GetByPlaceholder("name@example.com").FillAsync(_randomEmail);
+            await _page.GetByPlaceholder("Username").FillAsync(_randomUser);
             await _page.GetByPlaceholder("Password").FillAsync("Letme111n!");
             await _page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
         }
@@ -94,7 +103,7 @@ namespace PlaywrightTests
         private async Task LogoutUser()
         {
 
-            await _page.GetByRole(AriaRole.Link, new() { Name = $"Logout [{_randomEmail}]" }).ClickAsync();
+            await _page.GetByRole(AriaRole.Link, new() { Name = $"Logout [{_randomUser}]" }).ClickAsync();
             await _page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
         }
     }
