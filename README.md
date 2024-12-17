@@ -1,21 +1,30 @@
-# Chirp
-Repository for SWU 3.semester BDSA
+# Chirp - Group 22
+Welcome to our Chirp, a repository made in connection with the course Analysis, Design and Software Architecture at IT-university of Copenhagen.
+
+This project is a mini clone of Twitter where users can cheep cheeps, follow other user and much much more
+
+This project has been updated weekly since the beginning of september
 
 
-**Automatic releases:**
+## Link til our Azure Web Application
+Go have fun at our Chirp website:
+```
+https://bdsagroup22chirprazor-ebfngefjezeaahgz.westeurope-01.azurewebsites.net
+```
 
-1. working-branch
-- git add .
-- git commit
-- git push
+## Link for local development
+```
+gh repo clone ITU-BDSA2024-GROUP22/Chirp
+```
 
-2. Merge pull-request
+From the root of the program, run this command to run the program local:
+```
+dotnet run
+```
 
-3. Add tag to main
-- git checkout main
-- git pull
-- git tag vX.X.X
-- git add .
-- git push origin vX.X.X
-
-4. Check that the release has been created on GitHub.com
+## Authors
+ - [@Al](https://github.com/AVNBuelow)
+ - [@Anna](https://github.com/anypitu)
+ - [@Karoline](https://github.com/karokamp)
+ - [@Olivia](https://github.com/Olivia-Brophy)
+ - [@Stina](https://github.com/StinaKnudsen)
