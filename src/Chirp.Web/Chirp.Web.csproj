@@ -38,4 +38,8 @@
       <Folder Include="wwwroot\uploads\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="wwwroot\images\peach.png" />
+    </ItemGroup>
+
 </Project>
