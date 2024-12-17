@@ -42,7 +42,7 @@ Figure## illustrates the flow of actions for an authorised user, starting with v
 ## Sequence of functionality/calls through _Chirp!_
 
 ![fig##](./Diagrams/SequenceDiagram.drawio.svg "Sequence diagram for an unauthorized user")_Figure##: Sequence diagram for an unauthorized user_
-
+![fig##](./Diagrams/SequenceDiagramLegend.drawio.svg "Legend for sequence diagrams")_Figure##: Legend for sequence diagrams_
 The sequence diagram above, figure##, demonstrate the sequence of an unauthorised user accessing our Chirp application. Here the user’s request goes through the layers of our implementation, where a list of the 32 newest cheeps are retrieved from the database and returned to the user on the webpage.
 Below is a sequence diagram of a user logging in on our application and afterwards posting a cheep to the timeline. The request to log in with Github is forwarded to OAuth where the login is handled. The request will return as a success and the user will be redirected to the public timeline. Here the now authenticated user can post a cheep which will be stored in the database and shown on the public timeline.
 
