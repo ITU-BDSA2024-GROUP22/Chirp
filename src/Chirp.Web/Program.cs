@@ -9,6 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Web;
 
+/// <summary>
+/// The main entry point for the Chirp application, responsible for configuring services, middleware, and
+/// the application pipeline. This includes setting up database connections, authentication, and handling
+/// request processing.
+/// </summary>
 public class Program
 {
     public static void Main(string[] args)
@@ -20,9 +25,6 @@ public class Program
         builder.Services.AddScoped<CheepService>();
         builder.Services.AddScoped<FollowService>();
 
-
-
-        // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=Database/Chirp.db";
         builder.Services.AddDbContext<DBContext>(options =>
             options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
@@ -32,12 +34,9 @@ public class Program
 
         builder.Services.AddAuthentication(options =>
             {
-                //options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                // options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //options.DefaultChallengeScheme = "GitHub";
                 options.RequireAuthenticatedSignIn = true;
             })
-            //.AddCookie()
+
             .AddGitHub(o =>
             {
                 o.ClientId = builder.Configuration["authentication_github_clientId"];
@@ -52,6 +51,9 @@ public class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
+            
+            app.UseHttpsRedirection();
+            
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -60,29 +62,14 @@ public class Program
         {
             var _dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
 
-            //_dbContext.Database.EnsureDeleted();
-
             _dbContext.Database.EnsureCreated();
-
-            if (_dbContext.Database.IsRelational())
-            {
-                //_dbContext.Database.Migrate();
-            }
             DbInitializer.SeedDatabase(_dbContext);
         }
-
-        app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
-
-        // Need this for logout to work
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseSession();
-
         app.MapRazorPages();
-
         app.Run();
     }
 }

@@ -1,7 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Chirp.Core;
 
+/// <summary>
+/// Represents the bio of an author in the Chirp application.
+/// </summary>
 public class Bio
 {
     public int BioId { get; set; }
@@ -10,6 +11,6 @@ public class Bio
 
     public required Author Author { get; set; }
 
-    public string? Text {get; set;}
+    public string? Text { get; set;}
 
 }

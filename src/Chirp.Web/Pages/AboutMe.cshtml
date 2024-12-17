@@ -4,7 +4,7 @@
 @model Chirp.Web.Pages.AboutMeModel
 @{
     ViewData["Title"] = "Chirp!";
-    Layout = "Shared/_Layout";
+    <link href="/css/aboutMe.css" rel="stylesheet" type="text/css"/>
     var routeName = HttpContext.GetRouteValue("author");
 }
 @if (User.Identity?.IsAuthenticated == true)
@@ -287,5 +287,6 @@
     }
 
 </style>
+
 
 
