@@ -56,7 +56,7 @@ Below is a sequence diagram of a user logging in on our application and afterwar
 ## Build, test, release, and deployment
 
 ### Building and testing
-![](./Diagrams/testflow.svg)
+![](./Diagrams/TestflowDiagram.drawio.svg)
 
 Figure ##: Illustration of the building and testing workflow
 
@@ -64,11 +64,11 @@ When a pull-request or a push is made to the main branch in GitHub, a workflow v
 
 ### Releasing to GitHub and deploying application
 
-![](./Diagrams/Release.svg)
+![](./Diagrams/ReleaseDiagram.drawio.svg)
 
 When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm. After ending this flow the next flow starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
 
-![](./Diagrams/deployment.svg)
+![](./Diagrams/DeploymentDiagram.drawio.svg)
 
 
 ## Team work
