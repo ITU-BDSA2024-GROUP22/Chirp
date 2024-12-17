@@ -1,7 +1,5 @@
 ﻿@page "/"
-@using Chirp.Core
 @using Chirp.Core.DTOs
-@using Chirp.Infrastructure
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.PublicModel
 @inject FollowService FollowService;
@@ -54,11 +52,9 @@
         var shareButton = document.getElementById("shareButton");
         var maxLength = 160;
 
-        // Update used characters
         var used = cheepInput.value.length;
         charCount.textContent = used + "/" + maxLength;
 
-        // Change the color if the limit is almost reached
         if (used >= 150) {
             charCount.style.color = "red";
         } else {

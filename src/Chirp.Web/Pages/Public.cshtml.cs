@@ -36,7 +36,7 @@ public class PublicModel : PageModel
             if (User.Identity.Name != null) this.Author = _service.GetAuthorByName(User.Identity.Name);
         }
 
-        CurrentPage = page ?? 1; // Default to page 1 if no page parameter
+        CurrentPage = page ?? 1;
         Cheeps = _service.GetCheeps(CurrentPage);
 
         CheepsCount = (Cheeps?.Result?.Count ?? 0);

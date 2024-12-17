@@ -122,8 +122,6 @@ public class CheepRepository : ICheepRepository
     /// <param name="authorDTO"> The author whose bio is being updated. </param>
     /// <param name="text"> The new bio text to set for the author. </param>
     /// <returns>A task representing the asynchronous operation.</returns>
-
-
     public async Task UpdateBio(AuthorDTO authorDTO, string text)
     {
         var author = _dbContext.Authors.SingleOrDefault(a => a.UserName == authorDTO.UserName);
