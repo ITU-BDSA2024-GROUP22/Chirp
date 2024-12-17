@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Chirp.Core;
 
+/// <summary>
+/// represents an author, that cansend cheeps, have a profile picture and bio and
+/// follow other authors
+/// </summary>
 public class Author : IdentityUser
 {
     public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
