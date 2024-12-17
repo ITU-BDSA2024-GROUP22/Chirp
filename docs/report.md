@@ -61,7 +61,7 @@ Below is a sequence diagram of a user logging in on our application and afterwar
 ## Build, test, release, and deployment
 
 ### Building and testing
-![](./Diagrams/TestflowDiagram.drawio.svg)
+![](./Diagrams/TestflowDiagram.svg)
 
 Figure ##: Illustration of the building and testing workflow
 
