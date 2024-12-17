@@ -17,9 +17,10 @@ numbersections: true
 Here comes a description of our domain model.
 
 <How to indsætte billede:>
-![](./Diagrams/opdelt.png)_Figure ##: An overview of the domain model_
+![](./Diagrams/UML.png)_Figure ##: An overview of the domain model_
 
-An illustration of the domain model is seen in the UML-diagram above. It depicts the relations and cardinalities between classes and interfaces. It’s only a part of the program shown in the diagram. This is to show how the program is built while functioning as a representation of how the remaining classes and interfaces are related. For example, the repository FollowRepository inherits from an interface called IFollowRepository while also having a relation to FollowService. CheepService simultaneously has a relation to a UserTimelineModel and an AboutMeModel.
+An illustration of the domain model is seen in the UML-diagram above. It depicts the relations and cardinalities between the entities.
+
 
 ## Architecture — In the small
 ![fig##](./Diagrams/OnionArchitecture.drawio.svg "Layers of our architecture")_Figure##: Layers of our architecture_
@@ -59,13 +60,13 @@ Below is a sequence diagram of a user logging in on our application and afterwar
 
 Figure ##: Illustration of the building and testing workflow
 
-When a pull-request or a push is made to the main branch in GitHub, a workflow building and testing the application runs. The tests running are the tests in Chirp.Tests where both repositories,CheepRepository and FollowRepository, and their functionalities are tested.
+When a pull-request or a push is made to the main branch in GitHub, a workflow verifying that building and testing the application still runs.The tests running are the tests in Chirp.Tests where both repositories, CheepRepository and FollowRepository, and their functionalities are tested.
 
-### Releasing to GitHub
+### Releasing to GitHub and deploying application
 
 ![](./Diagrams/Release.svg)
 
-### Deploying application
+When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm. After ending this flow the next flow starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
 
 ![](./Diagrams/deployment.svg)
 
