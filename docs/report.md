@@ -25,7 +25,7 @@ An illustration of the domain model is seen in the UML-diagram above. It depicts
 ## Architecture — In the small
 ![fig##](./Diagrams/OnionArchitecture.drawio.svg "Layers of our architecture")_Figure##: Layers of our architecture_
 
-Figure## demonstrates our use of the Onion Architecture pattern in our implementation. Each layer is shown as a nuance of grey, where the different classes, interfaces and packages are shown, each belonging to a layer in our program. Here, the dependencies are shown with arrows, highlighting how the arrows are pointing inwards across the layers, living up to the criteria of the Onion Architecture pattern. The figure illustrates how the dependencies do not flow outward, and how the inner layers have no knowledge of the outer layers.
+Figure## demonstrates our use of the Onion Architecture pattern in our implementation. Each layer is shown as a nuance of grey, where the different classes, interfaces and packages are shown, each belonging to a layer in our program. Here, the dependencies are shown with arrows, highlighting how the arrows are pointing inwards across the layers, living up to the criteria of the Onion Architecture pattern. The figure illustrates how the dependencies do not flow outward, and how the inner layers have no knowledge of the outer layers. We are aware that our database does not follow the rules of the Onion Architecture pattern, since it resides in Chirp.Web, but due to continuous issues regarding Azure, we prioritised having a working website, hence breaking the pattern.
 
 ## Architecture of deployed application
 
