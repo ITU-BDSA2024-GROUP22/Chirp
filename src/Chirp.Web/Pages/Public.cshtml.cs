@@ -87,12 +87,18 @@ public class PublicModel : PageModel
         return RedirectToPage("/Public", new { page = 1 });
     }
 
-    public async Task<IActionResult> OnPostUnfollow(string userToFollow)
+    /// <summary>
+    /// Handles the POST request for unfollowing a user.
+    /// It ensures the user is authenticated before performing the unfollow action.
+    /// </summary>
+    /// <param name="userToFollow">The username of the user to unfollow.</param>
+    /// <returns>A redirect to the public page after the follow action is performed.</returns>
+    public async Task<IActionResult> OnPostUnfollow(string userToUnfollow)
     {
         if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
         {
             var author = User.Identity.Name;
-            await _followService.UnfollowAuthor(author, userToFollow);
+            await _followService.UnfollowAuthor(author, userToUnfollow);
         }
 
         return RedirectToPage("/Public", new { page = 1 });
