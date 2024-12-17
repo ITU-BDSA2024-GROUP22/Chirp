@@ -2,26 +2,21 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable disable
-
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Chirp.Core;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 
 namespace Chirp.Web.Areas.Identity.Pages.Account
 {
+    /// <summary>
+    /// Handles external login functionality, including managing the external provider's authentication,
+    /// user account creation, and linking the external account to the application user.
+    /// </summary>
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
@@ -100,7 +95,12 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             return new ChallengeResult(provider, properties);
         }
 
-
+        /// <summary>
+        /// Handles the callback from the external provider after the user has authenticated.
+        /// </summary>
+        /// <param name="returnUrl">The URL to redirect to after completing the callback.</param>
+        /// <param name="remoteError">Any error returned by the external provider.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -129,6 +129,12 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             return await OnPostConfirmationAsync(returnUrl);
         }
 
+        /// <summary>
+        /// Handles user confirmation after authentication with the external provider.
+        /// Creates a new user account if none exists with the respective Github claims.
+        /// </summary>
+        /// <param name="returnUrl">The URL to redirect to after completing confirmation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -216,6 +222,12 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             }
         }
 
+        /// <summary>
+        /// /// Generates a unique username by appending a number to the base username if it already exists.
+        /// It checks if the username is taken and, if so, increments a counter until an available username is found.
+        /// </summary>
+        /// <param name="baseUsername">The base username to start with.</param>
+        /// <returns>A unique username that is not already taken.</returns>
         private async Task<string> GenerateUniqueUsername(string baseUsername)
         {
             var uniqueUsername = baseUsername;
