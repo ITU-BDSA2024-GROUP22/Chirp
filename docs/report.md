@@ -142,6 +142,22 @@ Be aware that when logging in, it needs your username and not e-mail.
 
 To shut down the application, press Ctrl+C in the local terminal.
 ## How to run test suite locally
+To run test cases from the root of the Chirp Application. Run the following commands:
+
+
+```
+cd test/Chirp.Tests
+```
+```
+dotnet test
+```
+
+The CheepRepositoryTest class tests various methods of the CheepRepository for managing authors and cheeps, including creating authors, retrieving cheeps, updating bios, and deleting authors. It covers scenarios like empty repositories, pagination, non-existent authors, and updating bio details.
+
+The FollowRepositoryTest class tests the functionality of following, unfollowing, and retrieving Cheeps from followed users. It covers scenarios like pagination, handling non-existent users, and preventing duplicate follows.
+
+The tests are set up to verify Chirp application's functionality using an in-memory database, where user profiles, timelines, and Cheeps are created and retrieved. Each test ensures that the relevant data is displayed correctly on the user's profile and timeline. Additionally, tests for bio sections and "About Me" pages are included to ensure correct display of user information.
+
 
 
 # Ethics
