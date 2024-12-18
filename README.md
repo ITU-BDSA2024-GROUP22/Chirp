@@ -16,12 +16,17 @@ Go have fun at our Chirp website:
 https://bdsagroup22chirprazor-ebfngefjezeaahgz.westeurope-01.azurewebsites.net
 ```
 
-## Command to local development
+## Command to clone the repository
 ```
 git clone https://github.com/ITU-BDSA2024-GROUP22/Chirp.git
 ```
 
-From the root of the program, run this command to run the program local:
+From the root of the program navigate to Chirp.Web 
+```
+cd src/Chirp.Web
+```
+
+Then run this command to run the program via localhost:
 ```
 dotnet run
 ```
