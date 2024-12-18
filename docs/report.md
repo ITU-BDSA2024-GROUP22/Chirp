@@ -37,7 +37,7 @@ Figure## represents a client-server application deployed on Microsoft Azure. Cli
 ## User activities
 Chirp is a relatively simple program to navigate through. To illustrate the primary functions of a typical user journey, we have created activity diagrams for authorised/unauthorised users.
 
-![fig##](./Diagrams/Activity_diagram_unAuth.jpg "Component diagram illustrating the deployed application")_Figure##: Component diagram illustrating the deployed application_
+![fig##](./Diagrams/Activity_diagram.drawio.svg "Component diagram illustrating the deployed application")_Figure##: Component diagram illustrating the deployed application_
 
 Figure## illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub for registration. Both paths require validation. If the user already has an account, they can click login via username or GitHub login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
 
