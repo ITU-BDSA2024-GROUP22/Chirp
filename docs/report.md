@@ -213,35 +213,35 @@ When the weekly requirements were more open-ended, it was a good tool for interp
 
 - 2021, _Open Source Software Licenses 101: The MIT License_
 
-    Last visited on 15'th of december 2024
+    Last visited on 15'th of December 2024
 
     https://fossa.com/blog/open-source-licenses-101-mit-license/
 
 
 - Fakhroutdinov, Kirill, _Intro to UML class diagrams_
 
-    Last visited on 16'th of december 2024
+    Last visited on 16'th of December 2024
 
     https://www.uml-diagrams.org/class-diagrams-overview.html
 
 
 - Fakhroutdinov, Kirill, _Intro to UML activity diagrams_
 
-  Last visited on 18'th of december 2024
+  Last visited on 18'th of December 2024
 
   https://www.uml-diagrams.org/activity-diagrams.html
 
 
 - Fakhroutdinov, Kirill, _Intro to UML component diagrams_
 
-  Last visited on 17'th of december 2024
+  Last visited on 17'th of December 2024
 
   https://www.uml-diagrams.org/component-diagrams.html
 
 
 - Fakhroutdinov, Kirill, _Intro to UML sequence diagrams_
 
-  Last visited on 16'th of december 2024
+  Last visited on 16'th of December 2024
 
     https://www.uml-diagrams.org/sequence-diagrams.html
 
