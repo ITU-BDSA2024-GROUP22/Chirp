@@ -3,13 +3,13 @@ title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2024 Group 22
 author:
 - "Alberte Bülow <alby@itu.dk>"
-- "<anyp@itu.dk>"
-- "<kamp@itu.dk>"
-- "<brop@itu.dk>"
-- "<stik@itu.dk>"
+- "Anna Perlman <anyp@itu.dk>"
+- "Karoline Petersson <kamp@itu.dk>"
+- "Olivia Brophy <brop@itu.dk>"
+- "Stina Knudsen <stik@itu.dk>"
 numbersections: true
 ---
-
+\newpage
 # Design and Architecture of _Chirp!_
 This is our report for the course Analysis, Design and Software Architecture in the Autumn semester of 2024. Throughout, the report we will go into detail of how the different elements were implemented and the general structure of our Chirp! application.
 ## Domain model
