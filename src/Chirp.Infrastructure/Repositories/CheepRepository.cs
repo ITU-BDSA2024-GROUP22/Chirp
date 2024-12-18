@@ -56,11 +56,11 @@ public class CheepRepository : ICheepRepository
     {
         var lowerBound = (pageNumber - 1) * _pageSize;
         var pageQuery = (from cheep in _dbContext.Cheeps
-                where cheep.Author.UserName == username // Filter by the author's name
+                where cheep.Author.UserName == username
                 orderby cheep.TimeStamp descending
                 select cheep)
             .Include(c => c.Author)
-            .Skip(lowerBound) // Use lowerBound instead of pageNumber * pageSize
+            .Skip(lowerBound)
             .Take(_pageSize)
             .Select(cheep => new CheepDTO
             {

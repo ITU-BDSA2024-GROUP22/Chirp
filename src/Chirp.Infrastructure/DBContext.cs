@@ -13,9 +13,7 @@ public class DBContext : IdentityDbContext<Author>
 
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
-
     public DbSet<Bio> Bios { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -33,5 +31,4 @@ public class DBContext : IdentityDbContext<Author>
             .HasForeignKey<Bio>(b => b.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
     }
-
 }
