@@ -36,7 +36,6 @@ public class Program
             {
                 options.RequireAuthenticatedSignIn = true;
             })
-
             .AddGitHub(o =>
             {
                 o.ClientId = builder.Configuration["authentication_github_clientId"];

@@ -132,10 +132,8 @@ public class AboutMeModel : PageModel
             return StatusCode(500, "Sign-in manager service not available.");
         }
 
-        // Proceed to delete the author's data
         await _service.DeleteAuthor(await Author);
 
-        // Redirect to a public or confirmation page
         return RedirectToPage("/Public");
     }
 
@@ -174,7 +172,6 @@ public class AboutMeModel : PageModel
             }
         }
 
-
         if (profilePicture == null || profilePicture.Length == 0)
         {
             ModelState.AddModelError("ProfilePicture", "Please upload a valid picture.");
@@ -185,6 +182,7 @@ public class AboutMeModel : PageModel
         var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
         Directory.CreateDirectory(uploadFolder);
 
+        // Generate unique filename for uploaded picture
         var fileName = $"{Guid.NewGuid()}_{profilePicture.FileName}";
         var filePath = Path.Combine(uploadFolder, fileName);
 
@@ -193,10 +191,9 @@ public class AboutMeModel : PageModel
             await profilePicture.CopyToAsync(stream);
         }
 
-        // Generate the relative URL for the uploaded file
+        // Generate the URL path for the uploaded file
         var pictureUrl = $"/uploads/{fileName}";
 
-        // Update the author's profile picture in the database
         await _service.SetAuthorPictureAsync(User.Identity.Name, pictureUrl);
 
         return RedirectToPage("/AboutMe", new { author = User.Identity.Name });

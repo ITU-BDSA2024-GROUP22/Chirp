@@ -87,7 +87,6 @@ public class UserTimelineModel : PageModel
         if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
         {
             await _followService.UnfollowAuthor(authorName, userToFollow);
-
         }
         return RedirectToPage("/UserTimeline", new { author = author.UserName, page = 1 });
     }
