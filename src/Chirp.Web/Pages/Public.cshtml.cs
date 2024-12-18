@@ -80,7 +80,6 @@ public class PublicModel : PageModel
         if (User.Identity != null && (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(Text)))
         {
             var author = User.Identity.Name;
-            Console.WriteLine("Fra OnPostFollow method + " + userToFollow);
             await _followService.FollowAuthor(author, userToFollow);
         }
 
