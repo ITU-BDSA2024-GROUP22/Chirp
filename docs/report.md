@@ -11,7 +11,7 @@ numbersections: true
 ---
 \newpage
 # Design and Architecture of _Chirp!_
-This is our report for the course Analysis, Design and Software Architecture in the Autumn semester of 2024. Throughout, the report we will go into detail of how the different elements were implemented and the general structure of our Chirp! application.
+This is our report for the course Analysis, Design and Software Architecture in the Autumn semester of 2024. Throughout the report we will go into detail of how the different elements were implemented and the general structure of our Chirp! application.
 
 ## Domain model
 
@@ -19,7 +19,7 @@ This is our report for the course Analysis, Design and Software Architecture in 
 ![fig1](./Diagrams/UML.png)
 </br>_Figure 1: An overview of the domain model_
 
-The UML diagram above illustrates the domain model. It depicts the relations and cardinalities between the entities. The Author entity inherits from the ASP.NET Identity’s IdentityUser providing the application with key components regarding the Author-related data. As additional features to the project requirements, both a Bio and the Author’s ability to have a (profile) picture were implemented. As shown in the figure, the Bio entity was implemented somewhat like the Cheep entity, in the sense that the entity refers back to an Author. However, unlike Cheep, each Author can only have a single Bio. The profile picture is implemented as a reference to an uploaded image stored elsewhere in the application.
+The UML diagram above illustrates the domain model. It depicts the relations and cardinalities between the entities. The Author entity inherits from the ASP.NET Identity’s IdentityUser providing the application with key components regarding the Author-related data. As additional features to the project requirements, both a Bio and the Author’s ability to have a (profile) picture were implemented. As shown in the figure, the Bio entity was implemented somewhat like the Cheep entity, in the sense that the entity refers back to an Author. However, unlike Cheep, each Author can only have a single Bio. The profile picture was implemented as a reference to an uploaded image stored elsewhere in the application.
 
 
 ## Architecture — In the small
@@ -42,7 +42,7 @@ Chirp is a relatively simple program to navigate through. To illustrate the prim
 ![fig4](./Diagrams/Activity_diagram.drawio.svg "Component diagram illustrating the deployed application")
 </br>_Figure 4: Component diagram illustrating the deployed application_
 
-Figure 4 illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub. Both paths require validation. If the user already has an account, they can click login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
+Figure 4 illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users' timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub. Both paths require validation. If the user already has an account, they can click login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
 
 ![fig5](./Diagrams/activity_diagram_loggedIN.drawio.svg "Activity diagram for authorised users")
 </br>_Figure 5: Activity diagram for authorised users_
@@ -71,7 +71,7 @@ Figure 7 below is a sequence diagram of a user logging in on our application and
 ![fig8](./Diagrams/TestflowDiagram-2.svg)
 </br>_Figure 8: Illustration of the building and testing workflow_
 
-When a pull request or a push is made to the main branch in GitHub, a workflow verifying that building and testing the application still runs.The tests running are the tests in Chirp.Tests where both repositories, CheepRepository and FollowRepository, their functionalities are tested, and http responses are tested. It should be noted that the playwright tests are not run in this workflow but on separate testings.
+When a pull request or a push is made to the main branch in GitHub, a workflow verifying that building and testing the application still runs. The tests running are the tests in Chirp.Tests where both repositories, CheepRepository and FollowRepository, their functionalities, and http responses are tested. It should be noted that the playwright tests are not run in this workflow but on separate testings.
 
 ### Releasing to GitHub and deploying application
 
@@ -79,7 +79,8 @@ When a pull request or a push is made to the main branch in GitHub, a workflow v
 </br> _Figure 9: Illustration of the release workflow_
 
 When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release via the workflow as seen in figure 9 with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm.
-</br>After ending this flow the next flow, as seen on figure 10 beneath, starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
+
+After ending this flow the next flow, as seen on figure 10 beneath, starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
 
 ![fig 10](./Diagrams/deployment.svg)
 </br> _Figure 10: Illustration of the deployment workflow_
@@ -148,7 +149,8 @@ Run these two commands to set the user secrets locally.
 
 ```
 dotnet user-secrets set "authentication_github_clientId" "Ov23liZYXvXPxOxqjMap"
-dotnet user-secrets set "authentication_github_clientSecret" "ab07248b11a19096e2c822b96605679072c02f74"
+dotnet user-secrets set "authentication_github_clientSecret"
+"ab07248b11a19096e2c822b96605679072c02f74"
 ```
 
 **Step 4: run the program on localhost**
@@ -158,13 +160,15 @@ dotnet run
 ```
 
 Click on the URL and you will be directed to the web application.
-![fig##](./images/URL.png)
+![](./images/URL.png)
 
 Be aware that when logging in, it needs your username and not e-mail.
 
-![fig##](./images/Chirp-logIn_page.png)
+![](./images/Chirp-logIn_page.png)
 
 To shut down the application, press Ctrl+C in the local terminal.
+
+
 ## How to run test suite locally
 
 
@@ -245,7 +249,7 @@ This software is licensed under the MIT license. The MIT license is an open sour
 During this project, we used ChatGPT to support our development. We were mindful about how we used it and tried to avoid using it for writing concrete code.
 Since we are not used to a program that does not only run locally, debugging was harder than our previous semesters. So we sometimes used LLM’s to help us find bugs, making the process a lot easier.
 
-When the weekly requirements were more open-ended, it was a good tool for interpretation and helping us get started.. Sometimes we also used it for specific code examples, primarily during testing, since we were also introduced to new ways of testing during this course. We found these uses of LLM’s very helpful and they definitely sped up our development, especially in instances where we were very stuck.
+When the weekly requirements were more open-ended, it was a good tool for interpretation and to help us get started. Sometimes we also used it for specific code examples, primarily during testing, since we were also introduced to new ways of testing during this course. We found these uses of LLM’s very helpful and they definitely sped up our development, especially in instances where we were very stuck.
 
 \newpage
 
