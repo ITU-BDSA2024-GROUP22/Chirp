@@ -45,18 +45,18 @@ input[type="submit"]{
 
 div.page {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background: #ECCFDE;
     border: none;
     width: 700px;
     margin: 30px auto;
-    padding: 20px; /* Add padding for spacing */
-    border-radius: 15px; /* Rounded corners for the box */
+    padding: 20px;
+    border-radius: 15px;
     margin-top: 50px;
-    text-align: center; /* Center text content */
-    gap: 20px; /* Add space between child elements */
+    text-align: center;
+    gap: 20px;
 }
 
 div.page > h1 {
@@ -94,9 +94,9 @@ div.page div.navigation a {
 
 div.page div.navigation form {
     display: flex;
-    flex-direction: column; /* Stack inputs vertically */
-    align-items: center; /* Center inputs */
-    gap: 15px; /* Add space between elements */
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 div.page div.navigation form button {
@@ -185,41 +185,41 @@ div.page ul.cheeps li {
 .author-row {
     margin-top: -17px;
     display: flex;
-    align-items: center; /* Align items (name and button) vertically */
-    gap: 10px; /* Space between the author name and button */
-    margin-bottom: 2px; /* Optional: Add spacing between this row and the text below */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
     margin-left: 20px;
 }
 
 .small-profile-pic {
-    width: 30px; /* Adjust to your desired size */
-    height: 30px; /* Adjust to your desired size */
-    border-radius: 50%; /* Ensures a circular shape */
-    margin-right: -2px; /* Optional, for spacing */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: -2px;
     margin-top: 10px;
 }
 
 .author-row .pro{
     display: flex;
-    align-items: center; /* Align items (name and button) vertically */
-    gap: 20px; /* Space between the author name and button */
-    margin-bottom: 2px; /* Optional: Add spacing between this row and the text below */
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 2px;
     margin-left: 20px;
 }
 
 .timestamp {
     font-size: 8px;
-    color: rgba(119, 119, 119, 0.47); /* Adjust the color to make it subtle */
-    font-weight: normal; /* Optional: adjust weight */
-    font-family: 'Arial', sans-serif; /* Ensure a consistent font */
+    color: rgba(119, 119, 119, 0.47);
+    font-weight: normal;
+    font-family: 'Arial', sans-serif;
     margin-left: 440px;
     margin-bottom: 0px;
 }
 
-/* Make sure the follow button and form align inline */
+
 .follow-form {
-    display: inline; /* Keep the form inline */
-    margin: 0; /* Remove any default margin */
+    display: inline;
+    margin: 0;
 }
 
 div.page ul.cheeps p {
