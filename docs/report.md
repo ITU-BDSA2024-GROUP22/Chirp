@@ -63,11 +63,9 @@ Figure 7 below is a sequence diagram of a user logging in on our application and
 
 
 
-# Process
-
-## Build, test, release, and deployment
-
+# Process ## Build, test, release, and deployment
 ### Building and testing
+
 ![fig8](./Diagrams/TestflowDiagram-2.svg)
 </br>_Figure 8: Illustration of the building and testing workflow_
 
