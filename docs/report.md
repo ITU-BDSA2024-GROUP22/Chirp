@@ -14,43 +14,52 @@ numbersections: true
 This is our report for the course Analysis, Design and Software Architecture in the Autumn semester of 2024. Throughout, the report we will go into detail of how the different elements were implemented and the general structure of our Chirp! application.
 ## Domain model
 
-![](./Diagrams/UML.png)_Figure ##: An overview of the domain model_
+![fig1](./Diagrams/UML.png)
+</br>_Figure 1: An overview of the domain model_
+
+
 
 The UML diagram above illustrates the domain model. It depicts the relations and cardinalities between the entities. The Author entity inherits from the ASP.NET Identity’s IdentityUser providing the application with key components regarding the Author-related data. As additional features to the project requirements, both a Bio and the Author’s ability to have a (profile) picture were implemented. As shown in the figure, the Bio entity was implemented somewhat like the Cheep entity, in the sense that the entity refers back to an Author. However, unlike Cheep, each Author can only have a single Bio. The profile picture is implemented as a reference to an uploaded image stored elsewhere in the application.
 
 
 ## Architecture — In the small
-![fig##](./Diagrams/OnionArchitecture.drawio.svg "Layers of our architecture")_Figure##: Layers of our architecture_
+![fig2](./Diagrams/OnionArchitecture.drawio.svg "Layers of our architecture")
+</br>_Figure 2: Layers of our architecture_
 
-Figure## demonstrates our use of the Onion Architecture pattern in our implementation. Each layer shows the different classes, interfaces and packages, each belonging to a layer in our program. Here, the dependencies are shown with arrows, highlighting how the arrows are pointing inwards across the layers, living up to the criteria of the Onion Architecture pattern. The figure illustrates how the dependencies do not flow outward, and how the inner layers have no knowledge of the outer layers.
+Figure 2 demonstrates our use of the Onion Architecture pattern in our implementation. Each layer shows the different classes, interfaces and packages, each belonging to a layer in our program. Here, the dependencies are shown with arrows, highlighting how the arrows are pointing inwards across the layers, living up to the criteria of the Onion Architecture pattern. The figure illustrates how the dependencies do not flow outward, and how the inner layers have no knowledge of the outer layers.
 We are aware that our database does not follow the rules of the Onion Architecture pattern, since it resides in Chirp.Web and not Chirp.Core. But due to continuous issues regarding Azure, we prioritised having a working website, hence breaking the pattern.
 
 ## Architecture of deployed application
 
-Figure## represents a client-server application deployed on Microsoft Azure. Clients send HTTPS requests to the Azure App Service, where Chirp.Web processes user requests and interacts with the database. Data is securely stored and managed in the Azure SQL Database, with optional authentication via OAuth for Github user sign-up and sign-in.
+Figure 3 represents a client-server application deployed on Microsoft Azure. Clients send HTTPS requests to the Azure App Service, where Chirp.Web processes user requests and interacts with the database. Data is securely stored and managed in the Azure SQL Database, with optional authentication via OAuth for Github user sign-up and sign-in.
 
-![fig##](./Diagrams/deployedApplicationDiagram.drawio.svg "Activity diagram for unauthorised users")_Figure##: activity diagram for unauthorised users_
+![fig3](./Diagrams/deployedApplicationDiagram.drawio.svg "Activity diagram for unauthorised users")
+</br>_Figure 3: Activity diagram for unauthorised users_
 
 
 ## User activities
 Chirp is a relatively simple program to navigate through. To illustrate the primary functions of a typical user journey, we have created activity diagrams for both authorised and unauthorised users.
-![fig##](./Diagrams/Activity_diagram.drawio.svg "Component diagram illustrating the deployed application")_Figure##: Component diagram illustrating the deployed application_
+![fig4](./Diagrams/Activity_diagram.drawio.svg "Component diagram illustrating the deployed application")
+</br>_Figure 4: Component diagram illustrating the deployed application_
 
-Figure## illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub. Both paths require validation. If the user already has an account, they can click login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
+Figure 4 illustrates the flow for unauthorised users interacting with Chirp. Users can browse the public timeline, view more pages, go to other users timelines, or navigate to registration/login options. If a user has no account, they can click register and proceed either by filling out the registration form or using GitHub. Both paths require validation. If the user already has an account, they can click login. Once the user successfully registers or logs in, they are directed to the system's authorised user area.
 
-![fig##](./Diagrams/activity_diagram_loggedIN.drawio.svg "Activity diagram for authorised users")_Figure##: activity diagram for authorised users_
+![fig5](./Diagrams/activity_diagram_loggedIN.drawio.svg "Activity diagram for authorised users")
+</br>_Figure 5: Activity diagram for authorised users_
 
-Figure## illustrates the flow of actions for an authorised user, starting with viewing cheeps on the public timeline. Users can follow or unfollow other users, navigate to other pages, or view user timelines and bios, depending on their preferences. By accessing "my timeline", users can see their bio, their authored cheeps, and followed authors’ cheeps. Authorised users can update their profiles by choosing a file to upload a profile picture, writing a bio, or clicking "Forget me!" to delete their account and all their data. Users have the option to write new cheeps, interact with personalised or general public content, and log out, completing the interaction cycle.
+Figure 5 illustrates the flow of actions for an authorised user, starting with viewing cheeps on the public timeline. Users can follow or unfollow other users, navigate to other pages, or view user timelines and bios, depending on their preferences. By accessing "my timeline", users can see their bio, their authored cheeps, and followed authors’ cheeps. Authorised users can update their profiles by choosing a file to upload a profile picture, writing a bio, or clicking "Forget me!" to delete their account and all their data. Users have the option to write new cheeps, interact with personalised or general public content, and log out, completing the interaction cycle.
 
 ## Sequence of functionality/calls through _Chirp!_
 
-![fig##](./Diagrams/SequenceDiagram.drawio.svg "Sequence diagram for an unauthorized user")_Figure##: Sequence diagram for an unauthorized user_
+![fig6](./Diagrams/SequenceDiagram.drawio.svg "Sequence diagram for an unauthorized user")
+</br>_Figure 6: Sequence diagram for an unauthorized user_
 
-The sequence diagram above, figure##, demonstrates the sequence of an unauthorised user accessing our Chirp application. Here the user’s request goes through the layers of our implementation, where a list of the 32 newest cheeps are retrieved from the database and returned to the user on the webpage.
+The sequence diagram above, figure 6, demonstrates the sequence of an unauthorised user accessing our Chirp application. Here the user’s request goes through the layers of our implementation, where a list of the 32 newest cheeps are retrieved from the database and returned to the user on the webpage.
 
-Figure## below is a sequence diagram of a user logging in on our application and afterwards posting a cheep to the timeline. The request to log in with Github is forwarded to OAuth where the login is handled. The request will return as a success and the user will be redirected to the public timeline. Here, the now authenticated user can post a cheep which will be stored in the database and shown on the public timeline.
+Figure 7 below is a sequence diagram of a user logging in on our application and afterwards posting a cheep to the timeline. The request to log in with Github is forwarded to OAuth where the login is handled. The request will return as a success and the user will be redirected to the public timeline. Here, the now authenticated user can post a cheep which will be stored in the database and shown on the public timeline.
 
-![fig##](./Diagrams/SequenceDiagram2.drawio.svg "Sequence diagram for authenticated user posting a cheep")_Figure##: Sequence diagram for authenticated user posting a cheep_
+![fig7](./Diagrams/SequenceDiagram2.drawio.svg "Sequence diagram for authenticated user posting a cheep")
+</br>_Figure 7: Sequence diagram for authenticated user posting a cheep_
 
 
 
@@ -59,34 +68,38 @@ Figure## below is a sequence diagram of a user logging in on our application and
 ## Build, test, release, and deployment
 
 ### Building and testing
-![](./Diagrams/TestflowDiagram-2.svg) _Figure ##: Illustration of the building and testing workflow_
+![fig8](./Diagrams/TestflowDiagram-2.svg)
+</br>_Figure 8: Illustration of the building and testing workflow_
 
 When a pull request or a push is made to the main branch in GitHub, a workflow verifying that building and testing the application still runs.The tests running are the tests in Chirp.Tests where both repositories, CheepRepository and FollowRepository, their functionalities are tested, and http responses are tested. It should be noted that the playwright tests are not run in this workflow but on separate testings.
 
 ### Releasing to GitHub and deploying application
 
-![](./Diagrams/ReleaseDiagram.drawio-2.svg)
+![fig 9](./Diagrams/ReleaseDiagram.drawio-2.svg)
+</br> _Figure 9: Illustration of the release workflow_
 
-When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release via the workflow as seen in figure ##(above) with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm. After ending this flow the next flow, as seen on figure ## beneath, starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
+When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release via the workflow as seen in figure 9 with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm. After ending this flow the next flow, as seen on figure 10 beneath, starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
 
-![](./Diagrams/deployment.svg)
-
+![fig 10](./Diagrams/deployment.svg)
+</br> _Figure 10: Illustration of the deployment workflow_
 
 ## Team work
-Figure## below is an image of our project board right before hand-in. Here, almost all of our tasks are resolved and live up to their respective acceptance criteria. Some tickets regarding Chirp CLI were paused, since we did not have time to resolve them before we switched to Razor Pages. They got placed in “Paused tickets” in case there was time to resolve them later. We managed to fulfill the requirements set throughout the course and the ones that we set ourselves. One part of our program that we would have liked to work more on if we had the time, would be adding more tests, although we believe that our tests still cover most of our program.
+Figure 11 below is an image of our project board right before hand-in. Here, almost all of our tasks are resolved and live up to their respective acceptance criteria. Some tickets regarding Chirp CLI were paused, since we did not have time to resolve them before we switched to Razor Pages. They got placed in “Paused tickets” in case there was time to resolve them later. We managed to fulfill the requirements set throughout the course and the ones that we set ourselves. One part of our program that we would have liked to work more on if we had the time, would be adding more tests, although we believe that our tests still cover most of our program.
 
-![fig##](./images/ProjectBoard.png "Project board")_Figure##: Our project board_
+![fig11](./images/ProjectBoard.png "Project board")
+</br>_Figure 11: Our project board_
 
 During the course we updated our project board constantly and continuously wrote new tickets after each lecture. We then delegated the tickets among the group members and started working on the issue and during the last stretch of the course, we started assigning specific group members to tickets. We worked in many different constellations throughout the project, both doing pair, mob and individual programming depending on the extent of the issue.
 
-Figure## shows the workflow for each issue starting with the creation of a new branch and concluding with its deletion, to minimise the number of active branches.
+Figure 12 shows the workflow for each issue starting with the creation of a new branch and concluding with its deletion, to minimise the number of active branches.
 
-![fig##](./Diagrams/TeamworkDiagram.drawio.svg "Activity diagram showing work progress for an issue")_Figure##: Activity diagram showing work progress for an issue_
+![fig12](./Diagrams/TeamworkDiagram.drawio.svg "Activity diagram showing work progress for an issue")
+</br>_Figure 12: Activity diagram showing work progress for an issue_
 
 ## How to make _Chirp!_ work locally
 To run the system, follow these steps.
 
-Step 0: Ensure you have the correct softwares downloaded
+Step 0: Ensure you have the correct software downloaded
 
 Software needed:
 
