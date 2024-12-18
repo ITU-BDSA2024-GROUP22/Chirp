@@ -23,22 +23,22 @@ public interface ICheepService
 
 /// <summary>
 /// Service that relays information regarding Cheeps and Authors to 'CheepRepository',
-/// such that the repository can perform these operations and it ensures data integrity and validation at each step.
+/// such that the repository can perform these operations, and it ensures data integrity and validation at each step.
 /// Implements the ICheepService interface
 /// </summary>
 public class CheepService : ICheepService
 {
-    private readonly CheepRepository cheepRepository;
+    private readonly CheepRepository _cheepRepository;
 
-    public CheepService(CheepRepository _cheepRepository)
+    public CheepService(CheepRepository cheepRepository)
     {
-        cheepRepository = _cheepRepository;
+        _cheepRepository = cheepRepository;
     }
 
 
     public async Task<List<CheepDTO>> GetCheeps(int pageNumber)
     {
-        var results = cheepRepository.GetCheeps(pageNumber);
+        var results = _cheepRepository.GetCheeps(pageNumber);
 
         return await results;
     }
@@ -51,10 +51,7 @@ public class CheepService : ICheepService
     /// <returns> A list of CheepDTO objects for the specified author </returns>
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber)
     {
-        var result = await cheepRepository.GetCheepsFromAuthor(pageNumber, author);
-
-        // Debugging linje til logning
-        Console.WriteLine($"Fetched {result.Count} cheeps for {author}");
+        var result = await _cheepRepository.GetCheepsFromAuthor(pageNumber, author);
 
         return result;
     }
@@ -67,7 +64,7 @@ public class CheepService : ICheepService
     /// <exception cref="KeyNotFoundException"> Thrown if no author with the given name is found </exception>
     public async Task<AuthorDTO?> GetAuthorByName(string name)
     {
-        var authorDTO = await cheepRepository.GetAuthorByName(name);
+        var authorDTO = await _cheepRepository.GetAuthorByName(name);
         if (authorDTO == null)
         {
             throw new KeyNotFoundException($"No author with name {name} was found.");
@@ -87,7 +84,7 @@ public class CheepService : ICheepService
     /// </remarks>
     public async Task CreateCheep(AuthorDTO? author, string text, DateTime timeStamp)
     {
-        await cheepRepository.CreateCheep(author, text, timeStamp);
+        await _cheepRepository.CreateCheep(author, text, timeStamp);
     }
 
     /// <summary>
@@ -101,18 +98,17 @@ public class CheepService : ICheepService
     /// </remarks>
     public async Task UpdateBio(AuthorDTO authorDTO, string text)
     {
-        await cheepRepository.UpdateBio(authorDTO, text);
+        await _cheepRepository.UpdateBio(authorDTO, text);
     }
 
     public async Task<Bio> GetBioFromAuthor(string username)
     {
-        return await cheepRepository.GetBioFromAuthor(username);
+        return await _cheepRepository.GetBioFromAuthor(username);
     }
-
 
     public async Task DeleteAuthor(AuthorDTO authorDTO)
     {
-        await cheepRepository.DeleteAuthor(authorDTO);
+        await _cheepRepository.DeleteAuthor(authorDTO);
     }
 
     /// <summary>
@@ -126,7 +122,7 @@ public class CheepService : ICheepService
     /// </remarks>
     public async Task SetAuthorPictureAsync(string username, string picturePath)
     {
-        await cheepRepository.SetAuthorPictureAsync(username, picturePath);
+        await _cheepRepository.SetAuthorPictureAsync(username, picturePath);
     }
 }
 

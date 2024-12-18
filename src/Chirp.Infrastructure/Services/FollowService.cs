@@ -1,7 +1,4 @@
-using Chirp.Core;
-using Microsoft.EntityFrameworkCore;
 using Chirp.Core.DTOs;
-using Chirp.Core.Interfaces;
 using Chirp.Infrastructure.Repositories;
 
 public interface IFollowService
@@ -22,7 +19,6 @@ public interface IFollowService
 /// </summary>
 public class FollowService : IFollowService
 {
-
     private readonly FollowRepository _followRepository;
 
     public FollowService(FollowRepository followRepository)
@@ -113,10 +109,6 @@ public class FollowService : IFollowService
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int pageNumber)
     {
         var result = await _followRepository.GetCheepsFromAuthor(pageNumber, author);
-
-        // Debugging linje til logning
-        Console.WriteLine($"Fetched {result.Count} cheeps for {author}");
-
         return result;
     }
 

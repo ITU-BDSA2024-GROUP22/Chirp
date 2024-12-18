@@ -1,6 +1,8 @@
 using System;
 using Chirp.Core;
 using Chirp.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Used to seed the database with information, used on creation of the database
