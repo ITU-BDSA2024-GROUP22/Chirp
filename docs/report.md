@@ -12,13 +12,12 @@ numbersections: true
 \newpage
 # Design and Architecture of _Chirp!_
 This is our report for the course Analysis, Design and Software Architecture in the Autumn semester of 2024. Throughout, the report we will go into detail of how the different elements were implemented and the general structure of our Chirp! application.
+
 ## Domain model
 
-<img src="./Diagrams/UML.png" width="250"/>
 
+![fig1](./Diagrams/UML.png)
 </br>_Figure 1: An overview of the domain model_
-
-
 
 The UML diagram above illustrates the domain model. It depicts the relations and cardinalities between the entities. The Author entity inherits from the ASP.NET Identity’s IdentityUser providing the application with key components regarding the Author-related data. As additional features to the project requirements, both a Bio and the Author’s ability to have a (profile) picture were implemented. As shown in the figure, the Bio entity was implemented somewhat like the Cheep entity, in the sense that the entity refers back to an Author. However, unlike Cheep, each Author can only have a single Bio. The profile picture is implemented as a reference to an uploaded image stored elsewhere in the application.
 
@@ -79,7 +78,8 @@ When a pull request or a push is made to the main branch in GitHub, a workflow v
 ![fig 9](./Diagrams/ReleaseDiagram.drawio-2.svg)
 </br> _Figure 9: Illustration of the release workflow_
 
-When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release via the workflow as seen in figure 9 with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm. After ending this flow the next flow, as seen on figure 10 beneath, starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
+When a tag is pushed to GitHub the building and testing workflow will run as described earlier. If the build and test succeeds there will be created a new release via the workflow as seen in figure 9 with the given tag number and the application will be built in files for Windows, Linux, MacOS, and MacOS-arm.
+</br>After ending this flow the next flow, as seen on figure 10 beneath, starts running - the deployment flow. Here the program is once again built and all the necessary files for publishing the application are collected in a new directory (an artifact) and uploaded to GitHub to make it available for deployment. The artifact is downloaded and the ready-for-publish files are now available for Azure to deploy the application. This marks the end of the lines of flows.
 
 ![fig 10](./Diagrams/deployment.svg)
 </br> _Figure 10: Illustration of the deployment workflow_
@@ -100,7 +100,7 @@ Figure 12 shows the workflow for each issue starting with the creation of a new 
 ## How to make _Chirp!_ work locally
 To run the system, follow these steps.
 
-Step 0: Ensure you have the correct software downloaded
+**Step 0: Ensure you have the correct software downloaded**
 
 Software needed:
 
@@ -113,7 +113,7 @@ If you don’t have .NET 8.0 installed, please use this link to download it:
 https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
 
-### **Step 1: Cloning the project**
+**Step 1: Cloning the project**
 
 Navigate to the Github repository page for Group 22:
 
@@ -132,7 +132,7 @@ Use the copied repository URL:
 git clone <repository-url>
 ```
 
-### **Step 2: Open project**
+**Step 2: Open project**
 
 Open in Rider or Visual Studio Code. Make sure to be in the root of the directory.
 
@@ -142,7 +142,7 @@ Navigate to Chirp.web
 cd src/Chirp.Web
 ```
 
-### **Step 3: set user secrets**
+**Step 3: set user secrets**
 
 Run these two commands to set the user secrets locally.
 
@@ -151,7 +151,7 @@ dotnet user-secrets set "authentication_github_clientId" "Ov23liZYXvXPxOxqjMap"
 dotnet user-secrets set "authentication_github_clientSecret" "ab07248b11a19096e2c822b96605679072c02f74"
 ```
 
-### **Step 4: run the program on localhost**
+**Step 4: run the program on localhost**
 
 ```
 dotnet run
@@ -168,43 +168,67 @@ To shut down the application, press Ctrl+C in the local terminal.
 ## How to run test suite locally
 
 
-#### Step 0:
+**Step 0:**
 To run test cases from the root of the Chirp Application, run the following commands:
 
 ```
 cd test/Chirp.Tests
 ```
 
-#### Step 1:
+**Step 1:**
 Test by running the following command:
 ```
 dotnet test
 ```
+<br>
 
-### Unit tests
+**Unit tests**
+
 The CheepRepositoryTest class tests various methods of the CheepRepository for managing authors and cheeps, including creating authors, retrieving cheeps, updating bios, and deleting authors. It covers scenarios like empty repositories, pagination, non-existent authors, and updating bio details.
 
 The FollowRepositoryTest class tests the functionality of following, unfollowing, and retrieving Cheeps from followed users. It covers scenarios like pagination, handling non-existent users, and preventing duplicate follows.
 
-### Integration tests
+<br>
+
+**Integration tests**
+
 The tests are set up to verify the application's functionality using an in-memory database, where user profiles, timelines, and Cheeps are created and retrieved. Each test ensures that the relevant data is displayed correctly on the user's profile and timeline. Additionally, tests for bio sections and "About Me" pages are included to ensure correct display of user information.
 
-### Playwright tests
+<br>
+
+**Playwright tests**
+
 Playwright is a framework for testing. We utilised it for end-to-end (E2E) and UI tests. These tests simulate user interactions, such as navigating through pages, inputting data, logging in/out, and clicking buttons, to validate the application's functionality. These tests help identify UI defects and confirm smooth user experiences across all scenarios. To ensure the playwright tests always work, random usernames are generated during each test run, as the usernames are required to be unique.
 
 To run the playwright tests, please follow the instructions below. The instructions assume you are in the root directory of the program.
 
-##### Step 0:
+**Step 0:**
+If you don’t have playwright installed, make sure to download it by running the following commands. If it is installed you can continue to step 1.
+
+```
+npx playwright install
+```
+
+**Step 1:**
 Start by opening a terminal and run the program. Go to the previous guide on how to run the program locally. The program should keep running during the test run.
 
-##### Step 1:
+**Step 2:**
 Navigate to PlaywrightTests from the root of the repository
 ```
 cd PlaywrightTests
 ```
+Build the project
+```
+dotnet build
+```
 
+**Step 3:**
+If this is the first time running our playwright tests, you need to run an extra command. This however requires you to have power-shell installed:
 
-##### Step 2:
+```
+pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+```
+
 Now you can run the tests by typing:
 ```
 dotnet test
@@ -222,6 +246,8 @@ During this project, we used ChatGPT to support our development. We were mindful
 Since we are not used to a program that does not only run locally, debugging was harder than our previous semesters. So we sometimes used LLM’s to help us find bugs, making the process a lot easier.
 
 When the weekly requirements were more open-ended, it was a good tool for interpretation and helping us get started.. Sometimes we also used it for specific code examples, primarily during testing, since we were also introduced to new ways of testing during this course. We found these uses of LLM’s very helpful and they definitely sped up our development, especially in instances where we were very stuck.
+
+\newpage
 
 # Appendix
 
