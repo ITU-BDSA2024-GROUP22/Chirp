@@ -63,7 +63,9 @@ Figure 7 below is a sequence diagram of a user logging in on our application and
 
 
 
-# Process ## Build, test, release, and deployment
+# Process
+
+## Build, test, release, and deployment
 ### Building and testing
 
 ![fig8](./Diagrams/TestflowDiagram-2.svg)
@@ -183,7 +185,7 @@ The CheepRepositoryTest class tests various methods of the CheepRepository for m
 
 The FollowRepositoryTest class tests the functionality of following, unfollowing, and retrieving Cheeps from followed users. It covers scenarios like pagination, handling non-existent users, and preventing duplicate follows.
 
-### Integration-tests
+### Integration tests
 The tests are set up to verify the application's functionality using an in-memory database, where user profiles, timelines, and Cheeps are created and retrieved. Each test ensures that the relevant data is displayed correctly on the user's profile and timeline. Additionally, tests for bio sections and "About Me" pages are included to ensure correct display of user information.
 
 ### Playwright tests
