@@ -14,7 +14,8 @@ numbersections: true
 This is our report for the course Analysis, Design and Software Architecture in the Autumn semester of 2024. Throughout, the report we will go into detail of how the different elements were implemented and the general structure of our Chirp! application.
 ## Domain model
 
-![fig1](./Diagrams/UML.png)
+<img src="./Diagrams/UML.png" width="250"/>
+
 </br>_Figure 1: An overview of the domain model_
 
 
