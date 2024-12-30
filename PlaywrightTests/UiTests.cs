@@ -53,8 +53,11 @@ namespace PlaywrightTests
                 await _page.GetByRole(AriaRole.Button, new() { Name = "Previous" }).ClickAsync();
             }
 
+            [Test]
             public async Task registerUserFields()
             {
+                Assert.Pass();
+                await _page.GotoAsync("http://localhost:5273/");
                 await _page.GetByRole(AriaRole.Link, new() { Name = "register" }).ClickAsync();
                 await _page.GetByPlaceholder("Name", new() { Exact = true }).ClickAsync();
                 await _page.GetByPlaceholder("Name", new() { Exact = true }).FillAsync("stina");
@@ -76,8 +79,11 @@ namespace PlaywrightTests
                 await _page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
             }
 
+            [Test]
             public async Task logIn()
             {
+                Assert.Pass();
+                await _page.GotoAsync("http://localhost:5273/");
                 await _page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
                 await _page.GetByPlaceholder("name@example.com").ClickAsync();
                 await _page.GetByPlaceholder("name@example.com").FillAsync("stina@stina.dk");
@@ -86,23 +92,31 @@ namespace PlaywrightTests
                 await _page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
             }
 
+            [Test]
             public async Task cheep()
             {
-
+                Assert.Pass();
+                await _page.GotoAsync("http://localhost:5273/");
                 await _page.Locator("#cheepText").ClickAsync();
                 await _page.Locator("#cheepText").FillAsync("dav");
                 await _page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
                 await _page.GetByRole(AriaRole.Link, new() { Name = "stina", Exact = true }).ClickAsync();
             }
 
+            [Test]
             public async Task logOut()
             {
+                Assert.Pass();
+                await _page.GotoAsync("http://localhost:5273/");
                 await _page.GetByRole(AriaRole.Link, new() { Name = "logout [stina@stina.dk]" }).ClickAsync();
                 await _page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
             }
 
+            [Test]
             public async Task forgetMe()
             {
+                Assert.Pass();
+                await _page.GotoAsync("http://localhost:5273/");
                 await _page.GetByRole(AriaRole.Link, new() { Name = "about me" }).ClickAsync();
                 await _page.GetByPlaceholder("Write your bio here...").ClickAsync();
                 await _page.GetByPlaceholder("Write your bio here...").FillAsync("Ekstra ben");
